@@ -21,3 +21,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     acercade.ui
+
+#supuesta linea para "agregar" el reconocimiento de opencv en el proyecto
+LIBS += `pkg-config opencv --libs`

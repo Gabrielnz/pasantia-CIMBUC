@@ -30,7 +30,7 @@
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QGraphicsView" name="vistaCamara">
+       <widget class="QLabel" name="etqCamara">
         <property name="minimumSize">
          <size>
           <width>450</width>
@@ -42,6 +42,12 @@
           <width>450</width>
           <height>450</height>
          </size>
+        </property>
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600;&quot;&gt;Vista prinicpal&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
@@ -67,8 +73,8 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>247</width>
+            <height>31</height>
            </size>
           </property>
          </spacer>
@@ -87,8 +93,8 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>247</width>
+            <height>31</height>
            </size>
           </property>
          </spacer>
@@ -139,7 +145,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QGraphicsView" name="vistaPrevia">
+         <widget class="QLabel" name="etqVistaprevia">
           <property name="minimumSize">
            <size>
             <width>250</width>
@@ -151,6 +157,9 @@
             <width>250</width>
             <height>250</height>
            </size>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Vista previa&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -228,6 +237,8 @@
     <property name="title">
      <string>Archivo</string>
     </property>
+    <addaction name="actionIniciar_camara"/>
+    <addaction name="actionDetener_camara"/>
     <addaction name="actionOpciones"/>
     <addaction name="separator"/>
     <addaction name="actionSalir"/>
@@ -278,6 +289,16 @@
   <action name="actionEliminar_historia">
    <property name="text">
     <string>Eliminar historia</string>
+   </property>
+  </action>
+  <action name="actionIniciar_camara">
+   <property name="text">
+    <string>Iniciar camara</string>
+   </property>
+  </action>
+  <action name="actionDetener_camara">
+   <property name="text">
+    <string>Detener camara</string>
    </property>
   </action>
  </widget>
