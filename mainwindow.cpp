@@ -41,7 +41,7 @@ void MainWindow::on_actionSalir_triggered()
 
 void MainWindow::on_actionIniciar_camara_triggered()
 {
-
+    //si la camara no ha sido abierta ya
     if(capWebcam.isOpened() == false){
 
         tmrTimer = new QTimer(this);
@@ -53,11 +53,12 @@ void MainWindow::on_actionIniciar_camara_triggered()
         }
         connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
     }
-
-    tmrTimer->start(20);
+    if(!tmrTimer->isActive())
+        tmrTimer->start(20);
 }
 
 void MainWindow::on_actionDetener_camara_triggered()
 {
-    tmrTimer->stop();
+    if(tmrTimer->isActive())
+        tmrTimer->stop();
 }
