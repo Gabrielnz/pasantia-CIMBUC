@@ -49,7 +49,7 @@ void MainWindow::on_actionIniciar_camara_triggered()
         capWebcam.open(0);/*Abre la camara web*/
 
         if(capWebcam.isOpened() == false){
-            ui->etqHistoria->setText("No camera, nigger");
+            //avisar que la camara no se pudo abrir por medio de un cuadro de dialogo o algo asi.
         }
         connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
     }
