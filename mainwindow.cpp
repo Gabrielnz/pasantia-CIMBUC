@@ -21,9 +21,10 @@ void MainWindow::procesarCuadroActualizarGUI(){
     //se prepara la imagen para convertirla de BGR A RGB para que Qt pueda manejarla
     cv::cvtColor(matOriginal, matOriginal, CV_BGR2RGB);
     //ocurre la conversion de cv mat a qimage. Investigar sobre cual QImage::Format_ es mas apropiado
-    QImage img((uchar*)matOriginal.data, matOriginal.cols, matOriginal.rows, matOriginal.step, QImage::Format_RGB888);
+    QImage imgaux((uchar*)matOriginal.data, matOriginal.cols, matOriginal.rows, matOriginal.step, QImage::Format_RGB888);
+    qimg = imgaux;
     //se le asigna la imagen a la etiqueta de la camara
-    ui->etqCamara->setPixmap(QPixmap::fromImage(img));
+    ui->etqCamara->setPixmap(QPixmap::fromImage(qimg));
 
 }
 
@@ -54,11 +55,18 @@ void MainWindow::on_actionIniciar_camara_triggered()
         connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
     }
     if(!tmrTimer->isActive())
-        tmrTimer->start(20);
+        tmrTimer->start(30);
 }
 
 void MainWindow::on_actionDetener_camara_triggered()
 {
     if(tmrTimer->isActive())
         tmrTimer->stop();
+}
+
+void MainWindow::on_btnCapturar_clicked()
+{
+    if(capWebcam.isOpened() == true){//si la camara esta abierta ya
+        qimg.save("prueba.png");
+    }
 }

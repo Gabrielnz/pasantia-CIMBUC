@@ -30,13 +30,15 @@ private slots:
 
     void on_actionDetener_camara_triggered();
 
+    void on_btnCapturar_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     cv::VideoCapture capWebcam;
     cv::Mat matOriginal;
 
-    QImage qimgORiginal;
+    QImage qimg;
     QTimer *tmrTimer;
 };
 
