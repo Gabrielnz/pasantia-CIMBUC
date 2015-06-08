@@ -37,7 +37,6 @@ private:
 
     cv::VideoCapture capWebcam;
     cv::Mat matOriginal;
-
     QImage qimg;
     QTimer *tmrTimer;
 };

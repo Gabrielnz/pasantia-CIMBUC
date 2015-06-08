@@ -67,6 +67,8 @@ void MainWindow::on_actionDetener_camara_triggered()
 void MainWindow::on_btnCapturar_clicked()
 {
     if(capWebcam.isOpened() == true){//si la camara esta abierta ya
-        qimg.save("prueba.png");
+        QDate fecha;
+        qimg.save(ui->cBoxColor->currentText() + " - " + fecha.currentDate().toString("dd.MM.yyyy") + ".png");
     }
 }
+
