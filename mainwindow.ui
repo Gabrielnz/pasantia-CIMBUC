@@ -73,6 +73,39 @@
          </widget>
         </item>
         <item>
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>241</width>
+            <height>13</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="etqHistoria">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>241</width>
+            <height>13</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
            <spacer name="horizontalSpacer_4">
@@ -159,8 +192,8 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>244</width>
-            <height>18</height>
+            <width>241</width>
+            <height>13</height>
            </size>
           </property>
          </spacer>
@@ -221,8 +254,8 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>244</width>
-            <height>19</height>
+            <width>241</width>
+            <height>13</height>
            </size>
           </property>
          </spacer>
@@ -318,10 +351,11 @@
    </property>
    <widget class="QMenu" name="menuArchivo">
     <property name="title">
-     <string>Archivo</string>
+     <string>Camara</string>
     </property>
     <addaction name="actionIniciar_camara"/>
     <addaction name="actionDetener_camara"/>
+    <addaction name="separator"/>
     <addaction name="actionOpciones"/>
     <addaction name="separator"/>
     <addaction name="actionSalir"/>
@@ -334,9 +368,9 @@
    </widget>
    <widget class="QMenu" name="menuHistoria">
     <property name="title">
-     <string>Historia</string>
+     <string>Historias</string>
     </property>
-    <addaction name="actionNueva_historia"/>
+    <addaction name="actionCrear_historia"/>
     <addaction name="actionAbrir_historia"/>
     <addaction name="actionEliminar_historia"/>
    </widget>
@@ -359,9 +393,9 @@
     <string>Opciones</string>
    </property>
   </action>
-  <action name="actionNueva_historia">
+  <action name="actionCrear_historia">
    <property name="text">
-    <string>Nueva historia</string>
+    <string>Crear historia</string>
    </property>
   </action>
   <action name="actionAbrir_historia">

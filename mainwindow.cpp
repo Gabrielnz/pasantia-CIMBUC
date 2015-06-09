@@ -1,11 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "acercade.h"
+#include "opciones.h"
+#include "crearhistoria.h"
 #include <QtCore>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
 
     ui->setupUi(this);
+    dirRaiz = "Dermasoft - Historias";
+    tmrTimer = new QTimer(this);
     //deshabilitar todos los botones necesarios al iniciar la interfaz
     ui->btnCapturar->setEnabled(false);
     ui->btnMostrarImagen->setEnabled(false);
@@ -54,24 +59,40 @@ void MainWindow::on_actionIniciar_camara_triggered(){
     //si la camara no ha sido abierta ya
     if(capWebcam.isOpened() == false){
 
-        tmrTimer = new QTimer(this);
-
         capWebcam.open(0);/*Abre la camara web*/
 
         if(capWebcam.isOpened() == false){
             //avisar que la camara no se pudo abrir por medio de un cuadro de dialogo o algo asi.
         }else{
             connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
-            //habilitar seleccion de color
-            ui->cBoxColor->setEnabled(true);
+
+            //si hay una historia cargada o creada para guardar las imagenes, habilita la seleccion de los colores
+            if(!this->historia.isEmpty()){
+                //habilitar seleccion de color
+                ui->cBoxColor->setEnabled(true);
+                QString hist("Historia: " + historia);
+                ui->etqHistoria->setText(hist);
+                ui->etqHistoria->setAlignment(Qt::AlignCenter);
+            }else{
+                ui->etqHistoria->setText("<html><head/><body><p align='center'><span style=' font-weight:600;'>Crear o abrir una historia para continuar</span></p></body></html>");
+            }
+
             tmrTimer->start(30);
         }
     }else{
         if(!tmrTimer->isActive())
             tmrTimer->start(30);
 
-        //habilitar seleccion de color
-        ui->cBoxColor->setEnabled(true);
+        //si hay una historia cargada o creada para guardar las imagenes, habilita la seleccion de los colores
+        if(!this->historia.isEmpty()){
+            //habilitar seleccion de color
+            ui->cBoxColor->setEnabled(true);
+            QString hist("Historia: " + historia);
+            ui->etqHistoria->setText(hist);
+            ui->etqHistoria->setAlignment(Qt::AlignCenter);
+        }else{
+            ui->etqHistoria->setText("<html><head/><body><p align='center'><span style=' font-weight:600;'>Crear o abrir una historia para continuar</span></p></body></html>");
+        }
     }
     //dehabilita iniciar camara y habilita detener camara
     ui->actionIniciar_camara->setEnabled(false);
@@ -99,7 +120,11 @@ void MainWindow::on_actionDetener_camara_triggered(){
 
 void MainWindow::on_btnCapturar_clicked(){
 
-    qimg.save(ui->cBoxColor->currentText() + " - " + QDate::currentDate().toString("dd.MM.yyyy") + ".png");
+    //crea el directorio con la fecha actual antes de tomar las fotos
+    QDir dir;
+    dir.mkpath(QDir::homePath() + "/" + dirRaiz + "/" + historia + "/" + QDate::currentDate().toString("dd.MM.yyyy"));
+
+    qimg.save(QDir::homePath() + "/" + dirRaiz + "/" + historia + "/" + QDate::currentDate().toString("dd.MM.yyyy") + "/" + ui->cBoxColor->currentText() + " - " + QDate::currentDate().toString("dd.MM.yyyy") + ".png");
 
     int w = ui->etqVistaprevia->width();
     int h = ui->etqVistaprevia->height();
@@ -111,7 +136,7 @@ void MainWindow::on_btnCapturar_clicked(){
 
 void MainWindow::on_cBoxColor_currentTextChanged(const QString &texto){
 
-    QString nombreImagen(ui->cBoxColor->currentText() + " - " + QDate::currentDate().toString("dd.MM.yyyy") + ".png");
+    QString nombreImagen(QDir::homePath() + "/" + dirRaiz + "/" + historia + "/" + QDate::currentDate().toString("dd.MM.yyyy") + "/" + ui->cBoxColor->currentText() + " - " + QDate::currentDate().toString("dd.MM.yyyy") + ".png");
 
     if(texto != "Seleccionar"){
         QFileInfo archivo(nombreImagen);
@@ -149,7 +174,7 @@ void MainWindow::on_cBoxColor_currentTextChanged(const QString &texto){
 
 void MainWindow::on_btnMostrarImagen_clicked(){
 
-    QString nombreImagen(ui->cBoxColor->currentText() + " - " + QDate::currentDate().toString("dd.MM.yyyy") + ".png");
+    QString nombreImagen(QDir::homePath() + "/" + dirRaiz + "/" + historia + "/" + QDate::currentDate().toString("dd.MM.yyyy") + "/" + ui->cBoxColor->currentText() + " - " + QDate::currentDate().toString("dd.MM.yyyy") + ".png");
     QImage imagen(nombreImagen);
     int w = imagen.width();
     int h = imagen.height();
@@ -164,4 +189,29 @@ void MainWindow::on_btnMostrarImagen_clicked(){
     dialogoImagen->setFixedHeight(h);
     dialogoImagen->setModal(true);
     dialogoImagen->exec();
+}
+
+void MainWindow::on_actionOpciones_triggered(){
+
+    Opciones opc;
+    opc.setModal(true);
+    opc.exec();
+}
+
+void MainWindow::on_actionCrear_historia_triggered(){
+
+    QDir dir;
+    crearHistoria crear;
+    //obtiene el ID de la historia a crear
+    crear.setModal(true);
+    crear.exec();
+    //crea la estructura de directorios necesaria para la nueva historia
+    this->historia = crear.getHistoriaCreada();
+    dir.mkpath(dir.homePath() + "/" + dirRaiz + "/" + historia);
+    QString hist("Historia: " + historia);
+    ui->etqHistoria->setText(hist);
+    ui->etqHistoria->setAlignment(Qt::AlignCenter);
+
+    if(tmrTimer->isActive() && !(ui->cBoxColor->isEnabled()))
+        ui->cBoxColor->setEnabled(true);
 }

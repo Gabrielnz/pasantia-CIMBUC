@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDir>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -16,6 +17,10 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void setDirRaiz(QString raiz);
+    void setHistoria(QString historia);
+    QString getDirRaiz();
+    QString getHistoria();
     ~MainWindow();
 
 public slots:
@@ -37,13 +42,18 @@ private slots:
 
     void on_btnMostrarImagen_clicked();
 
+    void on_actionOpciones_triggered();
+
+    void on_actionCrear_historia_triggered();
+
 private:
     Ui::MainWindow *ui;
-
     cv::VideoCapture capWebcam;
     cv::Mat matOriginal;
     QImage qimg;
     QTimer *tmrTimer;
+    QString dirRaiz;
+    QString historia;
 };
 
 #endif // MAINWINDOW_H
