@@ -24,6 +24,7 @@ public slots:
 private slots:
 
     void on_actionAcerca_de_triggered();
+
     void on_actionSalir_triggered();
 
     void on_actionIniciar_camara_triggered();
@@ -31,6 +32,10 @@ private slots:
     void on_actionDetener_camara_triggered();
 
     void on_btnCapturar_clicked();
+
+    void on_cBoxColor_currentTextChanged(const QString &texto);
+
+    void on_btnMostrarImagen_clicked();
 
 private:
     Ui::MainWindow *ui;
