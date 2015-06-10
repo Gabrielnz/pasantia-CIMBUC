@@ -21,6 +21,7 @@ public:
     void setHistoria(QString historia);
     QString getDirRaiz();
     QString getHistoria();
+    void revisionHistoria();
     ~MainWindow();
 
 public slots:
@@ -46,6 +47,8 @@ private slots:
 
     void on_actionCrear_historia_triggered();
 
+    void on_actionCerrar_historia_triggered();
+
 private:
     Ui::MainWindow *ui;
     cv::VideoCapture capWebcam;
@@ -54,6 +57,7 @@ private:
     QTimer *tmrTimer;
     QString dirRaiz;
     QString historia;
+    QString fecha;
 };
 
 #endif // MAINWINDOW_H
