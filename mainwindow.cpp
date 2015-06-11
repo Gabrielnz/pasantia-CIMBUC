@@ -5,7 +5,6 @@
 #include "crearhistoria.h"
 #include <QtCore>
 #include <QDebug>
-#include <QStringList>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
 
@@ -69,38 +68,7 @@ void MainWindow::on_actionIniciar_camara_triggered(){
         if(capWebcam.isOpened() == false){
 
             //crea una ventana de error para notificar que no se pudo iniciar la camara
-            QWidget *msjError = new QWidget;
-            QLabel *etqError = new QLabel;
-            QHBoxLayout *hlayout1 = new QHBoxLayout;
-            QHBoxLayout *hlayout2 = new QHBoxLayout;
-            QVBoxLayout *vlayout = new QVBoxLayout;
-            QPushButton *btnAceptar = new QPushButton;
-
-            connect(btnAceptar, SIGNAL(clicked(bool)), msjError, SLOT(close()));
-
-            btnAceptar->setText("Aceptar");
-            btnAceptar->adjustSize();
-            btnAceptar->setFixedSize(btnAceptar->size());
-            hlayout2->addSpacing(15);
-            hlayout2->addWidget(btnAceptar);
-            hlayout2->addSpacing(15);
-
-            etqError->setText("No se pudo iniciar la camara, porfavor verifique que este conectada.");
-            etqError->adjustSize();
-            hlayout1->addSpacing(30);
-            hlayout1->addWidget(etqError);
-            hlayout1->addSpacing(30);
-            vlayout->addSpacing(30);
-            vlayout->addLayout(hlayout1);
-            vlayout->addSpacing(30);
-            vlayout->addLayout(hlayout2);
-            vlayout->addSpacing(10);
-
-            msjError->setLayout(vlayout);
-
-            msjError->setWindowTitle("Error al iniciar camara");
-            msjError->setWindowModality(Qt::ApplicationModal);
-            msjError->show();
+            msjError("No se pudo iniciar la camara, porfavor verifique que este conectada.");
         }else{
             //conecta el timer con la actualizacion del cuadro de la GUI
             connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
@@ -409,4 +377,41 @@ void MainWindow::on_btnAmarillo_clicked()
 void MainWindow::on_btnBlanco_clicked()
 {
     accionBotones("Blanco");
+}
+
+void MainWindow::msjError(QString msj){
+
+    QWidget *msjError = new QWidget;
+    QLabel *etqError = new QLabel;
+    QHBoxLayout *hlayout1 = new QHBoxLayout;
+    QHBoxLayout *hlayout2 = new QHBoxLayout;
+    QVBoxLayout *vlayout = new QVBoxLayout;
+    QPushButton *btnAceptar = new QPushButton;
+
+    connect(btnAceptar, SIGNAL(clicked(bool)), msjError, SLOT(close()));
+
+    btnAceptar->setText("Aceptar");
+    btnAceptar->adjustSize();
+    btnAceptar->setFixedSize(btnAceptar->size());
+    hlayout2->addSpacing(10);
+    hlayout2->addWidget(btnAceptar);
+    hlayout2->addSpacing(10);
+
+    etqError->setText(msj);
+    etqError->adjustSize();
+    hlayout1->addSpacing(30);
+    hlayout1->addWidget(etqError);
+    hlayout1->addSpacing(30);
+    vlayout->addSpacing(30);
+    vlayout->addLayout(hlayout1);
+    vlayout->addSpacing(30);
+    vlayout->addLayout(hlayout2);
+    vlayout->addSpacing(10);
+
+    msjError->setLayout(vlayout);
+    msjError->adjustSize();
+    msjError->setFixedSize(msjError->size());
+    msjError->setWindowTitle("Error al iniciar camara");
+    msjError->setWindowModality(Qt::ApplicationModal);
+    msjError->show();
 }

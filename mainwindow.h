@@ -65,6 +65,8 @@ private slots:
 
     void on_btnBlanco_clicked();
 
+    void msjError(QString msj);
+
 private:
     Ui::MainWindow *ui;
     cv::VideoCapture capWebcam;
