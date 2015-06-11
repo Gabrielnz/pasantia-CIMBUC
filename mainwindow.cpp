@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     dir.mkpath(dirRaiz);
     ui->etqHistoria->setAlignment(Qt::AlignCenter);
     //deshabilitar todos los botones necesarios al iniciar la interfaz
-    ui->btnAnotar->setEnabled(false);
+    ui->actionOpciones->setEnabled(false);
     ui->actionDetener_camara->setEnabled(false);
     ui->actionCerrar_historia->setEnabled(false);
     ui->actionEliminar_historia->setEnabled(false);
@@ -68,7 +68,7 @@ void MainWindow::on_actionIniciar_camara_triggered(){
         if(capWebcam.isOpened() == false){
 
             //crea una ventana de error para notificar que no se pudo iniciar la camara
-            msjError("No se pudo iniciar la camara, porfavor verifique que este conectada.");
+            msjError("Porfavor verifique que la camara este conectada.");
         }else{
             //conecta el timer con la actualizacion del cuadro de la GUI
             connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
@@ -96,12 +96,9 @@ void MainWindow::on_actionDetener_camara_triggered(){
     QPixmap pixDummy(0, 0);
     ui->etqCamara->setPixmap(pixDummy);
     ui->etqVistaprevia->setPixmap(pixDummy);
-    //desabilitar todos los botones
-    ui->btnAnotar->setEnabled(false);
 
     ui->actionIniciar_camara->setEnabled(true);
     ui->actionDetener_camara->setEnabled(false);
-
     //en caso de que haya una historia cargada, habilita la seleccion de colores
     revisionHistoria();
 }
@@ -200,7 +197,6 @@ void MainWindow::on_cBoxModo_currentIndexChanged(int index){
         ui->etqVistaprevia->setPixmap(pixDummy);
         //desabilitar todos los botones, excepto seleccionar
         setBotones(false);
-        ui->btnAnotar->setEnabled(false);
     }
 }
 
@@ -232,10 +228,6 @@ void MainWindow::accionBotones(QString color){
         h = ui->etqVistaprevia->height();
         //se le asigna la imagen a la etiqueta de la camara
         ui->etqVistaprevia->setPixmap((QPixmap::fromImage(qimg)).scaled(w, h, Qt::KeepAspectRatio));
-        //habilita el boton de mostrar imagen para visualizar la imagen que se capturo
-        if(!ui->btnAnotar->isEnabled())
-            ui->btnAnotar->setEnabled(true);
-
     }else{
     //si la interfaz esta en modo de visualizacion de imagenes
         QImage imagen(nombreImagen);
@@ -256,8 +248,6 @@ void MainWindow::accionBotones(QString color){
 
     if(archivo.exists()){
 
-        ui->btnAnotar->setEnabled(true);
-
         QImage imagen(nombreImagen);
         w = ui->etqVistaprevia->width();
         h = ui->etqVistaprevia->height();
@@ -266,7 +256,6 @@ void MainWindow::accionBotones(QString color){
         //borra la imagen que este en la vista previa
         QPixmap pixDummy(0, 0);
         ui->etqVistaprevia->setPixmap(pixDummy);
-        ui->btnAnotar->setEnabled(false);
     }
 }
 
