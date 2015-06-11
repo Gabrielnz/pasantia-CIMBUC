@@ -37,17 +37,33 @@ private slots:
 
     void on_actionDetener_camara_triggered();
 
-    void on_btnCapturar_clicked();
-
-    void on_cBoxColor_currentTextChanged(const QString &texto);
-
-    void on_btnMostrarImagen_clicked();
-
     void on_actionOpciones_triggered();
 
     void on_actionCrear_historia_triggered();
 
     void on_actionCerrar_historia_triggered();
+
+    void on_cBoxModo_currentIndexChanged(int index);
+
+    void setBotones(bool flag);
+
+    void accionBotones(QString color);
+
+    void setColorDisponible(int colorIndex);
+
+    void on_btnRojo_clicked();
+
+    void on_btnVerde_clicked();
+
+    void on_btnAzul_clicked();
+
+    void on_btnCyan_clicked();
+
+    void on_btnMagenta_clicked();
+
+    void on_btnAmarillo_clicked();
+
+    void on_btnBlanco_clicked();
 
 private:
     Ui::MainWindow *ui;

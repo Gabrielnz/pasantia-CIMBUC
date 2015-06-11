@@ -5,6 +5,7 @@
 #include "crearhistoria.h"
 #include <QtCore>
 #include <QDebug>
+#include <QStringList>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
 
@@ -16,13 +17,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     dir.mkpath(dirRaiz);
     ui->etqHistoria->setAlignment(Qt::AlignCenter);
     //deshabilitar todos los botones necesarios al iniciar la interfaz
-    ui->btnCapturar->setEnabled(false);
-    ui->btnMostrarImagen->setEnabled(false);
     ui->btnAnotar->setEnabled(false);
-    ui->cBoxColor->setEnabled(false);
     ui->actionDetener_camara->setEnabled(false);
     ui->actionCerrar_historia->setEnabled(false);
     ui->actionEliminar_historia->setEnabled(false);
+    ///////////nuevos botones/////////////
+    setBotones(false);
+    ui->cBoxModo->setEnabled(false);
 }
 
 MainWindow::~MainWindow(){
@@ -56,10 +57,7 @@ void MainWindow::on_actionAcerca_de_triggered(){
     mensaje.exec();
 }
 
-void MainWindow::on_actionSalir_triggered(){
-
-    close();
-}
+void MainWindow::on_actionSalir_triggered(){ close();}
 
 void MainWindow::on_actionIniciar_camara_triggered(){
 
@@ -69,7 +67,40 @@ void MainWindow::on_actionIniciar_camara_triggered(){
         capWebcam.open(0);/*Abre la camara web*/
 
         if(capWebcam.isOpened() == false){
-            //avisar que la camara no se pudo abrir por medio de un cuadro de dialogo o algo asi.
+
+            //crea una ventana de error para notificar que no se pudo iniciar la camara
+            QWidget *msjError = new QWidget;
+            QLabel *etqError = new QLabel;
+            QHBoxLayout *hlayout1 = new QHBoxLayout;
+            QHBoxLayout *hlayout2 = new QHBoxLayout;
+            QVBoxLayout *vlayout = new QVBoxLayout;
+            QPushButton *btnAceptar = new QPushButton;
+
+            connect(btnAceptar, SIGNAL(clicked(bool)), msjError, SLOT(close()));
+
+            btnAceptar->setText("Aceptar");
+            btnAceptar->adjustSize();
+            btnAceptar->setFixedSize(btnAceptar->size());
+            hlayout2->addSpacing(15);
+            hlayout2->addWidget(btnAceptar);
+            hlayout2->addSpacing(15);
+
+            etqError->setText("No se pudo iniciar la camara, porfavor verifique que este conectada.");
+            etqError->adjustSize();
+            hlayout1->addSpacing(30);
+            hlayout1->addWidget(etqError);
+            hlayout1->addSpacing(30);
+            vlayout->addSpacing(30);
+            vlayout->addLayout(hlayout1);
+            vlayout->addSpacing(30);
+            vlayout->addLayout(hlayout2);
+            vlayout->addSpacing(10);
+
+            msjError->setLayout(vlayout);
+
+            msjError->setWindowTitle("Error al iniciar camara");
+            msjError->setWindowModality(Qt::ApplicationModal);
+            msjError->show();
         }else{
             //conecta el timer con la actualizacion del cuadro de la GUI
             connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
@@ -98,8 +129,6 @@ void MainWindow::on_actionDetener_camara_triggered(){
     ui->etqCamara->setPixmap(pixDummy);
     ui->etqVistaprevia->setPixmap(pixDummy);
     //desabilitar todos los botones
-    ui->btnCapturar->setEnabled(false);
-    ui->btnMostrarImagen->setEnabled(false);
     ui->btnAnotar->setEnabled(false);
 
     ui->actionIniciar_camara->setEnabled(true);
@@ -107,82 +136,6 @@ void MainWindow::on_actionDetener_camara_triggered(){
 
     //en caso de que haya una historia cargada, habilita la seleccion de colores
     revisionHistoria();
-}
-
-void MainWindow::on_btnCapturar_clicked(){
-
-    //crea el directorio con la fecha actual antes de tomar las fotos
-    QDir dir;
-    dir.mkpath(dirRaiz + "/" + historia + "/" + fecha);
-    qimg.save(dirRaiz + "/" + historia + "/" + fecha + "/" + ui->cBoxColor->currentText() + " - " + fecha + ".png");
-
-    int w = ui->etqVistaprevia->width();
-    int h = ui->etqVistaprevia->height();
-    //se le asigna la imagen a la etiqueta de la camara
-    ui->etqVistaprevia->setPixmap((QPixmap::fromImage(qimg)).scaled(w, h, Qt::KeepAspectRatio));
-    //habilita el boton de mostrar imagen para visualizar la imagen que se capturo
-    if(!ui->btnMostrarImagen->isEnabled())
-        ui->btnMostrarImagen->setEnabled(true);
-    if(!ui->btnAnotar->isEnabled())
-        ui->btnAnotar->setEnabled(true);
-}
-
-void MainWindow::on_cBoxColor_currentTextChanged(const QString &texto){
-
-    QString nombreImagen(dirRaiz + "/" + historia + "/" + fecha + "/" + ui->cBoxColor->currentText() + " - " + fecha + ".png");
-
-    if(texto != "Seleccionar"){
-        QFileInfo archivo(nombreImagen);
-        //si la camara esta activa, habilita el boton capturar
-        if(tmrTimer->isActive()){
-            ui->btnCapturar->setEnabled(true);
-        }
-
-        if(archivo.exists()){
-            //si la imagen existe, habilita el boton para mostrarla
-            ui->btnMostrarImagen->setEnabled(true);
-            ui->btnAnotar->setEnabled(true);
-
-            QImage imagen(nombreImagen);
-            int w = ui->etqVistaprevia->width();
-            int h = ui->etqVistaprevia->height();
-            ui->etqVistaprevia->setPixmap((QPixmap::fromImage(imagen)).scaled(w, h, Qt::KeepAspectRatio));
-        }else{
-            //borra la imagen que este en la vista previa
-            QPixmap pixDummy(0, 0);
-            ui->etqVistaprevia->setPixmap(pixDummy);
-            ui->btnMostrarImagen->setEnabled(false);
-            ui->btnAnotar->setEnabled(false);
-        }
-    }else{
-        //borra la imagen que este en la vistap previa
-        //qDebug() << "Seleccione un color";
-        QPixmap pixDummy(0, 0);
-        ui->etqVistaprevia->setPixmap(pixDummy);
-        //desabilitar todos los botones, excepto seleccionar
-        ui->btnCapturar->setEnabled(false);
-        ui->btnMostrarImagen->setEnabled(false);
-        ui->btnAnotar->setEnabled(false);
-    }
-}
-
-void MainWindow::on_btnMostrarImagen_clicked(){
-
-    QString nombreImagen(dirRaiz + "/" + historia + "/" + fecha + "/" + ui->cBoxColor->currentText() + " - " + fecha + ".png");
-    QImage imagen(nombreImagen);
-    int w = imagen.width();
-    int h = imagen.height();
-    QDialog *dialogoImagen = new QDialog;
-    QLabel *etqImagen = new QLabel(dialogoImagen);
-
-    etqImagen->setFixedWidth(w);
-    etqImagen->setFixedHeight(h);
-    etqImagen->setPixmap(QPixmap::fromImage(imagen));
-    dialogoImagen->setWindowTitle(nombreImagen);
-    dialogoImagen->setFixedWidth(w);
-    dialogoImagen->setFixedHeight(h);
-    dialogoImagen->setModal(true);
-    dialogoImagen->exec();
 }
 
 void MainWindow::on_actionOpciones_triggered(){
@@ -219,7 +172,8 @@ void MainWindow::revisionHistoria(){
 
     //si hay una historia cargada, habilita la seleccion de colores
     if(!historia.isEmpty()){
-        ui->cBoxColor->setEnabled(true);
+        //ui->cBoxColor->setEnabled(true);
+        ui->cBoxModo->setEnabled(true);
         QString hist("Historia: " + historia);
         ui->etqHistoria->setText("<p align='center'><span style=' font-weight:600;'>" + hist + " - " + fecha + "</span></p>");
         //deshabilita la opcion de crear o de abrir una historia, mientras ya este una cargada
@@ -228,7 +182,8 @@ void MainWindow::revisionHistoria(){
         //habilita la opcion de cerrar la historia cargada
         ui->actionCerrar_historia->setEnabled(true);
     }else{
-        ui->cBoxColor->setEnabled(false);
+        //ui->cBoxColor->setEnabled(false);
+        ui->cBoxModo->setEnabled(false);
 
         //si la camara sigue activa, muestra el mensaje siguiente
         if(tmrTimer->isActive()){
@@ -243,5 +198,215 @@ void MainWindow::revisionHistoria(){
         //deshabilita la opcion de cerrar la historia cargada
         ui->actionCerrar_historia->setEnabled(false);
     }
-    ui->cBoxColor->setCurrentText("Seleccionar");
+    //ui->cBoxColor->setCurrentText("Seleccionar");
+    ui->cBoxModo->setCurrentIndex(0);
+}
+
+/*Indice 0: Seleccionar
+  Indice 1: Capturar
+  Indice 2: Visualizar*/
+void MainWindow::on_cBoxModo_currentIndexChanged(int index){
+
+    //si se elige modo de captura o modo de visualizacion
+    if(index != 0){
+        //si la seleccion esta en modo captura y la camara esta activa, habilita los botones para capturar las fotos
+        if(index == 1 && tmrTimer->isActive()){
+            setBotones(true);
+        }
+
+        if(index == 2){
+            //si la camara esta en modo de visualizacion
+            QStringList colores;
+
+            colores << "Amarillo" << "Azul" << "Blanco" << "Cyan" << "Magenta" << "Rojo" << "Verde";
+
+            for(int i = 0; i < colores.size(); i++){
+
+                setColorDisponible(colores.indexOf(colores.at(i)));
+            }
+        }
+
+    }else{
+        //borra la imagen que este en la vista previa
+        QPixmap pixDummy(0, 0);
+        ui->etqVistaprevia->setPixmap(pixDummy);
+        //desabilitar todos los botones, excepto seleccionar
+        setBotones(false);
+        ui->btnAnotar->setEnabled(false);
+    }
+}
+
+void MainWindow::setBotones(bool flag){
+
+    ui->btnAmarillo->setEnabled(flag);
+    ui->btnAzul->setEnabled(flag);
+    ui->btnBlanco->setEnabled(flag);
+    ui->btnCyan->setEnabled(flag);
+    ui->btnMagenta->setEnabled(flag);
+    ui->btnRojo->setEnabled(flag);
+    ui->btnVerde->setEnabled(flag);
+}
+
+void MainWindow::accionBotones(QString color){
+
+    QString nombreImagen(dirRaiz + "/" + historia + "/" + fecha + "/" + color + " - " + fecha + ".png");
+    QFileInfo archivo(nombreImagen);
+    int w, h;
+
+    //si la interfaz esta en modo de captura de imagenes
+    if(ui->cBoxModo->currentIndex() == 1){
+
+        QDir dir;
+        dir.mkpath(dirRaiz + "/" + historia + "/" + fecha);
+        qimg.save(dirRaiz + "/" + historia + "/" + fecha + "/" + color + " - " + fecha + ".png");
+
+        w = ui->etqVistaprevia->width();
+        h = ui->etqVistaprevia->height();
+        //se le asigna la imagen a la etiqueta de la camara
+        ui->etqVistaprevia->setPixmap((QPixmap::fromImage(qimg)).scaled(w, h, Qt::KeepAspectRatio));
+        //habilita el boton de mostrar imagen para visualizar la imagen que se capturo
+        if(!ui->btnAnotar->isEnabled())
+            ui->btnAnotar->setEnabled(true);
+
+    }else{
+    //si la interfaz esta en modo de visualizacion de imagenes
+        QImage imagen(nombreImagen);
+        w = imagen.width();
+        h = imagen.height();
+        QDialog *dialogoImagen = new QDialog;
+        QLabel *etqImagen = new QLabel(dialogoImagen);
+
+        etqImagen->setFixedWidth(w);
+        etqImagen->setFixedHeight(h);
+        etqImagen->setPixmap(QPixmap::fromImage(imagen));
+        dialogoImagen->setWindowTitle(nombreImagen);
+        dialogoImagen->setFixedWidth(w);
+        dialogoImagen->setFixedHeight(h);
+        dialogoImagen->setModal(true);
+        dialogoImagen->exec();
+    }
+
+    if(archivo.exists()){
+
+        ui->btnAnotar->setEnabled(true);
+
+        QImage imagen(nombreImagen);
+        w = ui->etqVistaprevia->width();
+        h = ui->etqVistaprevia->height();
+        ui->etqVistaprevia->setPixmap((QPixmap::fromImage(imagen)).scaled(w, h, Qt::KeepAspectRatio));
+    }else{
+        //borra la imagen que este en la vista previa
+        QPixmap pixDummy(0, 0);
+        ui->etqVistaprevia->setPixmap(pixDummy);
+        ui->btnAnotar->setEnabled(false);
+    }
+}
+
+void MainWindow::setColorDisponible(int colorIndex){
+
+    QString nombreImagen;
+    QFileInfo archivo;
+    switch (colorIndex) {
+
+    case 0:
+        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Amarillo - " + fecha + ".png");
+        archivo.setFile(nombreImagen);
+        if(archivo.exists())
+            ui->btnAmarillo->setEnabled(true);
+        else
+            ui->btnAmarillo->setEnabled(false);
+        break;
+
+    case 1:
+        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Azul - " + fecha + ".png");
+        archivo.setFile(nombreImagen);
+        if(archivo.exists())
+            ui->btnAzul->setEnabled(true);
+        else
+            ui->btnAzul->setEnabled(false);
+        break;
+
+    case 2:
+        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Blanco - " + fecha + ".png");
+        archivo.setFile(nombreImagen);
+        if(archivo.exists())
+            ui->btnBlanco->setEnabled(true);
+        else
+            ui->btnBlanco->setEnabled(false);
+        break;
+
+    case 3:
+        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Cyan - " + fecha + ".png");
+        archivo.setFile(nombreImagen);
+        if(archivo.exists())
+            ui->btnCyan->setEnabled(true);
+        else
+            ui->btnCyan->setEnabled(false);
+        break;
+
+    case 4:
+        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Magenta - " + fecha + ".png");
+        archivo.setFile(nombreImagen);
+        if(archivo.exists())
+            ui->btnMagenta->setEnabled(true);
+        else
+            ui->btnMagenta->setEnabled(false);
+        break;
+
+    case 5:
+        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Rojo - " + fecha + ".png");
+        archivo.setFile(nombreImagen);
+        if(archivo.exists())
+            ui->btnRojo->setEnabled(true);
+        else
+            ui->btnRojo->setEnabled(false);
+        break;
+
+    case 6:
+        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Verde - " + fecha + ".png");
+        archivo.setFile(nombreImagen);
+        if(archivo.exists())
+            ui->btnVerde->setEnabled(true);
+        else
+            ui->btnVerde->setEnabled(false);
+        break;
+
+    default:
+        break;
+    }
+}
+
+void MainWindow::on_btnRojo_clicked()
+{
+    accionBotones("Rojo");
+}
+
+void MainWindow::on_btnVerde_clicked()
+{
+    accionBotones("Verde");
+}
+
+void MainWindow::on_btnAzul_clicked()
+{
+    accionBotones("Azul");
+}
+
+void MainWindow::on_btnCyan_clicked()
+{
+    accionBotones("Cyan");
+}
+
+void MainWindow::on_btnMagenta_clicked()
+{
+    accionBotones("Magenta");
+}
+
+void MainWindow::on_btnAmarillo_clicked()
+{
+    accionBotones("Amarillo");
+}
+
+void MainWindow::on_btnBlanco_clicked()
+{
+    accionBotones("Blanco");
 }
