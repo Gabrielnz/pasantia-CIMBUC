@@ -16,17 +16,44 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     acercade.cpp \
     opciones.cpp \
-    crearhistoria.cpp
+    crearhistoria.cpp \
+    dlgimagen.cpp \
+    dlgreemplazar.cpp
 
 HEADERS  += mainwindow.h \
     acercade.h \
     opciones.h \
-    crearhistoria.h
+    crearhistoria.h \
+    dlgimagen.h \
+    dlgreemplazar.h
 
 FORMS    += mainwindow.ui \
     acercade.ui \
     opciones.ui \
-    crearhistoria.ui
+    crearhistoria.ui \
+    dlgimagen.ui \
+    dlgreemplazar.ui
 
-#supuesta linea para "agregar" el reconocimiento de opencv en el proyecto
-LIBS += `pkg-config opencv --libs`
+#revisar si se necesita esta linea para correr el proyecto en linux
+#LIBS += `pkg-config opencv --libs`
+
+INCLUDEPATH += C:\opencv\build\install\include
+
+#todas las librerias de opencv 3.0.0
+LIBS += C:\opencv\build\bin\libopencv_core300.dll
+LIBS += C:\opencv\build\bin\libopencv_highgui300.dll
+LIBS += C:\opencv\build\bin\libopencv_imgproc300.dll
+LIBS += C:\opencv\build\bin\libopencv_calib3d300.dll
+LIBS += C:\opencv\build\bin\libopencv_features2d300.dll
+LIBS += C:\opencv\build\bin\libopencv_flann300.dll
+LIBS += C:\opencv\build\bin\libopencv_imgcodecs300.dll
+LIBS += C:\opencv\build\bin\libopencv_ml300.dll
+LIBS += C:\opencv\build\bin\libopencv_photo300.dll
+LIBS += C:\opencv\build\bin\libopencv_photo300.dll
+LIBS += C:\opencv\build\bin\libopencv_video300.dll
+LIBS += C:\opencv\build\bin\libopencv_videoio300.dll
+LIBS += C:\opencv\build\bin\libopencv_videostab300.dll
+LIBS += C:\opencv\build\bin\libopencv_objdetect300.dll
+LIBS += C:\opencv\build\bin\libopencv_shape300.dll
+LIBS += C:\opencv\build\bin\libopencv_stitching300.dll
+LIBS += C:\opencv\build\bin\libopencv_superres300.dll

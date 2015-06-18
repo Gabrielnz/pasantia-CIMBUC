@@ -6,6 +6,8 @@ crearHistoria::crearHistoria(QWidget *parent) :
     ui(new Ui::crearHistoria)
 {
     ui->setupUi(this);
+    histLista = false;
+    lesionLista = false;
     ui->btnCrearHistoria->setEnabled(false);
 }
 
@@ -22,15 +24,21 @@ void crearHistoria::on_btnCancelar_clicked()
 void crearHistoria::on_lineaCrearHistoria_textChanged(const QString &historia){
     //se asegura de que se haya escrito algun texto para crear la historia
     if(!historia.isEmpty()){
-        ui->btnCrearHistoria->setEnabled(true);
+        histLista = true;
     }else{
-        ui->btnCrearHistoria->setEnabled(false);
+        histLista = false;
     }
+
+    if(histLista && lesionLista)
+        ui->btnCrearHistoria->setEnabled(true);
+    else
+        ui->btnCrearHistoria->setEnabled(false);
 }
 
 void crearHistoria::on_btnCrearHistoria_clicked(){
 
     histCreada = ui->lineaCrearHistoria->text();
+    lesionCreada = ui->lineaNuevaLesion->text();
 
     close();
 }
@@ -38,4 +46,23 @@ void crearHistoria::on_btnCrearHistoria_clicked(){
 QString crearHistoria::getHistoriaCreada(){
 
     return this->histCreada;
+}
+
+QString crearHistoria::getLesionCreada(){
+
+    return this->lesionCreada;
+}
+
+void crearHistoria::on_lineaNuevaLesion_textChanged(const QString &lesion)
+{
+    if(!lesion.isEmpty()){
+        lesionLista = true;
+    }else{
+        lesionLista = false;
+    }
+
+    if(histLista && lesionLista)
+        ui->btnCrearHistoria->setEnabled(true);
+    else
+        ui->btnCrearHistoria->setEnabled(false);
 }

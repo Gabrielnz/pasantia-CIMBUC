@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 #include <QDir>
-#include <opencv2/opencv.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 namespace Ui {
 class MainWindow;
@@ -33,9 +33,9 @@ private slots:
 
     void on_actionSalir_triggered();
 
-    void on_actionIniciar_camara_triggered();
+    void on_actionConectar_camara_triggered();
 
-    void on_actionDetener_camara_triggered();
+    void on_actionDesconectar_camara_triggered();
 
     void on_actionOpciones_triggered();
 
@@ -65,7 +65,9 @@ private slots:
 
     void on_btnBlanco_clicked();
 
-    void msjError(QString msj);
+    void msjInfo(QString msj, QString titulo);
+
+    void on_actionCerrar_lesion_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -75,7 +77,9 @@ private:
     QTimer *tmrTimer;
     QString dirRaiz;
     QString historia;
+    QString lesion;
     QString fecha;
+    QString msjConectar, msjHistoria;
 };
 
 #endif // MAINWINDOW_H

@@ -17,6 +17,7 @@ class crearHistoria : public QDialog
 public:
     explicit crearHistoria(QWidget *parent = 0);
     QString getHistoriaCreada();
+    QString getLesionCreada();
     ~crearHistoria();
 
 private slots:
@@ -26,9 +27,13 @@ private slots:
 
     void on_btnCrearHistoria_clicked();
 
+    void on_lineaNuevaLesion_textChanged(const QString &lesion);
+
 private:
     Ui::crearHistoria *ui;
     QString histCreada;
+    QString lesionCreada;
+    bool histLista, lesionLista;
 };
 
 #endif // CREARHISTORIA_H
