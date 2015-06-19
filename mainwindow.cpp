@@ -1,12 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "acercade.h"
-#include "opciones.h"
-#include "crearhistoria.h"
-#include "dlgimagen.h"
-#include "dlgreemplazar.h"
-#include <QtCore>
-#include <QDebug>
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
 
@@ -27,14 +21,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     setBotones(false);
     ui->cBoxModo->setEnabled(false);
     ui->actionCrear_historia->setEnabled(false);
+    ui->btnGenerarReporte->setEnabled(false);
     msjConectar = "<p align='center'><span style=' font-weight:600;'>Conectar la camara para continuar</span></p>";
     msjHistoria = "<p align='center'><span style=' font-weight:600;'>Crear o abrir una historia para continuar</span></p>";
     ui->etqInfo->setText(msjConectar);
-    //intenta conectar la camara al iniciar la aplicacion
-    on_actionConectar_camara_triggered();
     //si la camara esta conectada, actualiza la etiqueta de informacion.
     if(capWebcam.isOpened())
         ui->etqInfo->setText(msjHistoria);
+
+    this->adjustSize();
+    this->setFixedSize(this->size());
 }
 
 MainWindow::~MainWindow(){
@@ -79,14 +75,14 @@ void MainWindow::on_actionConectar_camara_triggered(){
         capWebcam.open(0);/*Abre la camara web*/
 
         if(capWebcam.isOpened() == false){
-            //crea una ventana de error para notificar que no se pudo iniciar la camara
-            msjInfo("Porfavor verifique que la camara este conectada.", "Error al conectar la camara");
+            dlgInfo info("Porfavor verifique que la camara este conectada.", "Error al conectar la camara");
+            info.exec();
         }else{
-
-            msjInfo("La camara fue conectada correctamente.", "Camara conectada");
             ui->actionConectar_camara->setEnabled(false);
             ui->actionDesconectar_camara->setEnabled(true);
             revisionHistoria();
+            dlgInfo info("La camara fue conectada correctamente.", "Camara conectada");
+            info.exec();
         }
     }
 }
@@ -101,9 +97,10 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
     ui->actionConectar_camara->setEnabled(true);
     ui->actionDesconectar_camara->setEnabled(false);
     ui->cBoxModo->setCurrentIndex(0);
-    msjInfo("La camara fue desconectada correctamente.", "Camara desconectada");
     ui->etqInfo->setText(msjConectar);
     revisionHistoria();
+    dlgInfo info("La camara fue desconectada correctamente.", "Camara desconectada");
+    info.exec();
 }
 
 void MainWindow::on_actionOpciones_triggered(){
@@ -120,6 +117,7 @@ void MainWindow::on_actionCrear_historia_triggered(){
     //obtiene el ID de la historia a crear
     crear.setModal(true);
     crear.exec();
+
     //crea la estructura de directorios necesaria para la nueva historia
     historia = crear.getHistoriaCreada();
     lesion = crear.getLesionCreada();
@@ -154,6 +152,7 @@ void MainWindow::revisionHistoria(){
         //habilita la opcion de cerrar la historia cargada
         ui->actionCerrar_historia->setEnabled(true);
         ui->cBoxModo->setEnabled(true);
+        ui->btnGenerarReporte->setEnabled(true);
     }else{
         ui->cBoxModo->setEnabled(false);
 
@@ -169,6 +168,7 @@ void MainWindow::revisionHistoria(){
         ui->actionAbrir_historia->setEnabled(true);
         //deshabilita la opcion de cerrar la historia cargada
         ui->actionCerrar_historia->setEnabled(false);
+        ui->btnGenerarReporte->setEnabled(false);
     }
     ui->cBoxModo->setCurrentIndex(0);
 }
@@ -272,7 +272,7 @@ void MainWindow::accionBotones(QString color){
 
     }else{
     //si la interfaz esta en modo de visualizacion de imagenes
-        dlgImagen *imagen = new dlgImagen(nombreImagen);
+        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + historia + "/" + fecha);
         imagen->setModal(true);
         imagen->exec();
     }
@@ -399,39 +399,7 @@ void MainWindow::on_btnBlanco_clicked()
     accionBotones("Blanco");
 }
 
-void MainWindow::msjInfo(QString msj, QString titulo){
-
-    QWidget *msjInfo = new QWidget;
-    QLabel *etqInfo = new QLabel;
-    QHBoxLayout *hlayout1 = new QHBoxLayout;
-    QHBoxLayout *hlayout2 = new QHBoxLayout;
-    QVBoxLayout *vlayout = new QVBoxLayout;
-    QPushButton *btnAceptar = new QPushButton;
-
-    connect(btnAceptar, SIGNAL(clicked(bool)), msjInfo, SLOT(close()));
-
-    btnAceptar->setText("Aceptar");
-    btnAceptar->adjustSize();
-    btnAceptar->setFixedSize(btnAceptar->size());
-    hlayout2->addSpacing(10);
-    hlayout2->addWidget(btnAceptar);
-    hlayout2->addSpacing(10);
-
-    etqInfo->setText(msj);
-    etqInfo->adjustSize();
-    hlayout1->addSpacing(30);
-    hlayout1->addWidget(etqInfo);
-    hlayout1->addSpacing(30);
-    vlayout->addSpacing(30);
-    vlayout->addLayout(hlayout1);
-    vlayout->addSpacing(30);
-    vlayout->addLayout(hlayout2);
-    vlayout->addSpacing(10);
-
-    msjInfo->setLayout(vlayout);
-    msjInfo->adjustSize();
-    msjInfo->setFixedSize(msjInfo->size());
-    msjInfo->setWindowTitle(titulo);
-    msjInfo->setWindowModality(Qt::ApplicationModal);
-    msjInfo->show();
+void MainWindow::on_btnGenerarReporte_clicked()
+{
+    QTextDocument doc;
 }

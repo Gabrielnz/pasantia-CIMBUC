@@ -18,6 +18,8 @@ public:
     explicit crearHistoria(QWidget *parent = 0);
     QString getHistoriaCreada();
     QString getLesionCreada();
+    void resetHistoria();
+    void resetLesion();
     ~crearHistoria();
 
 private slots:

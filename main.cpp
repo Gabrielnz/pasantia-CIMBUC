@@ -13,8 +13,7 @@ int main(int argc, char *argv[]){
     int x = (mainScreenSize.width()- w.width()) / 2;
     int y = (mainScreenSize.height()- w.height()) / 2;
     w.move(x, y);
-    //
-    w.show();
 
+    w.show();
     return a.exec();
 }

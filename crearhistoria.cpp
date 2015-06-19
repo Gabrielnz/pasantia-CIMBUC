@@ -9,6 +9,8 @@ crearHistoria::crearHistoria(QWidget *parent) :
     histLista = false;
     lesionLista = false;
     ui->btnCrearHistoria->setEnabled(false);
+    this->adjustSize();
+    this->setFixedSize(this->size());
 }
 
 crearHistoria::~crearHistoria()
@@ -51,6 +53,14 @@ QString crearHistoria::getHistoriaCreada(){
 QString crearHistoria::getLesionCreada(){
 
     return this->lesionCreada;
+}
+
+void crearHistoria::resetHistoria(){
+    ui->lineaCrearHistoria->setText("");
+}
+
+void crearHistoria::resetLesion(){
+    ui->lineaNuevaLesion->setText("");
 }
 
 void crearHistoria::on_lineaNuevaLesion_textChanged(const QString &lesion)

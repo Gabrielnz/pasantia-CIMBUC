@@ -6,6 +6,15 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include "acercade.h"
+#include "opciones.h"
+#include "crearhistoria.h"
+#include "dlgimagen.h"
+#include "dlgreemplazar.h"
+#include "dlginfo.h"
+#include <QTextDocument>
+#include <QtCore>
+#include <QDebug>
 
 namespace Ui {
 class MainWindow;
@@ -65,9 +74,9 @@ private slots:
 
     void on_btnBlanco_clicked();
 
-    void msjInfo(QString msj, QString titulo);
-
     void on_actionCerrar_lesion_triggered();
+
+    void on_btnGenerarReporte_clicked();
 
 private:
     Ui::MainWindow *ui;
