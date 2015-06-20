@@ -8,13 +8,11 @@ crearHistoria::crearHistoria(QWidget *parent) :
     ui->setupUi(this);
 }
 
-crearHistoria::crearHistoria(QString dirRaizExt, QString fechaExt): ui(new Ui::crearHistoria){
+crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt): ui(new Ui::crearHistoria){
 
     ui->setupUi(this);
+    historia = historiaExt;
     dirRaiz = dirRaizExt;
-    fecha = fechaExt;
-    histLista = false;
-    lesionLista = false;
     ui->btnCrearHistoria->setEnabled(false);
     this->setModal(true);
     this->adjustSize();
@@ -28,59 +26,21 @@ crearHistoria::~crearHistoria()
 
 void crearHistoria::on_btnCancelar_clicked(){ close();}
 
-void crearHistoria::on_lineaCrearHistoria_textChanged(const QString &historia){
+void crearHistoria::on_lineaCrearHistoria_textChanged(const QString &nuevaHistoria){
     //se asegura de que se haya escrito algun texto para crear la historia
-    if(!historia.isEmpty()){
-        histLista = true;
-    }else{
-        histLista = false;
-    }
-
-    if(histLista && lesionLista)
+    if(!nuevaHistoria.isEmpty()){
         ui->btnCrearHistoria->setEnabled(true);
-    else
+    }else{
         ui->btnCrearHistoria->setEnabled(false);
+    }
 }
 
 void crearHistoria::on_btnCrearHistoria_clicked(){
 
-    histCreada = ui->lineaCrearHistoria->text();
-    lesionCreada = ui->lineaNuevaLesion->text();
+    *historia = ui->lineaCrearHistoria->text();
     QDir dir;
     //crea la estructura de carpetas para la nueva historia y la lesion
-    dir.mkpath(dirRaiz + "/" + histCreada + "/" + lesionCreada + "/" + fecha);
+    dir.mkpath(dirRaiz + "/" + *historia);
 
     close();
-}
-
-QString crearHistoria::getHistoriaCreada(){
-
-    return this->histCreada;
-}
-
-QString crearHistoria::getLesionCreada(){
-
-    return this->lesionCreada;
-}
-
-void crearHistoria::resetHistoria(){
-    ui->lineaCrearHistoria->setText("");
-}
-
-void crearHistoria::resetLesion(){
-    ui->lineaNuevaLesion->setText("");
-}
-
-void crearHistoria::on_lineaNuevaLesion_textChanged(const QString &lesion){
-
-    if(!lesion.isEmpty()){
-        lesionLista = true;
-    }else{
-        lesionLista = false;
-    }
-
-    if(histLista && lesionLista)
-        ui->btnCrearHistoria->setEnabled(true);
-    else
-        ui->btnCrearHistoria->setEnabled(false);
 }

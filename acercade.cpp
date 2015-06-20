@@ -6,6 +6,7 @@ AcercaDe::AcercaDe(QWidget *parent) :
     ui(new Ui::AcercaDe)
 {
     ui->setupUi(this);
+    this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());
 }

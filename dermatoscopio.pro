@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     dlgimagen.cpp \
     dlgreemplazar.cpp \
     dlginfo.cpp \
-    crearlesion.cpp
+    crearlesion.cpp \
+    abrirhistoria.cpp \
+    abrirlesion.cpp
 
 HEADERS  += mainwindow.h \
     acercade.h \
@@ -29,7 +31,9 @@ HEADERS  += mainwindow.h \
     dlgimagen.h \
     dlgreemplazar.h \
     dlginfo.h \
-    crearlesion.h
+    crearlesion.h \
+    abrirhistoria.h \
+    abrirlesion.h
 
 FORMS    += mainwindow.ui \
     acercade.ui \
@@ -38,7 +42,9 @@ FORMS    += mainwindow.ui \
     dlgimagen.ui \
     dlgreemplazar.ui \
     dlginfo.ui \
-    crearlesion.ui
+    crearlesion.ui \
+    abrirhistoria.ui \
+    abrirlesion.ui
 
 #revisar si se necesita esta linea para correr el proyecto en linux
 #LIBS += `pkg-config opencv --libs`

@@ -7,7 +7,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     dirRaiz = QDir::homePath() + "/" + "Dermasoft - Historias";
     fecha = QDate::currentDate().toString("dd.MM.yyyy");
-    tmrTimer = new QTimer(this);
+    fechaLesion = new QString(fecha);
+    tmrTimer = new QTimer;
+    historia = new QString;
+    lesion = new QString;
     //conecta el timer con la actualizacion del cuadro de la GUI
     connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
     QDir dir;
@@ -19,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->actionCerrar_historia->setEnabled(false);
     ui->actionNueva_lesion->setEnabled(false);
     ui->actionCerrar_lesion->setEnabled(false);
+    ui->actionAbrir_lesion->setEnabled(false);
     setBotones(false);
     ui->cBoxModo->setEnabled(false);
     ui->actionCrear_historia->setEnabled(false);
@@ -63,7 +67,6 @@ void MainWindow::procesarCuadroActualizarGUI(){
 void MainWindow::on_actionAcerca_de_triggered(){
 
     AcercaDe mensaje;
-    mensaje.setModal(true);
     mensaje.exec();
 }
 
@@ -114,14 +117,8 @@ void MainWindow::on_actionOpciones_triggered(){
 
 void MainWindow::on_actionCrear_historia_triggered(){
 
-    crearHistoria crear(dirRaiz, fecha);
+    crearHistoria crear(dirRaiz, historia);
     crear.exec();
-
-    //si se pudo crear una historia, guarda los valores en esta clase
-    if(!crear.getHistoriaCreada().isEmpty()){
-        historia = crear.getHistoriaCreada();
-        lesion = crear.getLesionCreada();
-    }
 
     //revisa que la historia este cargada para activar los botones pertinentes
     revision();
@@ -130,14 +127,14 @@ void MainWindow::on_actionCrear_historia_triggered(){
 void MainWindow::on_actionCerrar_historia_triggered(){
 
     //cuando se cierra una historia, se debe cerrar la lesion de dicha historia tambien
-    historia = "";
-    lesion = "";
+    *historia = "";
+    *lesion = "";
     revision();
 }
 
 void MainWindow::on_actionCerrar_lesion_triggered(){
 
-    lesion = "";
+    *lesion = "";
     revision();
 }
 
@@ -145,13 +142,14 @@ void MainWindow::on_actionCerrar_lesion_triggered(){
 void MainWindow::revision(){
 
     //Si hay una historia cargada
-    if(!historia.isEmpty()){
+    if(!historia->isEmpty()){
         ui->actionCrear_historia->setEnabled(false);
         ui->actionCerrar_historia->setEnabled(true);
-        if(!lesion.isEmpty()){
+        ui->actionAbrir_lesion->setEnabled(true);
+        if(!lesion->isEmpty()){
             //Si hay una historia y una lesion cargada, habilita la seleccion de modos
-            QString hist("Historia: " + historia + ", lesion: " + lesion);
-            ui->etqInfo->setText("<p align='center'><span style=' font-weight:600;'>" + hist + ", fecha: " + fecha + "</span></p>");
+            QString hist("Historia: " + *historia + ", lesion: " + *lesion);
+            ui->etqInfo->setText("<p align='center'><span style=' font-weight:600;'>" + hist + ", fecha: " + *fechaLesion + "</span></p>");
             //deshabilita la opcion de crear o de abrir una historia, mientras ya este una cargada
             ui->actionNueva_lesion->setEnabled(false);
             ui->actionCerrar_lesion->setEnabled(true);
@@ -159,6 +157,7 @@ void MainWindow::revision(){
             ui->btnGenerarReporte->setEnabled(true);
         }else{
             //Si hay una historia pero no hay una lesion, deshabilita la seleccin de modos
+            *fechaLesion = fecha;
             ui->etqInfo->setText(msjLesion);
             ui->actionNueva_lesion->setEnabled(true);
             ui->actionCerrar_lesion->setEnabled(false);
@@ -166,8 +165,10 @@ void MainWindow::revision(){
             ui->btnGenerarReporte->setEnabled(false);
         }
     }else{
+        *fechaLesion = fecha;
         ui->actionNueva_lesion->setEnabled(false);
         ui->actionCerrar_lesion->setEnabled(false);
+        ui->actionAbrir_lesion->setEnabled(false);
         ui->cBoxModo->setEnabled(false);
 
         //si la camara sigue activa, muestra el mensaje siguiente
@@ -193,12 +194,16 @@ void MainWindow::on_cBoxModo_currentIndexChanged(int index){
     if(index != 0){
         //si la seleccion esta en modo captura y la camara esta activa, habilita los botones para capturar las fotos
         if(index == 1){
-            if(!tmrTimer->isActive())
-                tmrTimer->start(30);
+            //solamente se pueden capturar imagenes de una lesion cuya fecha sea la del dia actual
+            if(*fechaLesion == fecha){
+                if(!tmrTimer->isActive())
+                    tmrTimer->start(30);
 
-            if(capWebcam.isOpened())
-                setBotones(true);
-            else
+                if(capWebcam.isOpened())
+                    setBotones(true);
+                else
+                    setBotones(false);
+            }else
                 setBotones(false);
         }
 
@@ -243,13 +248,15 @@ void MainWindow::setBotones(bool flag){
 
 void MainWindow::accionBotones(QString color){
 
-    QString nombreImagen(dirRaiz + "/" + historia + "/" + lesion + "/" + fecha + "/" + color + " - " + fecha + ".jpg");
+    QString nombreImagen(dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion + "/" + color + " - " + *fechaLesion + ".jpg");
     QFileInfo archivo(nombreImagen);
     int w, h;
 
     //si la interfaz esta en modo de captura de imagenes
     if(ui->cBoxModo->currentIndex() == 1){
 
+        QDir dir;
+        dir.mkpath(dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion);
         QImage imgCapturada(qimg.copy());
         QFileInfo archivo(nombreImagen);
 
@@ -277,7 +284,7 @@ void MainWindow::accionBotones(QString color){
 
     }else{
     //si la interfaz esta en modo de visualizacion de imagenes
-        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + historia + "/" + lesion + "/" + fecha);
+        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion);
         imagen->exec();
     }
 
@@ -299,12 +306,12 @@ void MainWindow::setColorDisponible(int colorIndex){
     QString nombreImagen, ruta;
     QFileInfo archivo;
 
-    ruta = dirRaiz + "/" + historia + "/" + lesion + "/" + fecha;
+    ruta = dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion;
 
     switch (colorIndex) {
 
     case 0:
-        nombreImagen = (ruta + "/" + "Amarillo - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Amarillo - " + *fechaLesion + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnAmarillo->setEnabled(true);
@@ -313,7 +320,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 1:
-        nombreImagen = (ruta + "/" + "Azul - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Azul - " + *fechaLesion + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnAzul->setEnabled(true);
@@ -322,7 +329,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 2:
-        nombreImagen = (ruta + "/" + "Blanco - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Blanco - " + *fechaLesion + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnBlanco->setEnabled(true);
@@ -331,7 +338,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 3:
-        nombreImagen = (ruta + "/" + "Cyan - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Cyan - " + *fechaLesion + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnCyan->setEnabled(true);
@@ -340,7 +347,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 4:
-        nombreImagen = (ruta + "/" + "Magenta - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Magenta - " + *fechaLesion + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnMagenta->setEnabled(true);
@@ -349,7 +356,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 5:
-        nombreImagen = (ruta + "/" + "Rojo - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Rojo - " + *fechaLesion + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnRojo->setEnabled(true);
@@ -358,7 +365,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 6:
-        nombreImagen = (ruta + "/" + "Verde - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Verde - " + *fechaLesion + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnVerde->setEnabled(true);
@@ -411,16 +418,28 @@ void MainWindow::on_btnGenerarReporte_clicked()
     //QTextDocument doc;
 }
 
-void MainWindow::on_actionNueva_lesion_triggered()
-{
-    crearLesion nuevaLesion(dirRaiz, historia, fecha);
-    nuevaLesion.exec();
+void MainWindow::on_actionNueva_lesion_triggered(){
 
-    //si se pudo crear una historia, guarda los valores en esta clase
-    if(!nuevaLesion.getLesion().isEmpty()){
-        lesion = nuevaLesion.getLesion();
-    }
+    crearLesion nuevaLesion(dirRaiz, *historia, lesion);
+    nuevaLesion.exec();
 
     //revisa que la historia este cargada para activar los botones pertinentes
     revision();
+}
+
+void MainWindow::on_actionAbrir_historia_triggered(){
+
+    abrirHistoria abrirH(historia, lesion, dirRaiz);
+    abrirH.exec();
+
+    revision();
+}
+
+void MainWindow::on_actionAbrir_lesion_triggered(){
+
+    abrirLesion abrirL(lesion, dirRaiz + "/" + *historia, fechaLesion);
+    abrirL.exec();
+
+    revision();
+
 }

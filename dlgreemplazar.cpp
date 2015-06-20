@@ -13,6 +13,8 @@ dlgReemplazar::dlgReemplazar(QString color) : ui(new Ui::dlgReemplazar){
     reemplazar = false;
     this->setModal(true);
     ui->etqReemplazar->setText("Desea reemplazar la imagen de color " + color + "?");
+    this->adjustSize();
+    this->setFixedSize(this->size());
 }
 
 bool dlgReemplazar::getReemplazar(){

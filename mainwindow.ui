@@ -484,6 +484,7 @@
      <string>Historias</string>
     </property>
     <addaction name="actionCrear_historia"/>
+    <addaction name="actionAbrir_historia"/>
     <addaction name="separator"/>
     <addaction name="actionCerrar_historia"/>
    </widget>
@@ -492,6 +493,7 @@
      <string>Lesiones</string>
     </property>
     <addaction name="actionNueva_lesion"/>
+    <addaction name="actionAbrir_lesion"/>
     <addaction name="separator"/>
     <addaction name="actionCerrar_lesion"/>
    </widget>
@@ -549,6 +551,16 @@
   <action name="actionCerrar_lesion">
    <property name="text">
     <string>Cerrar lesion</string>
+   </property>
+  </action>
+  <action name="actionAbrir_historia">
+   <property name="text">
+    <string>Abrir historia</string>
+   </property>
+  </action>
+  <action name="actionAbrir_lesion">
+   <property name="text">
+    <string>Abrir lesion</string>
    </property>
   </action>
  </widget>

@@ -16,6 +16,8 @@
 #include "dlgreemplazar.h"
 #include "dlginfo.h"
 #include "crearlesion.h"
+#include "abrirhistoria.h"
+#include "abrirlesion.h"
 
 namespace Ui {
 class MainWindow;
@@ -81,6 +83,10 @@ private slots:
 
     void on_actionNueva_lesion_triggered();
 
+    void on_actionAbrir_historia_triggered();
+
+    void on_actionAbrir_lesion_triggered();
+
 private:
     Ui::MainWindow *ui;
     cv::VideoCapture capWebcam;
@@ -88,9 +94,8 @@ private:
     QImage qimg;
     QTimer *tmrTimer;
     QString dirRaiz;
-    QString historia;
-    QString lesion;
-    QString fecha;
+    QString *historia, *lesion;
+    QString fecha, *fechaLesion;
     QString msjConectar, msjHistoria, msjLesion;
 };
 

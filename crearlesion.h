@@ -14,12 +14,11 @@ class crearLesion : public QDialog
 
 public:
     explicit crearLesion(QWidget *parent = 0);
-    explicit crearLesion(QString dirRaizExt, QString historiaExt, QString fechaExt);
-    QString getLesion();
+    explicit crearLesion(QString dirRaizExt, QString historiaExt, QString *lesionExt);
     ~crearLesion();
 
 private slots:
-    void on_lineaLesion_textChanged(const QString &lesion);
+    void on_lineaLesion_textChanged(const QString &nuevaLesion);
 
     void on_btnCancelar_clicked();
 
@@ -29,8 +28,7 @@ private:
     Ui::crearLesion *ui;
     QString dirRaiz;
     QString historia;
-    QString fecha;
-    QString lesionCreada;
+    QString *lesion;
     bool lesionLista;
 };
 
