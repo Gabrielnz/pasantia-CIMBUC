@@ -492,6 +492,7 @@
      <string>Lesiones</string>
     </property>
     <addaction name="actionNueva_lesion"/>
+    <addaction name="separator"/>
     <addaction name="actionCerrar_lesion"/>
    </widget>
    <addaction name="menuArchivo"/>
@@ -519,16 +520,6 @@
     <string>Crear historia</string>
    </property>
   </action>
-  <action name="actionAbrir_historia">
-   <property name="text">
-    <string>Abrir historia</string>
-   </property>
-  </action>
-  <action name="actionEliminar_historia">
-   <property name="text">
-    <string>Eliminar historia</string>
-   </property>
-  </action>
   <action name="actionConectar_camara">
    <property name="text">
     <string>Conectar camara</string>
@@ -552,7 +543,7 @@
   </action>
   <action name="actionNueva_lesion">
    <property name="text">
-    <string>Nueva lesion</string>
+    <string>Crear lesion</string>
    </property>
   </action>
   <action name="actionCerrar_lesion">

@@ -11,6 +11,7 @@ dlgReemplazar::dlgReemplazar(QWidget *parent) :
 dlgReemplazar::dlgReemplazar(QString color) : ui(new Ui::dlgReemplazar){
     ui->setupUi(this);
     reemplazar = false;
+    this->setModal(true);
     ui->etqReemplazar->setText("Desea reemplazar la imagen de color " + color + "?");
 }
 

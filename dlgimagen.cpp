@@ -30,6 +30,7 @@ dlgImagen::dlgImagen(QString nombreImagen, QString colorExt, QString rutaExt) : 
     ui->textoAnotacion->setPlainText(aux);
     anotacion.close();
     this->setWindowTitle(nombreImagen);
+    this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());
 }

@@ -16,6 +16,7 @@ class crearHistoria : public QDialog
 
 public:
     explicit crearHistoria(QWidget *parent = 0);
+    explicit crearHistoria(QString dirRaizExt, QString fechaExt);
     QString getHistoriaCreada();
     QString getLesionCreada();
     void resetHistoria();
@@ -33,6 +34,8 @@ private slots:
 
 private:
     Ui::crearHistoria *ui;
+    QString dirRaiz;
+    QString fecha;
     QString histCreada;
     QString lesionCreada;
     bool histLista, lesionLista;

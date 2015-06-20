@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QDir>
+#include <QTextDocument>
+#include <QtCore>
+#include <QDebug>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -12,9 +15,7 @@
 #include "dlgimagen.h"
 #include "dlgreemplazar.h"
 #include "dlginfo.h"
-#include <QTextDocument>
-#include <QtCore>
-#include <QDebug>
+#include "crearlesion.h"
 
 namespace Ui {
 class MainWindow;
@@ -30,7 +31,7 @@ public:
     void setHistoria(QString historia);
     QString getDirRaiz();
     QString getHistoria();
-    void revisionHistoria();
+    void revision();
     ~MainWindow();
 
 public slots:
@@ -78,6 +79,8 @@ private slots:
 
     void on_btnGenerarReporte_clicked();
 
+    void on_actionNueva_lesion_triggered();
+
 private:
     Ui::MainWindow *ui;
     cv::VideoCapture capWebcam;
@@ -88,7 +91,7 @@ private:
     QString historia;
     QString lesion;
     QString fecha;
-    QString msjConectar, msjHistoria;
+    QString msjConectar, msjHistoria, msjLesion;
 };
 
 #endif // MAINWINDOW_H

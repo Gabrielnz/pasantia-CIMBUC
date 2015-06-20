@@ -17,13 +17,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->actionOpciones->setEnabled(false);
     ui->actionDesconectar_camara->setEnabled(false);
     ui->actionCerrar_historia->setEnabled(false);
-    ui->actionEliminar_historia->setEnabled(false);
+    ui->actionNueva_lesion->setEnabled(false);
+    ui->actionCerrar_lesion->setEnabled(false);
     setBotones(false);
     ui->cBoxModo->setEnabled(false);
     ui->actionCrear_historia->setEnabled(false);
     ui->btnGenerarReporte->setEnabled(false);
     msjConectar = "<p align='center'><span style=' font-weight:600;'>Conectar la camara para continuar</span></p>";
     msjHistoria = "<p align='center'><span style=' font-weight:600;'>Crear o abrir una historia para continuar</span></p>";
+    msjLesion = "<p align='center'><span style=' font-weight:600;'>Crear o abrir una lesion para continuar</span></p>";
     ui->etqInfo->setText(msjConectar);
     //si la camara esta conectada, actualiza la etiqueta de informacion.
     if(capWebcam.isOpened())
@@ -80,7 +82,7 @@ void MainWindow::on_actionConectar_camara_triggered(){
         }else{
             ui->actionConectar_camara->setEnabled(false);
             ui->actionDesconectar_camara->setEnabled(true);
-            revisionHistoria();
+            revision();
             dlgInfo info("La camara fue conectada correctamente.", "Camara conectada");
             info.exec();
         }
@@ -98,7 +100,7 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
     ui->actionDesconectar_camara->setEnabled(false);
     ui->cBoxModo->setCurrentIndex(0);
     ui->etqInfo->setText(msjConectar);
-    revisionHistoria();
+    revision();
     dlgInfo info("La camara fue desconectada correctamente.", "Camara desconectada");
     info.exec();
 }
@@ -112,48 +114,60 @@ void MainWindow::on_actionOpciones_triggered(){
 
 void MainWindow::on_actionCrear_historia_triggered(){
 
-    QDir dir;
-    crearHistoria crear;
-    //obtiene el ID de la historia a crear
-    crear.setModal(true);
+    crearHistoria crear(dirRaiz, fecha);
     crear.exec();
 
-    //crea la estructura de directorios necesaria para la nueva historia
-    historia = crear.getHistoriaCreada();
-    lesion = crear.getLesionCreada();
-    dir.mkpath(dirRaiz + "/" + historia + "/" + lesion);
+    //si se pudo crear una historia, guarda los valores en esta clase
+    if(!crear.getHistoriaCreada().isEmpty()){
+        historia = crear.getHistoriaCreada();
+        lesion = crear.getLesionCreada();
+    }
 
     //revisa que la historia este cargada para activar los botones pertinentes
-    revisionHistoria();
+    revision();
 }
 
 void MainWindow::on_actionCerrar_historia_triggered(){
 
+    //cuando se cierra una historia, se debe cerrar la lesion de dicha historia tambien
     historia = "";
-    revisionHistoria();
+    lesion = "";
+    revision();
 }
 
 void MainWindow::on_actionCerrar_lesion_triggered(){
 
     lesion = "";
-    revisionHistoria();
+    revision();
 }
 
-//Si hay una historia cargada, habilita los botones pertinentes, caso contrario los deshabilita
-void MainWindow::revisionHistoria(){
+//Realiza una revision de la historia y la lesion
+void MainWindow::revision(){
 
-    //si hay una historia cargada, habilita la seleccion de colores
+    //Si hay una historia cargada
     if(!historia.isEmpty()){
-        QString hist("Historia: " + historia + ", lesion: " + lesion);
-        ui->etqInfo->setText("<p align='center'><span style=' font-weight:600;'>" + hist + ", fecha: " + fecha + "</span></p>");
-        //deshabilita la opcion de crear o de abrir una historia, mientras ya este una cargada
         ui->actionCrear_historia->setEnabled(false);
-        ui->actionAbrir_historia->setEnabled(false);
-        //habilita la opcion de cerrar la historia cargada
         ui->actionCerrar_historia->setEnabled(true);
-        ui->cBoxModo->setEnabled(true);
-        ui->btnGenerarReporte->setEnabled(true);
+        if(!lesion.isEmpty()){
+            //Si hay una historia y una lesion cargada, habilita la seleccion de modos
+            QString hist("Historia: " + historia + ", lesion: " + lesion);
+            ui->etqInfo->setText("<p align='center'><span style=' font-weight:600;'>" + hist + ", fecha: " + fecha + "</span></p>");
+            //deshabilita la opcion de crear o de abrir una historia, mientras ya este una cargada
+            ui->actionNueva_lesion->setEnabled(false);
+            ui->actionCerrar_lesion->setEnabled(true);
+            ui->cBoxModo->setEnabled(true);
+            ui->btnGenerarReporte->setEnabled(true);
+        }else{
+            //Si hay una historia pero no hay una lesion, deshabilita la seleccin de modos
+            ui->etqInfo->setText(msjLesion);
+            ui->actionNueva_lesion->setEnabled(true);
+            ui->actionCerrar_lesion->setEnabled(false);
+            ui->cBoxModo->setEnabled(false);
+            ui->btnGenerarReporte->setEnabled(false);
+        }
     }else{
+        ui->actionNueva_lesion->setEnabled(false);
+        ui->actionCerrar_lesion->setEnabled(false);
         ui->cBoxModo->setEnabled(false);
 
         //si la camara sigue activa, muestra el mensaje siguiente
@@ -164,9 +178,6 @@ void MainWindow::revisionHistoria(){
             ui->actionCrear_historia->setEnabled(false);
             ui->etqInfo->setText(msjConectar);
         }
-        //habilita la opcion de crear o de abrir una historia, en caso de que no haya una historia cargada
-        ui->actionAbrir_historia->setEnabled(true);
-        //deshabilita la opcion de cerrar la historia cargada
         ui->actionCerrar_historia->setEnabled(false);
         ui->btnGenerarReporte->setEnabled(false);
     }
@@ -232,7 +243,7 @@ void MainWindow::setBotones(bool flag){
 
 void MainWindow::accionBotones(QString color){
 
-    QString nombreImagen(dirRaiz + "/" + historia + "/" + fecha + "/" + color + " - " + fecha + ".jpg");
+    QString nombreImagen(dirRaiz + "/" + historia + "/" + lesion + "/" + fecha + "/" + color + " - " + fecha + ".jpg");
     QFileInfo archivo(nombreImagen);
     int w, h;
 
@@ -240,15 +251,10 @@ void MainWindow::accionBotones(QString color){
     if(ui->cBoxModo->currentIndex() == 1){
 
         QImage imgCapturada(qimg.copy());
-
-        QDir dir;
-        dir.mkpath(dirRaiz + "/" + historia + "/" + fecha);
-
-        QString nombreImagen(dirRaiz + "/" + historia + "/" + fecha + "/" + color + " - " + fecha + ".jpg");
         QFileInfo archivo(nombreImagen);
 
         if(!archivo.exists()){
-            imgCapturada.save(dirRaiz + "/" + historia + "/" + fecha + "/" + color + " - " + fecha + ".jpg");
+            imgCapturada.save(nombreImagen);
             w = ui->etqVistaprevia->width();
             h = ui->etqVistaprevia->height();
             //se le asigna la imagen a la etiqueta de la camara
@@ -256,13 +262,12 @@ void MainWindow::accionBotones(QString color){
         }else{
 
             dlgReemplazar *dlg = new dlgReemplazar(color);
-            dlg->setModal(true);
             dlg->exec();
 
             bool reemplazar = dlg->getReemplazar();
 
             if(reemplazar){
-                imgCapturada.save(dirRaiz + "/" + historia + "/" + fecha + "/" + color + " - " + fecha + ".jpg");
+                imgCapturada.save(nombreImagen);
                 w = ui->etqVistaprevia->width();
                 h = ui->etqVistaprevia->height();
                 //se le asigna la imagen a la etiqueta de la camara
@@ -272,8 +277,7 @@ void MainWindow::accionBotones(QString color){
 
     }else{
     //si la interfaz esta en modo de visualizacion de imagenes
-        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + historia + "/" + fecha);
-        imagen->setModal(true);
+        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + historia + "/" + lesion + "/" + fecha);
         imagen->exec();
     }
 
@@ -292,12 +296,15 @@ void MainWindow::accionBotones(QString color){
 
 void MainWindow::setColorDisponible(int colorIndex){
 
-    QString nombreImagen;
+    QString nombreImagen, ruta;
     QFileInfo archivo;
+
+    ruta = dirRaiz + "/" + historia + "/" + lesion + "/" + fecha;
+
     switch (colorIndex) {
 
     case 0:
-        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Amarillo - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Amarillo - " + fecha + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnAmarillo->setEnabled(true);
@@ -306,7 +313,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 1:
-        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Azul - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Azul - " + fecha + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnAzul->setEnabled(true);
@@ -315,7 +322,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 2:
-        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Blanco - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Blanco - " + fecha + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnBlanco->setEnabled(true);
@@ -324,7 +331,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 3:
-        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Cyan - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Cyan - " + fecha + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnCyan->setEnabled(true);
@@ -333,7 +340,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 4:
-        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Magenta - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Magenta - " + fecha + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnMagenta->setEnabled(true);
@@ -342,7 +349,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 5:
-        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Rojo - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Rojo - " + fecha + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnRojo->setEnabled(true);
@@ -351,7 +358,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 6:
-        nombreImagen = (dirRaiz + "/" + historia + "/" + fecha + "/" + "Verde - " + fecha + ".jpg");
+        nombreImagen = (ruta + "/" + "Verde - " + fecha + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnVerde->setEnabled(true);
@@ -401,5 +408,19 @@ void MainWindow::on_btnBlanco_clicked()
 
 void MainWindow::on_btnGenerarReporte_clicked()
 {
-    QTextDocument doc;
+    //QTextDocument doc;
+}
+
+void MainWindow::on_actionNueva_lesion_triggered()
+{
+    crearLesion nuevaLesion(dirRaiz, historia, fecha);
+    nuevaLesion.exec();
+
+    //si se pudo crear una historia, guarda los valores en esta clase
+    if(!nuevaLesion.getLesion().isEmpty()){
+        lesion = nuevaLesion.getLesion();
+    }
+
+    //revisa que la historia este cargada para activar los botones pertinentes
+    revision();
 }
