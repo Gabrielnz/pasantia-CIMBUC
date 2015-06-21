@@ -19,8 +19,8 @@ crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt): ui(new U
     this->setFixedSize(this->size());
 }
 
-crearHistoria::~crearHistoria()
-{
+crearHistoria::~crearHistoria(){
+
     delete ui;
 }
 

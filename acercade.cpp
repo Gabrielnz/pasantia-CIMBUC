@@ -11,7 +11,7 @@ AcercaDe::AcercaDe(QWidget *parent) :
     this->setFixedSize(this->size());
 }
 
-AcercaDe::~AcercaDe()
-{
+AcercaDe::~AcercaDe(){
+
     delete ui;
 }

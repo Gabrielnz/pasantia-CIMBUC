@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QFileSystemModel>
 #include <QDirModel>
+#include <QDate>
 #include <QDebug>
 
 namespace Ui {

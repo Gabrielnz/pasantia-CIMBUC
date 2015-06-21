@@ -31,8 +31,8 @@ abrirHistoria::abrirHistoria(QString *historiaExt, QString *lesionExt, QString r
     this->setModal(true);
 }
 
-abrirHistoria::~abrirHistoria()
-{
+abrirHistoria::~abrirHistoria(){
+
     delete ui;
 }
 

@@ -21,13 +21,13 @@ crearLesion::crearLesion(QString dirRaizExt, QString historiaExt, QString *lesio
     this->setFixedSize(this->size());
 }
 
-crearLesion::~crearLesion()
-{
+crearLesion::~crearLesion(){
+
     delete ui;
 }
 
-void crearLesion::on_lineaLesion_textChanged(const QString &nuevaLesion)
-{
+void crearLesion::on_lineaLesion_textChanged(const QString &nuevaLesion){
+
     if(!nuevaLesion.isEmpty()){
         lesionLista = true;
         ui->btnAceptar->setEnabled(true);
@@ -39,8 +39,8 @@ void crearLesion::on_lineaLesion_textChanged(const QString &nuevaLesion)
 
 void crearLesion::on_btnCancelar_clicked(){ close(); }
 
-void crearLesion::on_btnAceptar_clicked()
-{
+void crearLesion::on_btnAceptar_clicked(){
+
     *lesion = ui->lineaLesion->text();
     QDir dir;
     //crea la estructura de carpetas para la nueva historia y la lesion

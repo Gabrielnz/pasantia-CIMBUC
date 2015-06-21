@@ -8,7 +8,7 @@ Opciones::Opciones(QWidget *parent) :
     ui->setupUi(this);
 }
 
-Opciones::~Opciones()
-{
+Opciones::~Opciones(){
+
     delete ui;
 }

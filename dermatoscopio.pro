@@ -46,26 +46,24 @@ FORMS    += mainwindow.ui \
     abrirhistoria.ui \
     abrirlesion.ui
 
-#revisar si se necesita esta linea para correr el proyecto en linux
-#LIBS += `pkg-config opencv --libs`
-
 INCLUDEPATH += C:\opencv\build\install\include
 
-#todas las librerias de opencv 3.0.0
+#librerias necesarias de opencv 3.0 para este proyecto
 LIBS += C:\opencv\build\bin\libopencv_core300.dll
-LIBS += C:\opencv\build\bin\libopencv_highgui300.dll
 LIBS += C:\opencv\build\bin\libopencv_imgproc300.dll
-LIBS += C:\opencv\build\bin\libopencv_calib3d300.dll
-LIBS += C:\opencv\build\bin\libopencv_features2d300.dll
-LIBS += C:\opencv\build\bin\libopencv_flann300.dll
-LIBS += C:\opencv\build\bin\libopencv_imgcodecs300.dll
-LIBS += C:\opencv\build\bin\libopencv_ml300.dll
-LIBS += C:\opencv\build\bin\libopencv_photo300.dll
-LIBS += C:\opencv\build\bin\libopencv_photo300.dll
 LIBS += C:\opencv\build\bin\libopencv_video300.dll
 LIBS += C:\opencv\build\bin\libopencv_videoio300.dll
-LIBS += C:\opencv\build\bin\libopencv_videostab300.dll
-LIBS += C:\opencv\build\bin\libopencv_objdetect300.dll
-LIBS += C:\opencv\build\bin\libopencv_shape300.dll
-LIBS += C:\opencv\build\bin\libopencv_stitching300.dll
-LIBS += C:\opencv\build\bin\libopencv_superres300.dll
+
+#librerias opcionales de opencv 3.0
+#LIBS += C:\opencv\build\bin\libopencv_highgui300.dll
+#LIBS += C:\opencv\build\bin\libopencv_calib3d300.dll
+#LIBS += C:\opencv\build\bin\libopencv_features2d300.dll
+#LIBS += C:\opencv\build\bin\libopencv_flann300.dll
+#LIBS += C:\opencv\build\bin\libopencv_imgcodecs300.dll
+#LIBS += C:\opencv\build\bin\libopencv_ml300.dll
+#LIBS += C:\opencv\build\bin\libopencv_photo300.dll
+#LIBS += C:\opencv\build\bin\libopencv_videostab300.dll
+#LIBS += C:\opencv\build\bin\libopencv_objdetect300.dll
+#LIBS += C:\opencv\build\bin\libopencv_shape300.dll
+#LIBS += C:\opencv\build\bin\libopencv_stitching300.dll
+#LIBS += C:\opencv\build\bin\libopencv_superres300.dll

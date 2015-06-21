@@ -27,16 +27,13 @@ abrirLesion::abrirLesion(QString *lesionExt, QString rutaExt, QString *fechaLesi
     ui->lesionList->scrollTo(index);
     ui->lesionList->setCurrentIndex(index);
     ui->lesionList->setRootIndex(index);
-    //permite que solo se seleccionen las carpetas del primer nivel
-    //ui->lesionList->setExpandsOnDoubleClick(false);
-    //ui->lesionList->setRootIsDecorated(false);
     this->setWindowTitle("Abrir lesion");
     this->adjustSize();
     this->setModal(true);
 }
 
-abrirLesion::~abrirLesion()
-{
+abrirLesion::~abrirLesion(){
+
     delete ui;
 }
 
@@ -45,16 +42,15 @@ void abrirLesion::on_btnCancelar_clicked(){ close(); }
 void abrirLesion::on_btnAbrir_clicked(){
 
     QString lesionSeleccionada = modeloLesion->fileName(ui->lesionList->currentIndex());
-
     *lesion = lesionSeleccionada;
     *fechaLesion = fechaSeleccionada;
 
     close();
 }
 
-void abrirLesion::on_lesionList_clicked(const QModelIndex &indexIn)
-{
-    fechaSeleccionada = *fechaLesion;
+void abrirLesion::on_lesionList_clicked(const QModelIndex &indexIn){
+    //si selecciona solamente la lesion, la fecha pasa a ser la del dia actual
+    fechaSeleccionada = QDate::currentDate().toString("dd.MM.yyyy");
 
     if(indexIn.isValid()){
         modeloFecha->setRootPath(modeloLesion->filePath(indexIn));
@@ -69,8 +65,8 @@ void abrirLesion::on_lesionList_clicked(const QModelIndex &indexIn)
     }
 }
 
-void abrirLesion::on_fechaLesionList_clicked(const QModelIndex &indexIn)
-{
+void abrirLesion::on_fechaLesionList_clicked(const QModelIndex &indexIn){
+
     if(indexIn.isValid()){
         fechaSeleccionada = modeloFecha->fileName(indexIn);
     }

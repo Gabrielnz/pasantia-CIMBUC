@@ -18,21 +18,22 @@ dlgReemplazar::dlgReemplazar(QString color) : ui(new Ui::dlgReemplazar){
 }
 
 bool dlgReemplazar::getReemplazar(){
+
     return reemplazar;
 }
 
-dlgReemplazar::~dlgReemplazar()
-{
+dlgReemplazar::~dlgReemplazar(){
+
     delete ui;
 }
 
-void dlgReemplazar::on_btnReemplazar_clicked()
-{
+void dlgReemplazar::on_btnReemplazar_clicked(){
+
     reemplazar = true;
     this->close();
 }
 
-void dlgReemplazar::on_btnCancelar_clicked()
-{
+void dlgReemplazar::on_btnCancelar_clicked(){
+
     close();
 }
