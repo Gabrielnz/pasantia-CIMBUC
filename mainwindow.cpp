@@ -284,7 +284,8 @@ void MainWindow::accionBotones(QString color){
 
     }else{
     //si la interfaz esta en modo de visualizacion de imagenes
-        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion);
+        //dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion);
+        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + *historia + "/" + *lesion, *fechaLesion);
         imagen->exec();
     }
 

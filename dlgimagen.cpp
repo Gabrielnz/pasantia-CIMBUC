@@ -8,27 +8,30 @@ dlgImagen::dlgImagen(QWidget *parent) :
     ui->setupUi(this);
 }
 
-dlgImagen::dlgImagen(QString nombreImagen, QString colorExt, QString rutaExt) : ui(new Ui::dlgImagen){
+dlgImagen::dlgImagen(QString nombreImagen, QString colorExt, QString rutaExt, QString fechaExt) : ui(new Ui::dlgImagen){
     ui->setupUi(this);
     QImage imagen(nombreImagen);
     color = colorExt;
     ruta = rutaExt;
+    fecha = fechaExt;
     int w = imagen.width();
     int h = imagen.height();
     ui->etqImagen->setFixedWidth(w);
     ui->etqImagen->setFixedHeight(h);
     ui->etqImagen->setPixmap(QPixmap::fromImage(imagen));
+    jAnotaciones.setFileName(ruta + "/" + fecha + "/" + "anotaciones.json");
+    jAnotaciones.open(QIODevice::ReadWrite);
+    QByteArray jData = jAnotaciones.readAll();
+    QJsonDocument jDoc(QJsonDocument::fromJson(jData));
+    QJsonObject jObj = jDoc.object();
+    QJsonValue jVal;
 
-    anotacion.setFileName(ruta + "/" + color + ".txt");
-    anotacion.open(QIODevice::ReadOnly | QIODevice::Text);
-    QString aux;
-    aux = aux + anotacion.readLine();
-    while(anotacion.canReadLine()){
-        aux = aux + anotacion.readLine();
+    if(jObj.contains(color)){
+        jVal = jObj.value(color);
+        ui->textoAnotacion->setPlainText(jVal.toString());
     }
 
-    ui->textoAnotacion->setPlainText(aux);
-    anotacion.close();
+    jAnotaciones.close();
     this->setWindowTitle(nombreImagen);
     this->setModal(true);
     this->adjustSize();
@@ -37,24 +40,29 @@ dlgImagen::dlgImagen(QString nombreImagen, QString colorExt, QString rutaExt) : 
 
 dlgImagen::~dlgImagen(){
 
-    if(anotacion.isOpen())
-        anotacion.close();
+    if(jAnotaciones.isOpen())
+        jAnotaciones.close();
 
     delete ui;
 }
 
 void dlgImagen::on_btnAceptar_clicked(){
 
-    anotacion.open(QIODevice::WriteOnly | QIODevice::Text);
+    jAnotaciones.open(QIODevice::ReadWrite);
+    QByteArray jData = jAnotaciones.readAll();
+    QJsonDocument jDoc(QJsonDocument::fromJson(jData));
+    QJsonObject jObj = jDoc.object();
+    QJsonValue jVal(ui->textoAnotacion->toPlainText());
 
-    /* Point a QTextStream object at the file */
-    QTextStream stream(&anotacion);
+    if(jObj.contains(color)){
+        jObj.remove(color);
+    }
 
-    QString aux = ui->textoAnotacion->toPlainText();
-    stream << aux;
-
-    /* Close the file */
-    anotacion.close();
+    jObj.insert(color, jVal);
+    jDoc.setObject(jObj);
+    jAnotaciones.reset();
+    jAnotaciones.write(jDoc.toJson());
+    jAnotaciones.close();
 
     close();
 }
