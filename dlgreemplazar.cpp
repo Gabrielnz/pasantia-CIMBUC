@@ -33,7 +33,4 @@ void dlgReemplazar::on_btnReemplazar_clicked(){
     this->close();
 }
 
-void dlgReemplazar::on_btnCancelar_clicked(){
-
-    close();
-}
+void dlgReemplazar::on_btnCancelar_clicked(){ close(); }

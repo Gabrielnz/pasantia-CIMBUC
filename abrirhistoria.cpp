@@ -23,9 +23,6 @@ abrirHistoria::abrirHistoria(QString *historiaExt, QString *lesionExt, QString r
     ui->listView->scrollTo(index);
     ui->listView->setCurrentIndex(index);
     ui->listView->setRootIndex(index);
-    //permite que solo se seleccionen las carpetas del primer nivel
-    //ui->treeView->setExpandsOnDoubleClick(false);
-    //ui->treeView->setRootIsDecorated(false);
     this->setWindowTitle("Abrir historia");
     this->adjustSize();
     this->setModal(true);

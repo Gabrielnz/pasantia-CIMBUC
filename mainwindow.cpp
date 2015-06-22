@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     dir.mkpath(dirRaiz);
     ui->etqInfo->setAlignment(Qt::AlignCenter);
     //deshabilitar todos los botones necesarios al iniciar la interfaz
-    ui->actionOpciones->setEnabled(false);
     ui->actionDesconectar_camara->setEnabled(false);
     ui->actionCerrar_historia->setEnabled(false);
     ui->actionNueva_lesion->setEnabled(false);
@@ -97,6 +96,7 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
     ui->actionDesconectar_camara->setEnabled(false);
     ui->cBoxModo->setCurrentIndex(0);
     ui->etqInfo->setText(msjConectar);
+
     revision();
     dlgInfo info("La camara fue desconectada correctamente.", "Camara desconectada");
     info.exec();
@@ -114,7 +114,6 @@ void MainWindow::on_actionCrear_historia_triggered(){
     crearHistoria crear(dirRaiz, historia);
     crear.exec();
 
-    //revisa que la historia este cargada para activar los botones pertinentes
     revision();
 }
 
@@ -123,12 +122,14 @@ void MainWindow::on_actionCerrar_historia_triggered(){
     //cuando se cierra una historia, se debe cerrar la lesion de dicha historia tambien
     *historia = "";
     *lesion = "";
+
     revision();
 }
 
 void MainWindow::on_actionCerrar_lesion_triggered(){
 
     *lesion = "";
+
     revision();
 }
 
@@ -278,7 +279,6 @@ void MainWindow::accionBotones(QString color){
 
     }else{
     //si la interfaz esta en modo de visualizacion de imagenes
-        //dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion);
         dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + *historia + "/" + *lesion, *fechaLesion);
         imagen->exec();
     }
@@ -408,9 +408,8 @@ void MainWindow::on_btnBlanco_clicked()
     accionBotones("Blanco");
 }
 
-void MainWindow::on_btnGenerarReporte_clicked()
-{
-    //QTextDocument doc;
+void MainWindow::on_btnGenerarReporte_clicked(){
+
 }
 
 void MainWindow::on_actionNueva_lesion_triggered(){
@@ -418,7 +417,6 @@ void MainWindow::on_actionNueva_lesion_triggered(){
     crearLesion nuevaLesion(dirRaiz, *historia, lesion);
     nuevaLesion.exec();
 
-    //revisa que la historia este cargada para activar los botones pertinentes
     revision();
 }
 

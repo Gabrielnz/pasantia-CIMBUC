@@ -6,6 +6,8 @@ Opciones::Opciones(QWidget *parent) :
     ui(new Ui::Opciones)
 {
     ui->setupUi(this);
+    this->adjustSize();
+    this->setFixedSize(this->size());
 }
 
 Opciones::~Opciones(){
