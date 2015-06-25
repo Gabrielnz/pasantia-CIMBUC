@@ -59,6 +59,8 @@ void abrirLesion::on_lesionList_clicked(const QModelIndex &indexIn){
         ui->fechaLesionList->scrollTo(index);
         ui->fechaLesionList->setCurrentIndex(index);
         ui->fechaLesionList->setRootIndex(index);
+        ui->etqInfoLesion->setText(modeloLesion->fileName(indexIn));
+        ui->etqInfoFecha->setText(QDate::currentDate().toString("dd/MM/yyyy"));
         ui->btnAbrir->setEnabled(true);
     }else{
         ui->btnAbrir->setEnabled(false);
@@ -69,5 +71,7 @@ void abrirLesion::on_fechaLesionList_clicked(const QModelIndex &indexIn){
 
     if(indexIn.isValid()){
         fechaSeleccionada = modeloFecha->fileName(indexIn);
+        QDate fecha = QDate::fromString(fechaSeleccionada, "dd.MM.yyyy");
+        ui->etqInfoFecha->setText(fecha.toString("dd/MM/yyyy"));
     }
 }

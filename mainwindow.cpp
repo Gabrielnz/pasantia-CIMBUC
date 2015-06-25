@@ -13,34 +13,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //conecta el timer con la actualizacion del cuadro de la GUI
     connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
     QDir dir;
-    dir.mkpath(dirRaiz);
-    ui->etqInfo->setAlignment(Qt::AlignCenter);
+    dir.setPath(dirRaiz);
+
+    if(!dir.exists())
+        dir.mkdir(dirRaiz);
+
     //deshabilitar todos los botones necesarios al iniciar la interfaz
     ui->actionDesconectar_camara->setEnabled(false);
+    ui->actionCrear_historia->setEnabled(false);
     ui->actionCerrar_historia->setEnabled(false);
     ui->actionNueva_lesion->setEnabled(false);
-    ui->actionCerrar_lesion->setEnabled(false);
     ui->actionAbrir_lesion->setEnabled(false);
-    setBotones(false);
+    ui->actionCerrar_lesion->setEnabled(false);
     ui->cBoxModo->setEnabled(false);
-    ui->actionCrear_historia->setEnabled(false);
+    setBotones(false);
     ui->btnGenerarReporte->setEnabled(false);
-    msjConectar = "<p align='center'><span style=' font-weight:600;'>Conectar la camara para continuar</span></p>";
-    msjHistoria = "<p align='center'><span style=' font-weight:600;'>Crear o abrir una historia para continuar</span></p>";
-    msjLesion = "<p align='center'><span style=' font-weight:600;'>Crear o abrir una lesion para continuar</span></p>";
-    ui->etqInfo->setText(msjConectar);
-    //si la camara esta conectada, actualiza la etiqueta de informacion.
-    if(capWebcam.isOpened())
-        ui->etqInfo->setText(msjHistoria);
-
     this->adjustSize();
     this->setFixedSize(this->size());
 }
 
-MainWindow::~MainWindow(){
-
-    delete ui;
-}
+MainWindow::~MainWindow(){ delete ui; }
 
 void MainWindow::procesarCuadroActualizarGUI(){
 
@@ -95,18 +87,10 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
     ui->actionConectar_camara->setEnabled(true);
     ui->actionDesconectar_camara->setEnabled(false);
     ui->cBoxModo->setCurrentIndex(0);
-    ui->etqInfo->setText(msjConectar);
 
     revision();
     dlgInfo info("La camara fue desconectada correctamente.", "Camara desconectada");
     info.exec();
-}
-
-void MainWindow::on_actionOpciones_triggered(){
-
-    Opciones opc;
-    opc.setModal(true);
-    opc.exec();
 }
 
 void MainWindow::on_actionCrear_historia_triggered(){
@@ -135,48 +119,68 @@ void MainWindow::on_actionCerrar_lesion_triggered(){
 
 //Realiza una revision de la historia y la lesion
 void MainWindow::revision(){
+    bool crearHistoria, abrirHistoria, cerrarHistoria, nuevaLesion, abrirLesion, cerrarLesion, cBoxModo, generarReporte;
 
     //Si hay una historia cargada
     if(!historia->isEmpty()){
-        ui->actionCrear_historia->setEnabled(false);
-        ui->actionCerrar_historia->setEnabled(true);
-        ui->actionAbrir_lesion->setEnabled(true);
+        crearHistoria = false;
+        abrirHistoria = true;
+        cerrarHistoria = true;
+        ui->etqInfoHistoria->setText(*historia);
         if(!lesion->isEmpty()){
-            //Si hay una historia y una lesion cargada, habilita la seleccion de modos
-            QString hist("Historia: " + *historia + ", lesion: " + *lesion);
-            ui->etqInfo->setText("<p align='center'><span style=' font-weight:600;'>" + hist + ", fecha: " + *fechaLesion + "</span></p>");
-            //deshabilita la opcion de crear o de abrir una historia, mientras ya este una cargada
-            ui->actionNueva_lesion->setEnabled(false);
-            ui->actionCerrar_lesion->setEnabled(true);
-            ui->cBoxModo->setEnabled(true);
-            ui->btnGenerarReporte->setEnabled(true);
+            nuevaLesion = false;
+            abrirLesion = true;
+            cerrarLesion = true;
+            cBoxModo = true;
+            generarReporte = true;
+            ui->etqInfoLesion->setText(*lesion);
+            ui->etqInfoFecha->setText(QDate::fromString(*fechaLesion, "dd.MM.yyyy").toString("dd/MM/yyyy"));
         }else{
             //Si hay una historia pero no hay una lesion, deshabilita la seleccin de modos
             *fechaLesion = fecha;
-            ui->etqInfo->setText(msjLesion);
-            ui->actionNueva_lesion->setEnabled(true);
-            ui->actionCerrar_lesion->setEnabled(false);
-            ui->cBoxModo->setEnabled(false);
-            ui->btnGenerarReporte->setEnabled(false);
+            nuevaLesion = true;
+            abrirLesion = true;
+            cerrarLesion = false;
+            cBoxModo = false;
+            generarReporte = false;
+            ui->etqInfoLesion->setText("- - -");
+            ui->etqInfoFecha->setText("- - -");
         }
     }else{
         *fechaLesion = fecha;
-        ui->actionNueva_lesion->setEnabled(false);
-        ui->actionCerrar_lesion->setEnabled(false);
-        ui->actionAbrir_lesion->setEnabled(false);
-        ui->cBoxModo->setEnabled(false);
-
         //si la camara sigue activa, muestra el mensaje siguiente
         if(capWebcam.isOpened()){
-            ui->actionCrear_historia->setEnabled(true);
-            ui->etqInfo->setText(msjHistoria);
+            crearHistoria = true;
         }else{
-            ui->actionCrear_historia->setEnabled(false);
-            ui->etqInfo->setText(msjConectar);
+            crearHistoria = false;
         }
-        ui->actionCerrar_historia->setEnabled(false);
-        ui->btnGenerarReporte->setEnabled(false);
+
+        abrirHistoria = true;
+        cerrarHistoria = false;
+        nuevaLesion = false;
+        abrirLesion = false;
+        cerrarLesion = false;
+        cBoxModo = false;
+        generarReporte = false;
+        ui->etqInfoHistoria->setText("- - -");
+        ui->etqInfoLesion->setText("- - -");
+        ui->etqInfoFecha->setText("- - -");
     }
+
+    if(capWebcam.isOpened())
+        ui->etqInfoEstado->setText("Conectada");
+    else
+        ui->etqInfoEstado->setText("Desconectada");
+
+    ui->actionCrear_historia->setEnabled(crearHistoria);
+    ui->actionAbrir_historia->setEnabled(abrirHistoria);
+    ui->actionCerrar_historia->setEnabled(cerrarHistoria);
+    ui->actionNueva_lesion->setEnabled(nuevaLesion);
+    ui->actionAbrir_lesion->setEnabled(abrirLesion);
+    ui->actionCerrar_lesion->setEnabled(cerrarLesion);
+    ui->cBoxModo->setEnabled(cBoxModo);
+    ui->btnGenerarReporte->setEnabled(generarReporte);
+
     ui->cBoxModo->setCurrentIndex(0);
 }
 
@@ -191,12 +195,13 @@ void MainWindow::on_cBoxModo_currentIndexChanged(int index){
         if(index == 1){
             //solamente se pueden capturar imagenes de una lesion cuya fecha sea la del dia actual
             if(*fechaLesion == fecha){
-                if(!tmrTimer->isActive())
-                    tmrTimer->start(30);
 
-                if(capWebcam.isOpened())
+                if(capWebcam.isOpened()){
                     setBotones(true);
-                else
+
+                    if(!tmrTimer->isActive())
+                        tmrTimer->start(30);
+                }else
                     setBotones(false);
             }else
                 setBotones(false);
@@ -263,10 +268,10 @@ void MainWindow::accionBotones(QString color){
             ui->etqVistaprevia->setPixmap((QPixmap::fromImage(qimg)).scaled(w, h, Qt::KeepAspectRatio));
         }else{
 
-            dlgReemplazar *dlg = new dlgReemplazar(color);
-            dlg->exec();
+            dlgConfirmar conf("La imagen de color: " + color + " ya existe, desea reemplazarla?", "Reemplazar imagen");
+            conf.exec();
 
-            bool reemplazar = dlg->getReemplazar();
+            bool reemplazar = conf.confirmacion();
 
             if(reemplazar){
                 imgCapturada.save(nombreImagen);
@@ -373,38 +378,38 @@ void MainWindow::setColorDisponible(int colorIndex){
     }
 }
 
-void MainWindow::on_btnRojo_clicked()
-{
+void MainWindow::on_btnRojo_clicked(){
+
     accionBotones("Rojo");
 }
 
-void MainWindow::on_btnVerde_clicked()
-{
+void MainWindow::on_btnVerde_clicked(){
+
     accionBotones("Verde");
 }
 
-void MainWindow::on_btnAzul_clicked()
-{
+void MainWindow::on_btnAzul_clicked(){
+
     accionBotones("Azul");
 }
 
-void MainWindow::on_btnCyan_clicked()
-{
+void MainWindow::on_btnCyan_clicked(){
+
     accionBotones("Cyan");
 }
 
-void MainWindow::on_btnMagenta_clicked()
-{
+void MainWindow::on_btnMagenta_clicked(){
+
     accionBotones("Magenta");
 }
 
-void MainWindow::on_btnAmarillo_clicked()
-{
+void MainWindow::on_btnAmarillo_clicked(){
+
     accionBotones("Amarillo");
 }
 
-void MainWindow::on_btnBlanco_clicked()
-{
+void MainWindow::on_btnBlanco_clicked(){
+
     accionBotones("Blanco");
 }
 

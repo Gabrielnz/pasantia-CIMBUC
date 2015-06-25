@@ -17,9 +17,6 @@ dlgInfo::dlgInfo(QString mensaje, QString titulo) : ui(new Ui::dlgInfo){
     this->setFixedSize(this->size());
 }
 
-dlgInfo::~dlgInfo(){
-
-    delete ui;
-}
+dlgInfo::~dlgInfo(){ delete ui; }
 
 void dlgInfo::on_btnAceptar_clicked(){ close(); }

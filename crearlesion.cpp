@@ -21,10 +21,7 @@ crearLesion::crearLesion(QString dirRaizExt, QString historiaExt, QString *lesio
     this->setFixedSize(this->size());
 }
 
-crearLesion::~crearLesion(){
-
-    delete ui;
-}
+crearLesion::~crearLesion(){ delete ui; }
 
 void crearLesion::on_lineaLesion_textChanged(const QString &nuevaLesion){
 
@@ -40,11 +37,20 @@ void crearLesion::on_lineaLesion_textChanged(const QString &nuevaLesion){
 void crearLesion::on_btnCancelar_clicked(){ close(); }
 
 void crearLesion::on_btnAceptar_clicked(){
+    QDir dir(dirRaiz + "/" + historia + "/" + ui->lineaLesion->text());
 
-    *lesion = ui->lineaLesion->text();
-    QDir dir;
-    //crea la estructura de carpetas para la nueva historia y la lesion
-    dir.mkpath(dirRaiz + "/" + historia + "/" + *lesion);
+    if(!dir.exists()){
 
-    close();
+        *lesion = ui->lineaLesion->text();
+        //crea la estructura de carpetas para la nueva historia y la lesion
+        dir.mkpath(dirRaiz + "/" + historia + "/" + *lesion);
+        dlgInfo info("La lesion ha sido creada correctamente.", "Lesion creada");
+        info.exec();
+
+        close();
+    }else{
+        dlgInfo info("La lesion con el nombre: " + ui->lineaLesion->text() + " ya existe, no se puede volver a crear.", "Error al crear lesion");
+        ui->lineaLesion->setText("");
+        info.exec();
+    }
 }

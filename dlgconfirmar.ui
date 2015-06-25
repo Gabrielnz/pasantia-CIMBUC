@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgReemplazar</class>
- <widget class="QDialog" name="dlgReemplazar">
+ <class>dlgConfirmar</class>
+ <widget class="QDialog" name="dlgConfirmar">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>312</width>
-    <height>132</height>
+    <width>332</width>
+    <height>170</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,9 +48,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="etqReemplazar">
+        <widget class="QLabel" name="etqConfirmacion">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Texto de reemplazar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Texto a confirmar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
@@ -101,7 +101,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="btnReemplazar">
+        <widget class="QPushButton" name="btnAceptar">
          <property name="text">
           <string>Aceptar</string>
          </property>

@@ -15,36 +15,33 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     acercade.cpp \
-    opciones.cpp \
     crearhistoria.cpp \
     dlgimagen.cpp \
-    dlgreemplazar.cpp \
     dlginfo.cpp \
     crearlesion.cpp \
     abrirhistoria.cpp \
-    abrirlesion.cpp
+    abrirlesion.cpp \
+    dlgconfirmar.cpp
 
 HEADERS  += mainwindow.h \
     acercade.h \
-    opciones.h \
     crearhistoria.h \
     dlgimagen.h \
-    dlgreemplazar.h \
     dlginfo.h \
     crearlesion.h \
     abrirhistoria.h \
-    abrirlesion.h
+    abrirlesion.h \
+    dlgconfirmar.h
 
 FORMS    += mainwindow.ui \
     acercade.ui \
-    opciones.ui \
     crearhistoria.ui \
     dlgimagen.ui \
-    dlgreemplazar.ui \
     dlginfo.ui \
     crearlesion.ui \
     abrirhistoria.ui \
-    abrirlesion.ui
+    abrirlesion.ui \
+    dlgconfirmar.ui
 
 INCLUDEPATH += C:\opencv\build\install\include
 

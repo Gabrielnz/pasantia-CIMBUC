@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDir>
+#include "dlginfo.h"
 
 namespace Ui {
 class crearLesion;

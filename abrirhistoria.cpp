@@ -25,13 +25,11 @@ abrirHistoria::abrirHistoria(QString *historiaExt, QString *lesionExt, QString r
     ui->listView->setRootIndex(index);
     this->setWindowTitle("Abrir historia");
     this->adjustSize();
+    this->setFixedSize(this->size());
     this->setModal(true);
 }
 
-abrirHistoria::~abrirHistoria(){
-
-    delete ui;
-}
+abrirHistoria::~abrirHistoria(){ delete ui; }
 
 void abrirHistoria::on_btnCancelar_clicked(){ close(); }
 
@@ -47,8 +45,21 @@ void abrirHistoria::on_btnAbrir_clicked(){
 
 void abrirHistoria::on_listView_clicked(const QModelIndex &index){
 
-    if(index.isValid())
+    if(index.isValid()){
+
+        jHistoria.setFileName(ruta + "/" + modeloDir->fileName(ui->listView->currentIndex()) + "/" + "historia.json");
+        jHistoria.open(QIODevice::ReadOnly);
+        QByteArray jData = jHistoria.readAll();
+        QJsonDocument jDoc(QJsonDocument::fromJson(jData));
+        QJsonObject jObj = jDoc.object();
+        ui->etqInfoCI->setText(jObj["CI"].toString());
+        ui->etqInfoNombre->setText(jObj["Nombre"].toString());
+        ui->etqInfoApellido->setText(jObj["Apellido"].toString());
+        ui->etqInfoSexo->setText(jObj["Sexo"].toString());
+        ui->etqInfoFechaNac->setText(jObj["Fecha de nacimiento"].toString());
+        jHistoria.close();
+
         ui->btnAbrir->setEnabled(true);
-    else
-        ui->btnAbrir->setEnabled(false);
+        ui->etqHistSeleccionada->setText(modeloDir->fileName(ui->listView->currentIndex()));
+    }
 }

@@ -5,6 +5,12 @@
 #include <QFileSystemModel>
 #include <QDirModel>
 #include <QDebug>
+#include <QDate>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QByteArray>
 
 namespace Ui {
 class abrirHistoria;
@@ -31,6 +37,7 @@ private:
     QString ruta;
     QFileSystemModel *modeloDir;
     QString *historia, *lesion;
+    QFile jHistoria;
 };
 
 #endif // ABRIRHISTORIA_H

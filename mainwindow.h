@@ -10,10 +10,9 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include "acercade.h"
-#include "opciones.h"
 #include "crearhistoria.h"
 #include "dlgimagen.h"
-#include "dlgreemplazar.h"
+#include "dlgconfirmar.h"
 #include "dlginfo.h"
 #include "crearlesion.h"
 #include "abrirhistoria.h"
@@ -48,8 +47,6 @@ private slots:
     void on_actionConectar_camara_triggered();
 
     void on_actionDesconectar_camara_triggered();
-
-    void on_actionOpciones_triggered();
 
     void on_actionCrear_historia_triggered();
 
@@ -96,7 +93,6 @@ private:
     QString dirRaiz;
     QString *historia, *lesion;
     QString fecha, *fechaLesion;
-    QString msjConectar, msjHistoria, msjLesion;
 };
 
 #endif // MAINWINDOW_H
