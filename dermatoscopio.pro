@@ -43,13 +43,14 @@ FORMS    += mainwindow.ui \
     abrirlesion.ui \
     dlgconfirmar.ui
 
-INCLUDEPATH += C:\opencv\build\install\include
+INCLUDEPATH += C:\opencv\build\include
 
 #librerias necesarias de opencv 3.0 para este proyecto
-LIBS += C:\opencv\build\bin\libopencv_core300.dll
-LIBS += C:\opencv\build\bin\libopencv_imgproc300.dll
-LIBS += C:\opencv\build\bin\libopencv_video300.dll
-LIBS += C:\opencv\build\bin\libopencv_videoio300.dll
+LIBS += C:\opencv\build\x86\vc12\lib\opencv_world300.lib
+#LIBS += C:\opencv\build\bin\libopencv_core300.dll
+#LIBS += C:\opencv\build\bin\libopencv_imgproc300.dll
+#LIBS += C:\opencv\build\bin\libopencv_video300.dll
+#LIBS += C:\opencv\build\bin\libopencv_videoio300.dll
 
 #librerias opcionales de opencv 3.0
 #LIBS += C:\opencv\build\bin\libopencv_highgui300.dll
