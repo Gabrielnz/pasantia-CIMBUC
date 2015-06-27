@@ -7,17 +7,19 @@ Dermasoft es una aplicacion que actua como una interfaz para el dermatoscopio mu
 Dermasoft requiere de la instalacion de las siguientes dependencias:
 
 + [openCV 3.0](http://opencv.org/) - Libreria open-source de computo visual.
-+ [CMake](http://www.cmake.org/) - herramienta para compilar openCV 3.0
 
-### Notas para la instalacion de openCV
+## Usuario final
 
-1. Extraer openCV 3.0 en C:\
+### Pasos para instalar la aplicacion
 
-3. Deseleccionar opcion WITH IPP al momento de compilar openCV 3.0 con CMake
+1. Descargar este archivo [opencv 3.0 pre-compilado](), extraer en C:\ y agregar el siguiente valor a la variable del sistema Path:
+c:\opencv\build\bin como se muestra en la siguiente imagen [agregar valor a variable de entorno Path](https://mega.nz/#!q9VFWASZ!LVVSHsgSJ79tHPGYQennFeAHJk3N0qAV9w0b2hCxl4k)
 
-2. Generar la build en C:\opencv\build
+2. Descargar el instalador de la aplicacion [dermasoft](https://mega.nz/#!u1ciRKxa!hZiEpucE12bt3vZa0coxlv8lXYHhh5JN-LH-vgtwO1A) y ejecutarlo.
 
-### Notas para la generacion del instalador de Dermasoft
+## Desarrollador
+
+### Notas para la generacion del instalador de la aplicacion
 
 1. Generar el ejecutable dermatoscopio.exe de la aplicacion, ejecutando el proyecto en modo "Release", desde Qt-creator.
 

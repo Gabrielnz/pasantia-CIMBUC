@@ -20,6 +20,8 @@ crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt): ui(new U
     ui->editFechaNac->setDate(fechaDefecto);
     ui->editFechaNac->setDateRange(fechaMinima, QDate::currentDate());
     ui->btnCrearHistoria->setEnabled(false);
+    QValidator *soloNumeros = new QIntValidator(1, 999999999, this);
+    ui->lineaCI->setValidator(soloNumeros);
     this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());
