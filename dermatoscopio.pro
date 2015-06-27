@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     crearlesion.cpp \
     abrirhistoria.cpp \
     abrirlesion.cpp \
-    dlgconfirmar.cpp
+    dlgconfirmar.cpp \
+    eliminarhistoria.cpp
 
 HEADERS  += mainwindow.h \
     acercade.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     crearlesion.h \
     abrirhistoria.h \
     abrirlesion.h \
-    dlgconfirmar.h
+    dlgconfirmar.h \
+    eliminarhistoria.h
 
 FORMS    += mainwindow.ui \
     acercade.ui \
@@ -41,7 +43,8 @@ FORMS    += mainwindow.ui \
     crearlesion.ui \
     abrirhistoria.ui \
     abrirlesion.ui \
-    dlgconfirmar.ui
+    dlgconfirmar.ui \
+    eliminarhistoria.ui
 
 
 win32 {

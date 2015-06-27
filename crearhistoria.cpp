@@ -22,6 +22,10 @@ crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt): ui(new U
     ui->btnCrearHistoria->setEnabled(false);
     QValidator *soloNumeros = new QIntValidator(1, 999999999, this);
     ui->lineaCI->setValidator(soloNumeros);
+    QRegExp rx("^([a-zA-Z]+\[ ])+$");
+    QValidator *soloPalabras = new QRegExpValidator(rx, this);
+    ui->lineaNombre->setValidator(soloPalabras);
+    ui->lineaApellido->setValidator(soloPalabras);
     this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());

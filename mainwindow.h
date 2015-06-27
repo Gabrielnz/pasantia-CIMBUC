@@ -17,6 +17,7 @@
 #include "crearlesion.h"
 #include "abrirhistoria.h"
 #include "abrirlesion.h"
+#include "eliminarhistoria.h"
 
 namespace Ui {
 class MainWindow;
@@ -83,6 +84,10 @@ private slots:
     void on_actionAbrir_historia_triggered();
 
     void on_actionAbrir_lesion_triggered();
+
+    void on_actionEliminar_historia_triggered();
+
+    void on_actionEliminar_lesion_triggered();
 
 private:
     Ui::MainWindow *ui;

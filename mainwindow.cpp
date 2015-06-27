@@ -22,9 +22,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->actionDesconectar_camara->setEnabled(false);
     ui->actionCrear_historia->setEnabled(false);
     ui->actionCerrar_historia->setEnabled(false);
+    ui->actionEliminar_historia->setEnabled(false);
     ui->actionNueva_lesion->setEnabled(false);
     ui->actionAbrir_lesion->setEnabled(false);
     ui->actionCerrar_lesion->setEnabled(false);
+    ui->actionEliminar_lesion->setEnabled(false);
     ui->cBoxModo->setEnabled(false);
     setBotones(false);
     ui->btnGenerarReporte->setEnabled(false);
@@ -119,18 +121,20 @@ void MainWindow::on_actionCerrar_lesion_triggered(){
 
 //Realiza una revision de la historia y la lesion
 void MainWindow::revision(){
-    bool crearHistoria, abrirHistoria, cerrarHistoria, nuevaLesion, abrirLesion, cerrarLesion, cBoxModo, generarReporte;
+    bool crearHistoria, abrirHistoria, cerrarHistoria, eliminarHistoria, nuevaLesion, abrirLesion, cerrarLesion, eliminarLesion, cBoxModo, generarReporte;
 
     //Si hay una historia cargada
     if(!historia->isEmpty()){
         crearHistoria = false;
         abrirHistoria = true;
         cerrarHistoria = true;
+        eliminarHistoria = true;
         ui->etqInfoHistoria->setText(*historia);
         if(!lesion->isEmpty()){
             nuevaLesion = false;
             abrirLesion = true;
             cerrarLesion = true;
+            eliminarLesion = true;
             cBoxModo = true;
             generarReporte = true;
             ui->etqInfoLesion->setText(*lesion);
@@ -138,9 +142,16 @@ void MainWindow::revision(){
         }else{
             //Si hay una historia pero no hay una lesion, deshabilita la seleccin de modos
             *fechaLesion = fecha;
-            nuevaLesion = true;
+
+            if(capWebcam.isOpened()){
+                nuevaLesion = true;
+            }else{
+                nuevaLesion = false;
+            }
+
             abrirLesion = true;
             cerrarLesion = false;
+            eliminarLesion = false;
             cBoxModo = false;
             generarReporte = false;
             ui->etqInfoLesion->setText("- - -");
@@ -157,9 +168,11 @@ void MainWindow::revision(){
 
         abrirHistoria = true;
         cerrarHistoria = false;
+        eliminarLesion = false;
         nuevaLesion = false;
         abrirLesion = false;
         cerrarLesion = false;
+        eliminarLesion = false;
         cBoxModo = false;
         generarReporte = false;
         ui->etqInfoHistoria->setText("- - -");
@@ -175,9 +188,11 @@ void MainWindow::revision(){
     ui->actionCrear_historia->setEnabled(crearHistoria);
     ui->actionAbrir_historia->setEnabled(abrirHistoria);
     ui->actionCerrar_historia->setEnabled(cerrarHistoria);
+    ui->actionEliminar_historia->setEnabled(eliminarHistoria);
     ui->actionNueva_lesion->setEnabled(nuevaLesion);
     ui->actionAbrir_lesion->setEnabled(abrirLesion);
     ui->actionCerrar_lesion->setEnabled(cerrarLesion);
+    ui->actionEliminar_lesion->setEnabled(eliminarLesion);
     ui->cBoxModo->setEnabled(cBoxModo);
     ui->btnGenerarReporte->setEnabled(generarReporte);
 
@@ -439,4 +454,28 @@ void MainWindow::on_actionAbrir_lesion_triggered(){
     abrirL.exec();
 
     revision();
+}
+
+void MainWindow::on_actionEliminar_historia_triggered(){
+    eliminarHistoria elim(dirRaiz, historia, lesion);
+    elim.exec();
+    revision();
+}
+
+void MainWindow::on_actionEliminar_lesion_triggered(){
+
+    dlgConfirmar conf("Seguro que desea eliminar la lesion: " + *lesion + "?", "Eliminar lesion");
+    conf.exec();
+
+    if(conf.confirmacion()){
+
+        QDir dir;
+        dir.setPath(dirRaiz + "/" + *historia + "/" + *lesion);
+        dir.removeRecursively();
+        dlgInfo info("La lesion se elimino correctamente.", "Lesion eliminada");
+        info.exec();
+
+        *lesion = "";
+        revision();
+    }
 }

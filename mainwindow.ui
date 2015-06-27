@@ -621,7 +621,9 @@
     </property>
     <addaction name="actionCrear_historia"/>
     <addaction name="actionAbrir_historia"/>
+    <addaction name="separator"/>
     <addaction name="actionCerrar_historia"/>
+    <addaction name="actionEliminar_historia"/>
    </widget>
    <widget class="QMenu" name="menuLesiones">
     <property name="title">
@@ -629,7 +631,9 @@
     </property>
     <addaction name="actionNueva_lesion"/>
     <addaction name="actionAbrir_lesion"/>
+    <addaction name="separator"/>
     <addaction name="actionCerrar_lesion"/>
+    <addaction name="actionEliminar_lesion"/>
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuHistoria"/>
@@ -690,6 +694,16 @@
   <action name="actionAbrir_lesion">
    <property name="text">
     <string>Abrir lesion</string>
+   </property>
+  </action>
+  <action name="actionEliminar_historia">
+   <property name="text">
+    <string>Eliminar historia</string>
+   </property>
+  </action>
+  <action name="actionEliminar_lesion">
+   <property name="text">
+    <string>Eliminar lesion</string>
    </property>
   </action>
  </widget>

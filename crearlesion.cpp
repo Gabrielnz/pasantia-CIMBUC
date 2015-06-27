@@ -13,6 +13,9 @@ crearLesion::crearLesion(QString dirRaizExt, QString historiaExt, QString *lesio
     dirRaiz = dirRaizExt;
     historia = historiaExt;
     lesion = lesionExt;
+    QRegExp rx("^([a-zA-Z0-9]+\[ ])+$");
+    QValidator *val = new QRegExpValidator(rx, this);
+    ui->lineaLesion->setValidator(val);
     this->setModal(true);
     ui->btnAceptar->setEnabled(false);
     lesionLista = false;
