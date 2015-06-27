@@ -122,6 +122,8 @@ void MainWindow::on_actionCerrar_lesion_triggered(){
 //Realiza una revision de la historia y la lesion
 void MainWindow::revision(){
     bool crearHistoria, abrirHistoria, cerrarHistoria, eliminarHistoria, nuevaLesion, abrirLesion, cerrarLesion, eliminarLesion, cBoxModo, generarReporte;
+    QDir dirHist, dirLesion;
+    QFileInfoList lista;
 
     //Si hay una historia cargada
     if(!historia->isEmpty()){
@@ -149,7 +151,14 @@ void MainWindow::revision(){
                 nuevaLesion = false;
             }
 
-            abrirLesion = true;
+            dirLesion.setPath(dirRaiz + "/" + *historia);
+            lista = dirLesion.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot);
+
+            if(lista.count() >= 1)
+                abrirLesion = true;
+            else
+                abrirLesion = false;
+
             cerrarLesion = false;
             eliminarLesion = false;
             cBoxModo = false;
@@ -166,7 +175,14 @@ void MainWindow::revision(){
             crearHistoria = false;
         }
 
-        abrirHistoria = true;
+        dirHist.setPath(dirRaiz);
+        lista = dirHist.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot);
+
+        if(lista.count() >= 1)
+            abrirHistoria = true;
+        else
+            abrirHistoria = false;
+
         cerrarHistoria = false;
         eliminarLesion = false;
         nuevaLesion = false;
