@@ -12,10 +12,10 @@ Dermasoft requiere de la instalacion de las siguientes dependencias:
 
 ### Pasos para instalar la aplicacion
 
-1. Descargar este archivo [opencv 3.0 pre-compilado](), extraer en C:\ y agregar el siguiente valor a la variable del sistema Path:
+1. Descargar este archivo [opencv 3.0 pre-compilado](https://mega.nz/#!XpMw1ZSS!PZA33YhmlT4_KhacCrwTeU1TE4rQYb379Tk1haiOCP8), extraer en C:\ y agregar el siguiente valor a la variable del sistema Path:
 c:\opencv\build\bin como se muestra en la siguiente imagen [agregar valor a variable de entorno Path](https://mega.nz/#!q9VFWASZ!LVVSHsgSJ79tHPGYQennFeAHJk3N0qAV9w0b2hCxl4k)
 
-2. Descargar el instalador de la aplicacion [dermasoft](https://mega.nz/#!u1ciRKxa!hZiEpucE12bt3vZa0coxlv8lXYHhh5JN-LH-vgtwO1A) y ejecutarlo.
+2. Descargar la ultima version del instalador de la aplicacion [dermasoft](https://mega.nz/#F!7ltiHAoI!EoDU-7zDYOx2thE4ccKpVg) y ejecutarlo.
 
 ## Desarrollador
 
