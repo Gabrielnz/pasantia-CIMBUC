@@ -46,8 +46,6 @@ private slots:
 
     void on_actionSalir_triggered();
 
-    void on_actionConectar_camara_triggered();
-
     void on_actionDesconectar_camara_triggered();
 
     void on_actionCrear_historia_triggered();
@@ -91,6 +89,8 @@ private slots:
     void on_actionEliminar_lesion_triggered();
 
     void on_btnAbrirCarpeta_clicked();
+
+    void conectarCamaras(int num);
 
 private:
     Ui::MainWindow *ui;

@@ -17,10 +17,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     if(!dir.exists())
         dir.mkdir(dirRaiz);
-    //Averiguar de que manera aplicar un candado a todos los archivos que se esten manejando en el directorio raiz
-    locker = new QLockFile(dirRaiz + "/" + "lock");
-    locker->setStaleLockTime(0);
-    locker->tryLock();
 
     //deshabilitar todos los botones necesarios al iniciar la interfaz
     ui->actionDesconectar_camara->setEnabled(false);
@@ -38,6 +34,41 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->btnGenerarReporte->setEnabled(false);
     this->adjustSize();
     this->setFixedSize(this->size());
+
+    /////////////////////////////////////////////PROBANDO/DESARROLLANDO///////////////////////////////////////////////////
+    //Averiguar de que manera aplicar un candado a todos los archivos que se esten manejando en el directorio raiz
+    locker = new QLockFile(dirRaiz + "/" + "lock");
+    locker->setStaleLockTime(0);
+    locker->tryLock();
+
+    int i, numCamaras;
+    bool flag = true;
+    i = numCamaras = 0;
+    cv::VideoCapture camaras;
+    QList<QAction*> accionesDinamicas;
+    QSignalMapper *signalMapper = new QSignalMapper;
+    ui->menuCamaras->clear();
+    while(flag){
+        camaras.open(i);
+        if(camaras.isOpened()){
+            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara - " + QString::number(i)));
+            connect(accionesDinamicas.at(i), SIGNAL(triggered()), signalMapper, SLOT(map()));
+            signalMapper->setMapping(accionesDinamicas.at(i), i);
+            numCamaras+=1;
+            camaras.release();
+        }else
+            flag = false;
+        i++;
+    }
+    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(conectarCamaras(int)));
+
+    if(numCamaras == 0){
+        ui->menuCamaras->setEnabled(false);
+    }
+
+    dlgInfo info("Porfavor, no conecte o desconecte ninguna camara mientras la aplicacion este en ejecucion.", "Camara");
+    info.exec();
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 MainWindow::~MainWindow(){ delete ui; }
@@ -57,26 +88,17 @@ void MainWindow::procesarCuadroActualizarGUI(){
     ui->etqCamara->setPixmap((QPixmap::fromImage(qimg)).scaled(w, h, Qt::KeepAspectRatio));
 }
 
-void MainWindow::on_actionAcerca_de_triggered(){
-
-    AcercaDe mensaje;
-    mensaje.exec();
-}
-
-void MainWindow::on_actionSalir_triggered(){ close();}
-
-void MainWindow::on_actionConectar_camara_triggered(){
-
+void MainWindow::conectarCamaras(int num){
     //si la camara no ha sido abierta
     if(capWebcam.isOpened() == false){
 
-        capWebcam.open(0);/*Abre la camara web*/
+        capWebcam.open(num);/*Abre la camara web*/
 
         if(capWebcam.isOpened() == false){
             dlgInfo info("Porfavor verifique que la camara este conectada.", "Error al conectar la camara");
             info.exec();
         }else{
-            ui->actionConectar_camara->setEnabled(false);
+            ui->menuCamaras->setEnabled(false);
             ui->actionDesconectar_camara->setEnabled(true);
             revision();
             dlgInfo info("La camara fue conectada correctamente.", "Camara conectada");
@@ -92,13 +114,22 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
     QPixmap pixDummy(0, 0);
     ui->etqCamara->setPixmap(pixDummy);
     ui->etqVistaprevia->setPixmap(pixDummy);
-    ui->actionConectar_camara->setEnabled(true);
+    //ui->actionConectar_camara->setEnabled(true);
+    ui->menuCamaras->setEnabled(true);
     ui->actionDesconectar_camara->setEnabled(false);
     ui->cBoxModo->setCurrentIndex(0);
 
     revision();
     dlgInfo info("La camara fue desconectada correctamente.", "Camara desconectada");
     info.exec();
+}
+
+void MainWindow::on_actionSalir_triggered(){ close();}
+
+void MainWindow::on_actionAcerca_de_triggered(){
+
+    AcercaDe mensaje;
+    mensaje.exec();
 }
 
 void MainWindow::on_actionCrear_historia_triggered(){

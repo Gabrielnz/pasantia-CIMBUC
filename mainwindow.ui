@@ -626,7 +626,13 @@
     <property name="title">
      <string>Camara</string>
     </property>
-    <addaction name="actionConectar_camara"/>
+    <widget class="QMenu" name="menuCamaras">
+     <property name="title">
+      <string>Conectar</string>
+     </property>
+     <addaction name="actionP"/>
+    </widget>
+    <addaction name="menuCamaras"/>
     <addaction name="actionDesconectar_camara"/>
     <addaction name="separator"/>
     <addaction name="actionSalir"/>
@@ -687,7 +693,7 @@
   </action>
   <action name="actionDesconectar_camara">
    <property name="text">
-    <string>Desconectar camara</string>
+    <string>Desconectar</string>
    </property>
    <property name="toolTip">
     <string>Desconectar camara</string>
@@ -726,6 +732,11 @@
   <action name="actionEliminar_lesion">
    <property name="text">
     <string>Eliminar lesion</string>
+   </property>
+  </action>
+  <action name="actionP">
+   <property name="text">
+    <string>p</string>
    </property>
   </action>
  </widget>
