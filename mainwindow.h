@@ -6,6 +6,7 @@
 #include <QTextDocument>
 #include <QtCore>
 #include <QDebug>
+#include <QDesktopServices>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -89,6 +90,8 @@ private slots:
 
     void on_actionEliminar_lesion_triggered();
 
+    void on_btnAbrirCarpeta_clicked();
+
 private:
     Ui::MainWindow *ui;
     cv::VideoCapture capWebcam;
@@ -98,6 +101,7 @@ private:
     QString dirRaiz;
     QString *historia, *lesion;
     QString fecha, *fechaLesion;
+    QLockFile *locker;
 };
 
 #endif // MAINWINDOW_H

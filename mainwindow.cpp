@@ -17,10 +17,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     if(!dir.exists())
         dir.mkdir(dirRaiz);
+    //Averiguar de que manera aplicar un candado a todos los archivos que se esten manejando en el directorio raiz
+    locker = new QLockFile(dirRaiz + "/" + "lock");
+    locker->setStaleLockTime(0);
+    locker->tryLock();
 
     //deshabilitar todos los botones necesarios al iniciar la interfaz
     ui->actionDesconectar_camara->setEnabled(false);
     ui->actionCrear_historia->setEnabled(false);
+    ui->actionAbrir_historia->setEnabled(false);
     ui->actionCerrar_historia->setEnabled(false);
     ui->actionEliminar_historia->setEnabled(false);
     ui->actionNueva_lesion->setEnabled(false);
@@ -29,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->actionEliminar_lesion->setEnabled(false);
     ui->cBoxModo->setEnabled(false);
     setBotones(false);
+    ui->btnAbrirCarpeta->setEnabled(false);
     ui->btnGenerarReporte->setEnabled(false);
     this->adjustSize();
     this->setFixedSize(this->size());
@@ -99,7 +105,6 @@ void MainWindow::on_actionCrear_historia_triggered(){
 
     crearHistoria crear(dirRaiz, historia);
     crear.exec();
-
     revision();
 }
 
@@ -108,20 +113,19 @@ void MainWindow::on_actionCerrar_historia_triggered(){
     //cuando se cierra una historia, se debe cerrar la lesion de dicha historia tambien
     *historia = "";
     *lesion = "";
-
     revision();
 }
 
 void MainWindow::on_actionCerrar_lesion_triggered(){
 
     *lesion = "";
-
     revision();
 }
 
 //Realiza una revision de la historia y la lesion
 void MainWindow::revision(){
-    bool crearHistoria, abrirHistoria, cerrarHistoria, eliminarHistoria, nuevaLesion, abrirLesion, cerrarLesion, eliminarLesion, cBoxModo, generarReporte;
+
+    bool crearHistoria, abrirHistoria, cerrarHistoria, eliminarHistoria, nuevaLesion, abrirLesion, cerrarLesion, eliminarLesion, cBoxModo, abrirCarpeta, generarReporte;
     QDir dirHist, dirLesion;
     QFileInfoList lista;
 
@@ -138,6 +142,7 @@ void MainWindow::revision(){
             cerrarLesion = true;
             eliminarLesion = true;
             cBoxModo = true;
+            abrirCarpeta = true;
             generarReporte = true;
             ui->etqInfoLesion->setText(*lesion);
             ui->etqInfoFecha->setText(QDate::fromString(*fechaLesion, "dd.MM.yyyy").toString("dd/MM/yyyy"));
@@ -162,6 +167,7 @@ void MainWindow::revision(){
             cerrarLesion = false;
             eliminarLesion = false;
             cBoxModo = false;
+            abrirCarpeta = false;
             generarReporte = false;
             ui->etqInfoLesion->setText("- - -");
             ui->etqInfoFecha->setText("- - -");
@@ -190,6 +196,7 @@ void MainWindow::revision(){
         cerrarLesion = false;
         eliminarLesion = false;
         cBoxModo = false;
+        abrirCarpeta = false;
         generarReporte = false;
         ui->etqInfoHistoria->setText("- - -");
         ui->etqInfoLesion->setText("- - -");
@@ -210,6 +217,7 @@ void MainWindow::revision(){
     ui->actionCerrar_lesion->setEnabled(cerrarLesion);
     ui->actionEliminar_lesion->setEnabled(eliminarLesion);
     ui->cBoxModo->setEnabled(cBoxModo);
+    ui->btnAbrirCarpeta->setEnabled(abrirCarpeta);
     ui->btnGenerarReporte->setEnabled(generarReporte);
 
     ui->cBoxModo->setCurrentIndex(0);
@@ -473,6 +481,7 @@ void MainWindow::on_actionAbrir_lesion_triggered(){
 }
 
 void MainWindow::on_actionEliminar_historia_triggered(){
+
     eliminarHistoria elim(dirRaiz, historia, lesion);
     elim.exec();
     revision();
@@ -494,4 +503,10 @@ void MainWindow::on_actionEliminar_lesion_triggered(){
         *lesion = "";
         revision();
     }
+}
+
+void MainWindow::on_btnAbrirCarpeta_clicked(){
+
+    QString path = QDir::toNativeSeparators(dirRaiz);
+    QDesktopServices::openUrl(QUrl("file:///" + path + "/" + *historia + "/" + *lesion));
 }
