@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     locker = new QLockFile(dirRaiz + "/" + "lock");
     locker->setStaleLockTime(0);
     locker->tryLock();
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     int i, numCamaras;
     bool flag = true;
@@ -66,9 +67,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->menuCamaras->setEnabled(false);
     }
 
-    dlgInfo info("Porfavor, no conecte o desconecte ninguna camara mientras la aplicacion este en ejecucion.", "Camara");
+    dlgInfo info("Porfavor, no conecte o desconecte ninguna camara mientras la aplicacion este en ejecucion.", "Atencion");
     info.exec();
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 MainWindow::~MainWindow(){ delete ui; }

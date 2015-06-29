@@ -649,8 +649,8 @@
     </property>
     <addaction name="actionCrear_historia"/>
     <addaction name="actionAbrir_historia"/>
-    <addaction name="separator"/>
     <addaction name="actionCerrar_historia"/>
+    <addaction name="separator"/>
     <addaction name="actionEliminar_historia"/>
    </widget>
    <widget class="QMenu" name="menuLesiones">
@@ -659,8 +659,8 @@
     </property>
     <addaction name="actionNueva_lesion"/>
     <addaction name="actionAbrir_lesion"/>
-    <addaction name="separator"/>
     <addaction name="actionCerrar_lesion"/>
+    <addaction name="separator"/>
     <addaction name="actionEliminar_lesion"/>
    </widget>
    <addaction name="menuArchivo"/>
