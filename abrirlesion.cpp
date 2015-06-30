@@ -1,14 +1,8 @@
 #include "abrirlesion.h"
 #include "ui_abrirlesion.h"
 
-abrirLesion::abrirLesion(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::abrirLesion)
-{
-    ui->setupUi(this);
-}
+abrirLesion::abrirLesion(QString *lesionExt, QString rutaExt, QString *fechaLesionExt, QWidget *parent) : QDialog(parent), ui(new Ui::abrirLesion){
 
-abrirLesion::abrirLesion(QString *lesionExt, QString rutaExt, QString *fechaLesionExt) : ui(new Ui::abrirLesion){
     ui->setupUi(this);
     ui->btnAbrir->setEnabled(false);
     lesion = lesionExt;
@@ -32,10 +26,7 @@ abrirLesion::abrirLesion(QString *lesionExt, QString rutaExt, QString *fechaLesi
     this->setModal(true);
 }
 
-abrirLesion::~abrirLesion(){
-
-    delete ui;
-}
+abrirLesion::~abrirLesion(){ delete ui; }
 
 void abrirLesion::on_btnCancelar_clicked(){ close(); }
 

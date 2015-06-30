@@ -16,8 +16,7 @@ class abrirLesion : public QDialog
     Q_OBJECT
 
 public:
-    explicit abrirLesion(QWidget *parent = 0);
-    explicit abrirLesion(QString *lesionExt, QString rutaExt, QString *fechaLesionExt);
+    explicit abrirLesion(QString *lesionExt, QString rutaExt, QString *fechaLesionExt, QWidget *parent = 0);
     ~abrirLesion();
 
 private slots:

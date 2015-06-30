@@ -1,14 +1,7 @@
 #include "crearhistoria.h"
 #include "ui_crearhistoria.h"
 
-crearHistoria::crearHistoria(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::crearHistoria)
-{
-    ui->setupUi(this);
-}
-
-crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt): ui(new Ui::crearHistoria){
+crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt, QWidget *parent): QDialog(parent), ui(new Ui::crearHistoria){
 
     ui->setupUi(this);
     historia = historiaExt;
@@ -31,10 +24,7 @@ crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt): ui(new U
     this->setFixedSize(this->size());
 }
 
-crearHistoria::~crearHistoria(){
-
-    delete ui;
-}
+crearHistoria::~crearHistoria(){ delete ui; }
 
 void crearHistoria::on_btnCancelar_clicked(){ close();}
 

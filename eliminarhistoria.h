@@ -20,8 +20,7 @@ class eliminarHistoria : public QDialog
     Q_OBJECT
 
 public:
-    explicit eliminarHistoria(QWidget *parent = 0);
-    explicit eliminarHistoria(QString rutaExt, QString *historiaExt, QString *lesionExt);
+    explicit eliminarHistoria(QString rutaExt, QString *historiaExt, QString *lesionExt, QWidget *parent = 0);
     ~eliminarHistoria();
 
 private slots:

@@ -12,8 +12,7 @@ class dlgInfo : public QDialog
     Q_OBJECT
 
 public:
-    explicit dlgInfo(QWidget *parent = 0);
-    explicit dlgInfo(QString mensaje, QString titulo);
+    explicit dlgInfo(QString mensaje, QString titulo, QWidget *parent = 0);
     ~dlgInfo();
 
 private slots:

@@ -1,17 +1,10 @@
 #include "dlgconfirmar.h"
 #include "ui_dlgconfirmar.h"
 
-dlgConfirmar::dlgConfirmar(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::dlgConfirmar)
-{
-    ui->setupUi(this);
-}
+dlgConfirmar::dlgConfirmar(QString mensaje, QString titulo, QWidget *parent) : QDialog(parent), ui(new Ui::dlgConfirmar){
 
-dlgConfirmar::dlgConfirmar(QString mensaje, QString titulo) : ui(new Ui::dlgConfirmar){
     ui->setupUi(this);
     confirmar = false;
-
     ui->etqConfirmacion->setText(mensaje);
     this->setWindowTitle(titulo);
     this->setModal(true);

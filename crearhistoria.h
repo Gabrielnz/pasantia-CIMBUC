@@ -21,8 +21,7 @@ class crearHistoria : public QDialog
     Q_OBJECT
 
 public:
-    explicit crearHistoria(QWidget *parent = 0);
-    explicit crearHistoria(QString dirRaizExt, QString *historiaExt);
+    explicit crearHistoria(QString dirRaizExt, QString *historiaExt, QWidget *parent = 0);
     ~crearHistoria();
 
 private slots:

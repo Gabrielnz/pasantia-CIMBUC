@@ -1,14 +1,7 @@
 #include "eliminarhistoria.h"
 #include "ui_eliminarhistoria.h"
 
-eliminarHistoria::eliminarHistoria(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::eliminarHistoria)
-{
-    ui->setupUi(this);
-}
-
-eliminarHistoria::eliminarHistoria(QString rutaExt, QString *historiaExt, QString *lesionExt) : ui(new Ui::eliminarHistoria){
+eliminarHistoria::eliminarHistoria(QString rutaExt, QString *historiaExt, QString *lesionExt, QWidget *parent) : QDialog(parent), ui(new Ui::eliminarHistoria){
 
     ui->setupUi(this);
     ruta = rutaExt;

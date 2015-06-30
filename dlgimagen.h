@@ -19,8 +19,7 @@ class dlgImagen : public QDialog
     Q_OBJECT
 
 public:
-    explicit dlgImagen(QWidget *parent = 0);
-    explicit dlgImagen(QString nombreImagen, QString colorExt, QString rutaExt, QString fechaExt);
+    explicit dlgImagen(QString nombreImagen, QString colorExt, QString rutaExt, QString fechaExt, QWidget *parent = 0);
     void actAnotaciones();
     bool getReemplazar();
     ~dlgImagen();

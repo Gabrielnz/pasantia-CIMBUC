@@ -1,14 +1,8 @@
 #include "crearlesion.h"
 #include "ui_crearlesion.h"
 
-crearLesion::crearLesion(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::crearLesion)
-{
-    ui->setupUi(this);
-}
+crearLesion::crearLesion(QString dirRaizExt, QString historiaExt, QString *lesionExt, QWidget *parent) : QDialog(parent), ui(new Ui::crearLesion){
 
-crearLesion::crearLesion(QString dirRaizExt, QString historiaExt, QString *lesionExt) : ui(new Ui::crearLesion){
     ui->setupUi(this);
     dirRaiz = dirRaizExt;
     historia = historiaExt;

@@ -37,10 +37,8 @@ public:
     void revision();
     ~MainWindow();
 
-public slots:
-    void procesarCuadroActualizarGUI();/*Procedimiento donde la magia sucede :b*/
-
 private slots:
+    void procesarCuadroActualizarGUI();/*Procedimiento donde la magia sucede :b*/
 
     void on_actionAcerca_de_triggered();
 
@@ -76,8 +74,6 @@ private slots:
 
     void on_actionCerrar_lesion_triggered();
 
-    void on_btnGenerarReporte_clicked();
-
     void on_actionNueva_lesion_triggered();
 
     void on_actionAbrir_historia_triggered();
@@ -94,8 +90,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    cv::VideoCapture capWebcam;
-    cv::Mat matOriginal;
+    cv::VideoCapture cam;
+    cv::Mat mat;
     QImage qimg;
     QTimer *tmrTimer;
     QString dirRaiz;

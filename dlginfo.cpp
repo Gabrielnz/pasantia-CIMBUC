@@ -1,14 +1,8 @@
 #include "dlginfo.h"
 #include "ui_dlginfo.h"
 
-dlgInfo::dlgInfo(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::dlgInfo)
-{
-    ui->setupUi(this);
-}
+dlgInfo::dlgInfo(QString mensaje, QString titulo, QWidget *parent) : QDialog(parent), ui(new Ui::dlgInfo){
 
-dlgInfo::dlgInfo(QString mensaje, QString titulo) : ui(new Ui::dlgInfo){
     ui->setupUi(this);
     ui->etqInfo->setText(mensaje);
     this->setWindowTitle(titulo);

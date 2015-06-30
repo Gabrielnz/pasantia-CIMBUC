@@ -1,14 +1,7 @@
 #include "dlgimagen.h"
 #include "ui_dlgimagen.h"
 
-dlgImagen::dlgImagen(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::dlgImagen)
-{
-    ui->setupUi(this);
-}
-
-dlgImagen::dlgImagen(QString nombreImagen, QString colorExt, QString rutaExt, QString fechaExt) : ui(new Ui::dlgImagen){
+dlgImagen::dlgImagen(QString nombreImagen, QString colorExt, QString rutaExt, QString fechaExt, QWidget *parent) : QDialog(parent), ui(new Ui::dlgImagen){
     ui->setupUi(this);
     QImage imagen(nombreImagen);
     color = colorExt;

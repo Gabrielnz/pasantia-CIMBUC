@@ -14,8 +14,7 @@ class crearLesion : public QDialog
     Q_OBJECT
 
 public:
-    explicit crearLesion(QWidget *parent = 0);
-    explicit crearLesion(QString dirRaizExt, QString historiaExt, QString *lesionExt);
+    explicit crearLesion(QString dirRaizExt, QString historiaExt, QString *lesionExt, QWidget *parent = 0);
     ~crearLesion();
 
 private slots:

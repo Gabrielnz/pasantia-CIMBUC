@@ -54,17 +54,17 @@ win32 {
     LIBS += C:\opencv\build\bin\libopencv_imgproc300.dll
     LIBS += C:\opencv\build\bin\libopencv_video300.dll
     LIBS += C:\opencv\build\bin\libopencv_videoio300.dll
-    LIBS += C:\opencv\build\bin\libopencv_highgui300.dll
-    LIBS += C:\opencv\build\bin\libopencv_calib3d300.dll
-    LIBS += C:\opencv\build\bin\libopencv_features2d300.dll
-    LIBS += C:\opencv\build\bin\libopencv_flann300.dll
-    LIBS += C:\opencv\build\bin\libopencv_imgcodecs300.dll
-    LIBS += C:\opencv\build\bin\libopencv_ml300.dll
-    LIBS += C:\opencv\build\bin\libopencv_photo300.dll
-    LIBS += C:\opencv\build\bin\libopencv_videostab300.dll
-    LIBS += C:\opencv\build\bin\libopencv_objdetect300.dll
-    LIBS += C:\opencv\build\bin\libopencv_shape300.dll
-    LIBS += C:\opencv\build\bin\libopencv_stitching300.dll
-    LIBS += C:\opencv\build\bin\libopencv_superres300.dll
-    message("Usando la configuracion para Windows")
+    #LIBS += C:\opencv\build\bin\libopencv_highgui300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_calib3d300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_features2d300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_flann300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_imgcodecs300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_ml300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_photo300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_videostab300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_objdetect300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_shape300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_stitching300.dll
+    #LIBS += C:\opencv\build\bin\libopencv_superres300.dll
+    #message("Usando la configuracion para Windows")
 }

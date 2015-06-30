@@ -12,8 +12,7 @@ class dlgConfirmar : public QDialog
     Q_OBJECT
 
 public:
-    explicit dlgConfirmar(QWidget *parent = 0);
-    explicit dlgConfirmar(QString mensaje, QString titulo);
+    explicit dlgConfirmar(QString mensaje, QString titulo, QWidget *parent = 0);
     bool confirmacion();
     ~dlgConfirmar();
 

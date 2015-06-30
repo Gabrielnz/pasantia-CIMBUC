@@ -21,8 +21,7 @@ class abrirHistoria : public QDialog
     Q_OBJECT
 
 public:
-    explicit abrirHistoria(QWidget *parent = 0);
-    explicit abrirHistoria(QString *historiaExt, QString *lesionExt, QString rutaExt);
+    explicit abrirHistoria(QString *historiaExt, QString *lesionExt, QString rutaExt, QWidget *parent = 0);
     ~abrirHistoria();
 
 private slots:
@@ -31,6 +30,12 @@ private slots:
     void on_btnAbrir_clicked();
 
     void on_listView_clicked(const QModelIndex &index);
+
+    void on_cBoxBuscar_currentIndexChanged(int index);
+
+    void on_lineaBuscar_textChanged(const QString &CI);
+
+    void buscar(int index, const QString &CI);
 
 private:
     Ui::abrirHistoria *ui;
