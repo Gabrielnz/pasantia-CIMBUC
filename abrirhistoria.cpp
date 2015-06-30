@@ -23,6 +23,12 @@ abrirHistoria::abrirHistoria(QString *historiaExt, QString *lesionExt, QString r
     this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());
+    ////////////////////////////////////////////////////////////
+    modelo = new QStringListModel();
+    QDir dir;
+    dir.setPath(ruta);
+    dir.setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
+    modelo->setStringList(dir.entryList());
 }
 
 abrirHistoria::~abrirHistoria(){ delete ui; }
@@ -61,12 +67,12 @@ void abrirHistoria::on_listView_clicked(const QModelIndex &index){
 
 void abrirHistoria::on_cBoxBuscar_currentIndexChanged(int index){
 
-    buscar(index, ui->lineaBuscar->text());
+    //buscar(index, ui->lineaBuscar->text());
 }
 
 void abrirHistoria::on_lineaBuscar_textChanged(const QString &CI){
 
-    buscar(ui->cBoxBuscar->currentIndex(), CI);
+    //buscar(ui->cBoxBuscar->currentIndex(), CI);
 }
 
 void abrirHistoria::buscar(int index, const QString &CI){
@@ -76,51 +82,62 @@ void abrirHistoria::buscar(int index, const QString &CI){
     QDir dir;
     dir.setPath(ruta);
     dir.setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
+    QFileInfoList infoLista = dir.entryInfoList();
     QStringList lista = dir.entryList();
+    QStringList quitarPath;
     int i;
     int n = dir.count();
-    QStringList coincidencias, quitar;
+    QStringList quitar;
 
     switch (index) {
 
     case 1:
         for(i = 0; i < n; i++){
-            if(lista[i].contains("V - " + CI)){
-                coincidencias+= lista[i];
-                //qDebug() << lista[i];
-            }else
+            if(!lista[i].contains("V - " + CI)){
                 quitar+= lista[i];
+                quitarPath += (infoLista.at(i)).absoluteFilePath();
+                qDebug() << (infoLista.at(i)).absoluteFilePath();
+            }
         }
         break;
 
     case 2:
         for(i = 0; i < n; i++){
-            if(lista[i].contains("E - " + CI)){
-                coincidencias+= lista[i];
-                //qDebug() << lista[i];
-            }else
+            if(!lista[i].contains("E - " + CI)){
                 quitar+= lista[i];
+                quitarPath += (infoLista.at(i)).absoluteFilePath();
+                qDebug() << (infoLista.at(i)).absoluteFilePath();
+            }
         }
         break;
 
     default:
         for(i = 0; i < n; i++){
-            if(lista[i].contains("V - " + CI) || lista[i].contains("E - " + CI)){
-                coincidencias+= lista[i];
-                //qDebug() << lista[i];
-            }else
+            if(!lista[i].contains("V - " + CI) && !lista[i].contains("E - " + CI)){
                 quitar+= lista[i];
+                quitarPath += (infoLista.at(i)).absoluteFilePath();
+                qDebug() << (infoLista.at(i)).absoluteFilePath();
+            }
         }
         break;
     }
     //actualiza el modelo de vista para que solo muestre las carpetas filtradas
     n = quitar.count();
-    modeloDir->removeRow(2, modeloDir->index(ruta));
-    for(i = 0; i < n; i++){
-        QStringList::const_iterator iter = qFind(lista.begin(), lista.end(), quitar[i]);
-        //si el iterador no esta al final de la lista es porque encontro el valor
-        if(iter != lista.end()){
-            qDebug() << *iter;
-        }
+    QModelIndexList indexes;
+
+    for(i = 0; i < quitarPath.count(); i++){
+        indexes += modeloDir->index(quitarPath.at(i));
     }
+
+    for(i = indexes.count() - 1; i > -1; --i){
+        qDebug() << modeloDir->removeRow(indexes.at(i).row());
+    }
+    //qDebug() << modeloDir->removeRow(0);
+    //for(i = 0; i < n; i++){
+     //   QStringList::const_iterator iter = qFind(lista.begin(), lista.end(), quitar[i]);
+        //si el iterador no esta al final de la lista es porque encontro el valor
+     //   if(iter != lista.end()){
+            //qDebug() << *iter;
+      //  }
+    //}
 }

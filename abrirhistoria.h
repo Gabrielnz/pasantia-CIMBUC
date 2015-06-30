@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QFileSystemModel>
+#include <QStringListModel>
 #include <QDirModel>
 #include <QDebug>
 #include <QDate>
@@ -41,6 +42,7 @@ private:
     Ui::abrirHistoria *ui;
     QString ruta;
     QFileSystemModel *modeloDir;
+    QStringListModel *modelo;
     QString *historia, *lesion;
     QFile jHistoria;
 };
