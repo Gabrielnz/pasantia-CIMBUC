@@ -86,6 +86,7 @@ void MainWindow::conectarCamaras(int num){
         }else{
             ui->menuCamaras->setEnabled(false);
             ui->actionDesconectar_camara->setEnabled(true);
+            numCamara = num;
             revision();
             ui->cBoxModo->setCurrentIndex(0);
             dlgInfo info("La camara fue conectada correctamente.", "Camara conectada");
@@ -164,20 +165,21 @@ void MainWindow::on_actionCerrar_lesion_triggered(){
 //Realiza una revision de la historia, la lesion y la fecha, habilitando y deshabilitando los botones segun sea el caso
 void MainWindow::revision(){
 
-    bool crearHistoria, abrirHistoria, cerrarHistoria, eliminarHistoria, nuevaLesion, abrirLesion, cerrarLesion, eliminarLesion, cBoxModo, abrirCarpeta;
+    bool crearHistoria, abrirHistoria, verHistoria, cerrarHistoria, eliminarHistoria, nuevaLesion, abrirLesion, cerrarLesion, eliminarLesion, cBoxModo, abrirCarpeta;
     QDir dirHist, dirLesion, dirFecha;
     QFileInfoList lista;
 
     //Si hay una historia cargada
     if(!historia->isEmpty()){
         crearHistoria = false;
-        abrirHistoria = true;
+        abrirHistoria = false;
+        verHistoria = true;
         cerrarHistoria = true;
         eliminarHistoria = true;
         ui->etqInfoHistoria->setText(*historia);
         if(!lesion->isEmpty()){
             nuevaLesion = false;
-            abrirLesion = true;
+            abrirLesion = false;
             cerrarLesion = true;
             eliminarLesion = true;
             cBoxModo = true;
@@ -233,6 +235,7 @@ void MainWindow::revision(){
         else
             abrirHistoria = false;
 
+        verHistoria = false;
         cerrarHistoria = false;
         eliminarHistoria = false;
         nuevaLesion = false;
@@ -253,6 +256,7 @@ void MainWindow::revision(){
 
     ui->actionCrear_historia->setEnabled(crearHistoria);
     ui->actionAbrir_historia->setEnabled(abrirHistoria);
+    ui->actionVer_historia->setEnabled(verHistoria);
     ui->actionCerrar_historia->setEnabled(cerrarHistoria);
     ui->actionEliminar_historia->setEnabled(eliminarHistoria);
     ui->actionNueva_lesion->setEnabled(nuevaLesion);
@@ -261,8 +265,6 @@ void MainWindow::revision(){
     ui->actionEliminar_lesion->setEnabled(eliminarLesion);
     ui->cBoxModo->setEnabled(cBoxModo);
     ui->btnAbrirCarpeta->setEnabled(abrirCarpeta);
-
-    //ui->cBoxModo->setCurrentIndex(0);
 }
 
 /*Indice 0: Seleccionar
@@ -497,8 +499,8 @@ void MainWindow::on_btnBlanco_clicked(){
 
 void MainWindow::on_actionAbrir_historia_triggered(){
 
-    abrirHistoria abrirH(historia, lesion, dirRaiz);
-    abrirH.exec();
+    abrirHistoria abrir(historia, lesion, dirRaiz);
+    abrir.exec();
 
     revision();
     ui->cBoxModo->setCurrentIndex(0);
@@ -545,4 +547,10 @@ void MainWindow::on_btnAbrirCarpeta_clicked(){
 
     QString path = QDir::toNativeSeparators(dirRaiz);
     QDesktopServices::openUrl(QUrl("file:///" + path + "/" + *historia + "/" + *lesion + "/" + *fechaLesion));
+}
+
+void MainWindow::on_actionVer_historia_triggered(){
+
+    verHistoria ver(dirRaiz, *historia);
+    ver.exec();
 }

@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     abrirhistoria.cpp \
     abrirlesion.cpp \
     dlgconfirmar.cpp \
-    eliminarhistoria.cpp
+    eliminarhistoria.cpp \
+    verhistoria.cpp
 
 HEADERS  += mainwindow.h \
     acercade.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     abrirhistoria.h \
     abrirlesion.h \
     dlgconfirmar.h \
-    eliminarhistoria.h
+    eliminarhistoria.h \
+    verhistoria.h
 
 FORMS    += mainwindow.ui \
     acercade.ui \
@@ -44,7 +46,8 @@ FORMS    += mainwindow.ui \
     abrirhistoria.ui \
     abrirlesion.ui \
     dlgconfirmar.ui \
-    eliminarhistoria.ui
+    eliminarhistoria.ui \
+    verhistoria.ui
 
 
 win32 {
@@ -69,6 +72,3 @@ win32 {
     message("Usando la configuracion para Windows")
 }
 
-unix:!mac{
-    message("Usando la configuracion para Linux")
-}

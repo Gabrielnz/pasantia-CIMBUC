@@ -19,6 +19,7 @@
 #include "abrirhistoria.h"
 #include "abrirlesion.h"
 #include "eliminarhistoria.h"
+#include "verhistoria.h"
 
 namespace Ui {
 class MainWindow;
@@ -88,6 +89,8 @@ private slots:
 
     void conectarCamaras(int num);
 
+    void on_actionVer_historia_triggered();
+
 private:
     Ui::MainWindow *ui;
     cv::VideoCapture cam;
@@ -95,6 +98,7 @@ private:
     QImage qimg;
     QTimer *tmrTimer;
     QString dirRaiz, *historia, *lesion, fecha, *fechaLesion;
+    int numCamara;
 };
 
 #endif // MAINWINDOW_H

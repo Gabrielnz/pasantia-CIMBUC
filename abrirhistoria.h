@@ -2,7 +2,7 @@
 #define ABRIRHISTORIA_H
 
 #include <QDialog>
-#include <QFileSystemModel>
+#include <QFile>
 #include <QStringListModel>
 #include <QDirModel>
 #include <QDebug>
