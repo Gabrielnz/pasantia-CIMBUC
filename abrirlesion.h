@@ -30,10 +30,8 @@ private slots:
 
 private:
     Ui::abrirLesion *ui;
-    QString ruta;
+    QString ruta, *lesion, *fechaLesion, fechaSeleccionada;
     QFileSystemModel *modeloLesion, *modeloFecha;
-    QString *lesion;
-    QString *fechaLesion, fechaSeleccionada;
 };
 
 #endif // ABRIRLESION_H

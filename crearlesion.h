@@ -26,9 +26,7 @@ private slots:
 
 private:
     Ui::crearLesion *ui;
-    QString dirRaiz;
-    QString historia;
-    QString *lesion;
+    QString dirRaiz, historia, *lesion;
     bool lesionLista;
 };
 

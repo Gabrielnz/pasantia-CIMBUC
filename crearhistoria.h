@@ -41,8 +41,7 @@ private slots:
 
 private:
     Ui::crearHistoria *ui;
-    QString dirRaiz;
-    QString *historia;
+    QString dirRaiz, *historia;
     QFile jHistoria;
 };
 

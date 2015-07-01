@@ -17,12 +17,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     if(!dir.exists())
         dir.mkdir(dirRaiz);
-    /////////////////////////////////////////////PROBANDO/DESARROLLANDO///////////////////////////////////////////////////
-    //Averiguar de que manera aplicar un candado a todos los archivos que se esten manejando en el directorio raiz
-    //locker = new QLockFile(dirRaiz + "/" + "lock");
-    //locker->setStaleLockTime(0);
-    //locker->tryLock();
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     int i, numCamaras;
     bool flag = true;
@@ -93,6 +87,7 @@ void MainWindow::conectarCamaras(int num){
             ui->menuCamaras->setEnabled(false);
             ui->actionDesconectar_camara->setEnabled(true);
             revision();
+            ui->cBoxModo->setCurrentIndex(0);
             dlgInfo info("La camara fue conectada correctamente.", "Camara conectada");
             info.exec();
         }
@@ -106,12 +101,12 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
     QPixmap pixDummy(0, 0);
     ui->etqCamara->setPixmap(pixDummy);
     ui->etqVistaprevia->setPixmap(pixDummy);
-    //ui->actionConectar_camara->setEnabled(true);
     ui->menuCamaras->setEnabled(true);
     ui->actionDesconectar_camara->setEnabled(false);
     ui->cBoxModo->setCurrentIndex(0);
 
     revision();
+    ui->cBoxModo->setCurrentIndex(0);
     dlgInfo info("La camara fue desconectada correctamente.", "Camara desconectada");
     info.exec();
 }
@@ -129,6 +124,16 @@ void MainWindow::on_actionCrear_historia_triggered(){
     crearHistoria crear(dirRaiz, historia);
     crear.exec();
     revision();
+    ui->cBoxModo->setCurrentIndex(0);
+
+    if(*historia != ""){
+        dlgConfirmar conf("Desea agregar una nueva lesion a la historia: " + *historia + "?", "Agregar lesion");
+        conf.exec();
+
+        if(conf.confirmacion()){
+            on_actionNueva_lesion_triggered();
+        }
+    }
 }
 
 void MainWindow::on_actionCerrar_historia_triggered(){
@@ -137,19 +142,30 @@ void MainWindow::on_actionCerrar_historia_triggered(){
     *historia = "";
     *lesion = "";
     revision();
+    ui->cBoxModo->setCurrentIndex(0);
+}
+
+void MainWindow::on_actionNueva_lesion_triggered(){
+
+    crearLesion nuevaLesion(dirRaiz, *historia, lesion);
+    nuevaLesion.exec();
+
+    revision();
+    ui->cBoxModo->setCurrentIndex(0);
 }
 
 void MainWindow::on_actionCerrar_lesion_triggered(){
 
     *lesion = "";
     revision();
+    ui->cBoxModo->setCurrentIndex(0);
 }
 
-//Realiza una revision de la historia y la lesion
+//Realiza una revision de la historia, la lesion y la fecha, habilitando y deshabilitando los botones segun sea el caso
 void MainWindow::revision(){
 
     bool crearHistoria, abrirHistoria, cerrarHistoria, eliminarHistoria, nuevaLesion, abrirLesion, cerrarLesion, eliminarLesion, cBoxModo, abrirCarpeta;
-    QDir dirHist, dirLesion;
+    QDir dirHist, dirLesion, dirFecha;
     QFileInfoList lista;
 
     //Si hay una historia cargada
@@ -165,7 +181,14 @@ void MainWindow::revision(){
             cerrarLesion = true;
             eliminarLesion = true;
             cBoxModo = true;
-            abrirCarpeta = true;
+
+            dirFecha.setPath(dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion);
+
+            if(dirFecha.exists())
+                abrirCarpeta = true;
+            else
+                abrirCarpeta = false;
+
             ui->etqInfoLesion->setText(*lesion);
             ui->etqInfoFecha->setText(QDate::fromString(*fechaLesion, "dd.MM.yyyy").toString("dd/MM/yyyy"));
         }else{
@@ -239,7 +262,7 @@ void MainWindow::revision(){
     ui->cBoxModo->setEnabled(cBoxModo);
     ui->btnAbrirCarpeta->setEnabled(abrirCarpeta);
 
-    ui->cBoxModo->setCurrentIndex(0);
+    //ui->cBoxModo->setCurrentIndex(0);
 }
 
 /*Indice 0: Seleccionar
@@ -290,6 +313,7 @@ void MainWindow::on_cBoxModo_currentIndexChanged(int index){
         //desabilitar todos los botones, excepto seleccionar
         setBotones(false);
     }
+    revision();
 }
 
 void MainWindow::setBotones(bool flag){
@@ -356,6 +380,7 @@ void MainWindow::accionBotones(QString color){
         QPixmap pixDummy(0, 0);
         ui->etqVistaprevia->setPixmap(pixDummy);
     }
+    revision();
 }
 
 void MainWindow::setColorDisponible(int colorIndex){
@@ -470,20 +495,13 @@ void MainWindow::on_btnBlanco_clicked(){
     accionBotones("Blanco");
 }
 
-void MainWindow::on_actionNueva_lesion_triggered(){
-
-    crearLesion nuevaLesion(dirRaiz, *historia, lesion);
-    nuevaLesion.exec();
-
-    revision();
-}
-
 void MainWindow::on_actionAbrir_historia_triggered(){
 
     abrirHistoria abrirH(historia, lesion, dirRaiz);
     abrirH.exec();
 
     revision();
+    ui->cBoxModo->setCurrentIndex(0);
 }
 
 void MainWindow::on_actionAbrir_lesion_triggered(){
@@ -492,6 +510,7 @@ void MainWindow::on_actionAbrir_lesion_triggered(){
     abrirL.exec();
 
     revision();
+    ui->cBoxModo->setCurrentIndex(0);
 }
 
 void MainWindow::on_actionEliminar_historia_triggered(){
@@ -500,6 +519,7 @@ void MainWindow::on_actionEliminar_historia_triggered(){
     elim.exec();
 
     revision();
+    ui->cBoxModo->setCurrentIndex(0);
 }
 
 void MainWindow::on_actionEliminar_lesion_triggered(){
@@ -514,6 +534,7 @@ void MainWindow::on_actionEliminar_lesion_triggered(){
         dir.removeRecursively();
         *lesion = "";
         revision();
+        ui->cBoxModo->setCurrentIndex(0);
 
         dlgInfo info("La lesion se elimino correctamente.", "Lesion eliminada");
         info.exec();

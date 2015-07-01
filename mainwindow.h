@@ -7,9 +7,9 @@
 #include <QtCore>
 #include <QDebug>
 #include <QDesktopServices>
-#include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include "acercade.h"
 #include "crearhistoria.h"
 #include "dlgimagen.h"
@@ -94,10 +94,7 @@ private:
     cv::Mat mat;
     QImage qimg;
     QTimer *tmrTimer;
-    QString dirRaiz;
-    QString *historia, *lesion;
-    QString fecha, *fechaLesion;
-    QLockFile *locker;
+    QString dirRaiz, *historia, *lesion, fecha, *fechaLesion;
 };
 
 #endif // MAINWINDOW_H

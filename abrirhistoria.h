@@ -40,10 +40,9 @@ private slots:
 
 private:
     Ui::abrirHistoria *ui;
-    QString ruta;
-    QFileSystemModel *modeloDir;
+    QString ruta, *historia, *lesion;
+    QDir dir;
     QStringListModel *modelo;
-    QString *historia, *lesion;
     QFile jHistoria;
 };
 

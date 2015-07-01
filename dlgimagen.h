@@ -29,9 +29,7 @@ private slots:
 
 private:
     Ui::dlgImagen *ui;
-    QString color;
-    QString ruta;
-    QString fecha;
+    QString color, ruta, fecha;
     QFile jAnotaciones;
 };
 

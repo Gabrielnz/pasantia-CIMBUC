@@ -24,7 +24,13 @@ crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt, QWidget *
     this->setFixedSize(this->size());
 }
 
-crearHistoria::~crearHistoria(){ delete ui; }
+crearHistoria::~crearHistoria(){
+
+    if(jHistoria.isOpen())
+        jHistoria.close();
+
+    delete ui;
+}
 
 void crearHistoria::on_btnCancelar_clicked(){ close();}
 
@@ -83,7 +89,6 @@ void crearHistoria::on_btnCrearHistoria_clicked(){
 }
 
 void crearHistoria::on_lineaNombre_textChanged(const QString &nombre){
-
     //se asegura de que todos los campos esten llenos
     if(!ui->lineaCI->text().isEmpty() && !nombre.isEmpty() && !ui->lineaApellido->text().isEmpty() && (ui->radioMasculino->isChecked() || ui->radioFemenino->isChecked())){
         ui->btnCrearHistoria->setEnabled(true);
@@ -93,7 +98,6 @@ void crearHistoria::on_lineaNombre_textChanged(const QString &nombre){
 }
 
 void crearHistoria::on_lineaApellido_textChanged(const QString &apellido){
-
     //se asegura de que todos los campos esten llenos
     if(!ui->lineaCI->text().isEmpty() && !ui->lineaNombre->text().isEmpty() && !apellido.isEmpty() && (ui->radioMasculino->isChecked() || ui->radioFemenino->isChecked())){
         ui->btnCrearHistoria->setEnabled(true);
@@ -103,7 +107,6 @@ void crearHistoria::on_lineaApellido_textChanged(const QString &apellido){
 }
 
 void crearHistoria::on_radioMasculino_clicked(){
-
     //se asegura de que todos los campos esten llenos
     if(!ui->lineaCI->text().isEmpty() && !ui->lineaNombre->text().isEmpty() && !ui->lineaApellido->text().isEmpty()){
         ui->btnCrearHistoria->setEnabled(true);
@@ -113,7 +116,6 @@ void crearHistoria::on_radioMasculino_clicked(){
 }
 
 void crearHistoria::on_radioFemenino_clicked(){
-
     //se asegura de que todos los campos esten llenos
     if(!ui->lineaCI->text().isEmpty() && !ui->lineaNombre->text().isEmpty() && !ui->lineaApellido->text().isEmpty()){
         ui->btnCrearHistoria->setEnabled(true);

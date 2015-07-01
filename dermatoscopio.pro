@@ -66,5 +66,9 @@ win32 {
     #LIBS += C:\opencv\build\bin\libopencv_shape300.dll
     #LIBS += C:\opencv\build\bin\libopencv_stitching300.dll
     #LIBS += C:\opencv\build\bin\libopencv_superres300.dll
-    #message("Usando la configuracion para Windows")
+    message("Usando la configuracion para Windows")
+}
+
+unix:!mac{
+    message("Usando la configuracion para Linux")
 }

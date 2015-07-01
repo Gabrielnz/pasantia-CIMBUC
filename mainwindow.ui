@@ -653,7 +653,7 @@
   </action>
   <action name="actionAcerca_de">
    <property name="text">
-    <string>Acerca de</string>
+    <string>Acerca de Dermasoft</string>
    </property>
   </action>
   <action name="actionCrear_historia">
@@ -719,6 +719,17 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>cBoxModo</tabstop>
+  <tabstop>btnVerde</tabstop>
+  <tabstop>btnAzul</tabstop>
+  <tabstop>btnCyan</tabstop>
+  <tabstop>btnMagenta</tabstop>
+  <tabstop>btnAmarillo</tabstop>
+  <tabstop>btnBlanco</tabstop>
+  <tabstop>btnRojo</tabstop>
+  <tabstop>btnAbrirCarpeta</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
