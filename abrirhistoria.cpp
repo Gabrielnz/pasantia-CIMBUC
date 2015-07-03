@@ -1,12 +1,12 @@
 #include "abrirhistoria.h"
 #include "ui_abrirhistoria.h"
 
-abrirHistoria::abrirHistoria(QString *historiaExt, QString *lesionExt, QString rutaExt, QWidget *parent) : QDialog(parent), ui(new Ui::abrirHistoria){
+abrirHistoria::abrirHistoria(QString *historiaExt, QString *iconExt, QString rutaExt, QWidget *parent) : QDialog(parent), ui(new Ui::abrirHistoria){
 
     ui->setupUi(this);
     ui->btnAbrir->setEnabled(false);
     historia = historiaExt;
-    lesion = lesionExt;
+    icon = iconExt;
     ruta = rutaExt;
     QValidator *soloNumeros = new QIntValidator(1, 999999999, this);
     ui->lineaBuscar->setValidator(soloNumeros);
@@ -30,7 +30,7 @@ void abrirHistoria::on_btnAbrir_clicked(){
 
     QString histSeleccionada = (modelo->data(ui->listView->currentIndex(), Qt::DisplayRole)).toString();
     *historia = histSeleccionada;
-    *lesion = "";
+    *icon = "";
 
     close();
 }

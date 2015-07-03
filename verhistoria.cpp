@@ -19,7 +19,7 @@ verHistoria::verHistoria(QString ruta, QString historia, QWidget *parent) : QDia
     QDir dir;
     dir.setPath(ruta + "/" + historia);
     dir.setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
-    ui->etqInfoLesiones->setText(QString::number(dir.entryList().count()));
+    ui->etqInfoIcones->setText(QString::number(dir.entryList().count()));
     this->setWindowTitle("Historia");
     this->setModal(true);
     this->adjustSize();
@@ -28,4 +28,4 @@ verHistoria::verHistoria(QString ruta, QString historia, QWidget *parent) : QDia
 
 verHistoria::~verHistoria(){ delete ui; }
 
-void verHistoria::on_btnAceptar_clicked(){ close(); }
+void verHistoria::on_btnListo_clicked(){ close(); }

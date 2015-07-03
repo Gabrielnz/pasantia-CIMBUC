@@ -39,7 +39,7 @@ dlgImagen::~dlgImagen(){
     delete ui;
 }
 
-void dlgImagen::on_btnAceptar_clicked(){
+void dlgImagen::on_btnListo_clicked(){
 
     jAnotaciones.open(QIODevice::ReadWrite);
     QByteArray jData = jAnotaciones.readAll();

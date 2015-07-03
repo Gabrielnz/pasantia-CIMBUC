@@ -4,12 +4,14 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
 
     ui->setupUi(this);
+    txtCamara = ui->etqCamara->text();
+    txtVistaPrev = ui->etqVistaprevia->text();
     dirRaiz = QDir::homePath() + "/" + "Dermasoft - Historias";
     fecha = QDate::currentDate().toString("dd.MM.yyyy");
-    fechaLesion = new QString(fecha);
+    fechaIcon = new QString(fecha);
     tmrTimer = new QTimer;
     historia = new QString;
-    lesion = new QString;
+    icon = new QString;
     //conecta el timer con la actualizacion del cuadro de la GUI
     connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
     QDir dir;
@@ -18,79 +20,65 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if(!dir.exists())
         dir.mkdir(dirRaiz);
 
-    int i, numCamaras;
-    bool flag = true;
-    i = numCamaras = 0;
-    cv::VideoCapture camaras;
-    QList<QAction*> accionesDinamicas;
-    QSignalMapper *signalMapper = new QSignalMapper;
-    ui->menuCamaras->clear();
-    while(flag){
-        camaras.open(i);
-        if(camaras.isOpened()){
-            double w = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
-            double h = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
-            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara " + QString::number(i + 1) + " - " + QString::number(w) + "x" + QString::number(h)));
-            connect(accionesDinamicas.at(i), SIGNAL(triggered()), signalMapper, SLOT(map()));
-            signalMapper->setMapping(accionesDinamicas.at(i), i);
-            numCamaras+=1;
-            camaras.release();
-        }else
-            flag = false;
-        i++;
-    }
-    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(conectarCamaras(int)));
-
-    if(numCamaras == 0){
-        ui->menuCamaras->setEnabled(false);
-    }
+    dlgInfo info("Verifique que el dispositivo este conectado antes de empezar.", "Atencion", "Listo");
+    info.exec();
 
     this->adjustSize();
     this->setFixedSize(this->size());
 
-    //habilitando y deshabilitando los botones necesarios para empezar
-    ui->actionDesconectar_camara->setEnabled(false);
-    setBotones(false);
+    numCams = 0;
+    signalMapper = new QSignalMapper;
+    ui->actionActualizar->trigger();
     revision();
-
-    dlgInfo info("Porfavor, no conecte o desconecte ninguna camara mientras la aplicacion este en ejecucion.", "Atencion");
-    info.exec();
 }
 
 MainWindow::~MainWindow(){ delete ui; }
 
 void MainWindow::procesarCuadroActualizarGUI(){
-
+    cv::Mat mAux;
     cam.read(mat);
+    cam.read(mAux);
     //se prepara la imagen para convertirla de BGR A RGB para que Qt pueda manejarla
     cv::cvtColor(mat, mat, CV_BGR2RGB);
     //ocurre la conversion de cv mat a qimage. Investigar sobre cual QImage::Format_ es mas apropiado
-    QImage imgaux((uchar*)mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
-    qimg = imgaux;
-    //se obtiene al largo y ancho de la imagen capturada
-    int w = ui->etqCamara->width();
-    int h = ui->etqCamara->height();
-    //se le asigna la imagen a la etiqueta de la camara
-    ui->etqCamara->setPixmap((QPixmap::fromImage(qimg)).scaled(w, h, Qt::KeepAspectRatio));
+    QImage imgAux((uchar*)mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
+    QImage imgAux2((uchar*)mAux.data, mAux.cols, mAux.rows, mAux.step, QImage::Format_RGB888);
+
+    if(!imgAux2.allGray()){
+        qimg = imgAux;
+        //se obtiene al largo y ancho de la imagen capturada
+        int w = ui->etqCamara->width();
+        int h = ui->etqCamara->height();
+        //se le asigna la imagen a la etiqueta de la camara
+        ui->etqCamara->setPixmap((QPixmap::fromImage(qimg)).scaled(w, h, Qt::KeepAspectRatio));
+    }else{
+        ui->actionDesconectar_camara->trigger();
+        ui->actionActualizar->trigger();
+        revision();
+    }
 }
 
 void MainWindow::conectarCamaras(int num){
     //si la camara no ha sido abierta
-    if(cam.isOpened() == false){
+    if(!cam.isOpened()){
 
         cam.open(num);/*Abre la camara web*/
 
-        if(cam.isOpened() == false){
+        if(!cam.isOpened()){
             dlgInfo info("Porfavor verifique que la camara este conectada.", "Error al conectar la camara");
             info.exec();
         }else{
-            ui->menuCamaras->setEnabled(false);
-            ui->actionDesconectar_camara->setEnabled(true);
-            numCamara = num;
+            indexCam = num;
             revision();
-            ui->cBoxModo->setCurrentIndex(0);
-            dlgInfo info("La camara fue conectada correctamente.", "Camara conectada");
-            info.exec();
+
+            if(!historia->isEmpty() && !icon->isEmpty()){
+
+                if(*fechaIcon == fecha)
+                    ui->cBoxModo->setCurrentIndex(1);
+                else
+                    ui->cBoxModo->setCurrentIndex(2);
+            }else
+                ui->cBoxModo->setCurrentIndex(0);
         }
     }
 }
@@ -99,17 +87,16 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
 
     cam.release();
     //borra la imagen que haya quedado en la etiqueta de la camara
-    QPixmap pixDummy(0, 0);
-    ui->etqCamara->setPixmap(pixDummy);
-    ui->etqVistaprevia->setPixmap(pixDummy);
-    ui->menuCamaras->setEnabled(true);
-    ui->actionDesconectar_camara->setEnabled(false);
-    ui->cBoxModo->setCurrentIndex(0);
-
+    ui->etqCamara->clear();
+    ui->etqCamara->setText(txtCamara);
+    ui->etqVistaprevia->clear();
+    ui->etqVistaprevia->setText(txtVistaPrev);
     revision();
-    ui->cBoxModo->setCurrentIndex(0);
-    dlgInfo info("La camara fue desconectada correctamente.", "Camara desconectada");
-    info.exec();
+
+    if(!historia->isEmpty() && !icon->isEmpty()){
+        ui->cBoxModo->setCurrentIndex(2);
+    }else
+        ui->cBoxModo->setCurrentIndex(0);
 }
 
 void MainWindow::on_actionSalir_triggered(){ close();}
@@ -127,99 +114,101 @@ void MainWindow::on_actionCrear_historia_triggered(){
     revision();
     ui->cBoxModo->setCurrentIndex(0);
 
-    if(*historia != ""){
-        dlgConfirmar conf("Desea agregar una nueva lesion a la historia: " + *historia + "?", "Agregar lesion");
-        conf.exec();
+    if(!historia->isEmpty() && cam.isOpened()){
 
-        if(conf.confirmacion()){
-            on_actionNueva_lesion_triggered();
+        regAbrirIcon reg(true, false);
+        reg.exec();
+
+        if(reg.selecciono()){
+            ui->actionRegistrar_Iconografia->trigger();
         }
     }
 }
 
 void MainWindow::on_actionCerrar_historia_triggered(){
 
-    //cuando se cierra una historia, se debe cerrar la lesion de dicha historia tambien
+    //cuando se cierra una historia, se debe cerrar la icon de dicha historia tambien
     *historia = "";
-    *lesion = "";
+    *icon = "";
     revision();
     ui->cBoxModo->setCurrentIndex(0);
 }
 
-void MainWindow::on_actionNueva_lesion_triggered(){
+void MainWindow::on_actionRegistrar_Iconografia_triggered(){
 
-    crearLesion nuevaLesion(dirRaiz, *historia, lesion);
-    nuevaLesion.exec();
+    regIcon n(dirRaiz, *historia, icon);
+    n.exec();
 
+    revision();
+
+    if(!icon->isEmpty())
+        ui->cBoxModo->setCurrentIndex(1);
+    else
+        ui->cBoxModo->setCurrentIndex(0);
+}
+
+void MainWindow::on_actionCerrar_icon_triggered(){
+
+    *icon = "";
     revision();
     ui->cBoxModo->setCurrentIndex(0);
 }
 
-void MainWindow::on_actionCerrar_lesion_triggered(){
-
-    *lesion = "";
-    revision();
-    ui->cBoxModo->setCurrentIndex(0);
-}
-
-//Realiza una revision de la historia, la lesion y la fecha, habilitando y deshabilitando los botones segun sea el caso
+//Realiza una revision de la historia, la icon y la fecha, habilitando y deshabilitando los botones segun sea el caso
 void MainWindow::revision(){
 
-    bool crearHistoria, abrirHistoria, verHistoria, cerrarHistoria, eliminarHistoria, nuevaLesion, abrirLesion, cerrarLesion, eliminarLesion, cBoxModo, abrirCarpeta;
-    QDir dirHist, dirLesion, dirFecha;
+    bool actualizar, conectar, desconectar, crearHistoria, abrirHistoria, verHistoria, cerrarHistoria, regIcon, abrirIcon, cerrarIcon, cBoxModo, abrirCarpeta;
+    QDir dirHist, dirIcon, dirFecha;
     QFileInfoList lista;
 
     //Si hay una historia cargada
     if(!historia->isEmpty()){
         crearHistoria = false;
-        abrirHistoria = false;
+        abrirHistoria = true;
         verHistoria = true;
         cerrarHistoria = true;
-        eliminarHistoria = true;
         ui->etqInfoHistoria->setText(*historia);
-        if(!lesion->isEmpty()){
-            nuevaLesion = false;
-            abrirLesion = false;
-            cerrarLesion = true;
-            eliminarLesion = true;
+        if(!icon->isEmpty()){
+            regIcon = false;
+            abrirIcon = true;
+            cerrarIcon = true;
             cBoxModo = true;
 
-            dirFecha.setPath(dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion);
+            dirFecha.setPath(dirRaiz + "/" + *historia + "/" + *icon + "/" + *fechaIcon);
 
             if(dirFecha.exists())
                 abrirCarpeta = true;
             else
                 abrirCarpeta = false;
 
-            ui->etqInfoLesion->setText(*lesion);
-            ui->etqInfoFecha->setText(QDate::fromString(*fechaLesion, "dd.MM.yyyy").toString("dd/MM/yyyy"));
+            ui->etqInfoIcon->setText(*icon);
+            ui->etqInfoFecha->setText(QDate::fromString(*fechaIcon, "dd.MM.yyyy").toString("dd/MM/yyyy"));
         }else{
-            //Si hay una historia pero no hay una lesion, deshabilita la seleccin de modos
-            *fechaLesion = fecha;
+            //Si hay una historia pero no hay una icon, deshabilita la seleccin de modos
+            *fechaIcon = fecha;
 
             if(cam.isOpened()){
-                nuevaLesion = true;
+                regIcon = true;
             }else{
-                nuevaLesion = false;
+                regIcon = false;
             }
 
-            dirLesion.setPath(dirRaiz + "/" + *historia);
-            lista = dirLesion.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot);
+            dirIcon.setPath(dirRaiz + "/" + *historia);
+            lista = dirIcon.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot);
 
             if(lista.count() >= 1)
-                abrirLesion = true;
+                abrirIcon = true;
             else
-                abrirLesion = false;
+                abrirIcon = false;
 
-            cerrarLesion = false;
-            eliminarLesion = false;
+            cerrarIcon = false;
             cBoxModo = false;
             abrirCarpeta = false;
-            ui->etqInfoLesion->setText("- - -");
+            ui->etqInfoIcon->setText("- - -");
             ui->etqInfoFecha->setText("- - -");
         }
     }else{
-        *fechaLesion = fecha;
+        *fechaIcon = fecha;
         //si la camara sigue activa, muestra el mensaje siguiente
         if(cam.isOpened()){
             crearHistoria = true;
@@ -237,33 +226,46 @@ void MainWindow::revision(){
 
         verHistoria = false;
         cerrarHistoria = false;
-        eliminarHistoria = false;
-        nuevaLesion = false;
-        abrirLesion = false;
-        cerrarLesion = false;
-        eliminarLesion = false;
+        regIcon = false;
+        abrirIcon = false;
+        cerrarIcon = false;
         cBoxModo = false;
         abrirCarpeta = false;
         ui->etqInfoHistoria->setText("- - -");
-        ui->etqInfoLesion->setText("- - -");
+        ui->etqInfoIcon->setText("- - -");
         ui->etqInfoFecha->setText("- - -");
     }
 
-    if(cam.isOpened())
-        ui->etqInfoEstado->setText("Conectada");
-    else
-        ui->etqInfoEstado->setText("Desconectada");
+    if(cam.isOpened()){
+        actualizar = false;
+        conectar = false;
+        desconectar = true;
+        ui->etqInfoEstado->setText("<html><head/><body><p><span style= 'font-weight:600; color:#29bf33;'>Conectada</span></p></body></html>");
+    }else{
 
+        actualizar = true;
+
+        if(numCams > 0){
+            conectar = true;
+        }else
+            conectar = false;
+
+        desconectar = false;
+        ui->etqInfoEstado->setText("<html><head/><body><p><span style= 'font-weight:600; color:#c81d1d;'>Desconectada</span></p></body></html>");
+    }
+
+    ui->actionActualizar->setEnabled(actualizar);
+    ui->menuCamaras->setEnabled(conectar);
+    ui->actionDesconectar_camara->setEnabled(desconectar);
     ui->actionCrear_historia->setEnabled(crearHistoria);
     ui->actionAbrir_historia->setEnabled(abrirHistoria);
     ui->actionVer_historia->setEnabled(verHistoria);
     ui->actionCerrar_historia->setEnabled(cerrarHistoria);
-    ui->actionEliminar_historia->setEnabled(eliminarHistoria);
-    ui->actionNueva_lesion->setEnabled(nuevaLesion);
-    ui->actionAbrir_lesion->setEnabled(abrirLesion);
-    ui->actionCerrar_lesion->setEnabled(cerrarLesion);
-    ui->actionEliminar_lesion->setEnabled(eliminarLesion);
+    ui->actionRegistrar_Iconografia->setEnabled(regIcon);
+    ui->actionAbrir_icon->setEnabled(abrirIcon);
+    ui->actionCerrar_icon->setEnabled(cerrarIcon);
     ui->cBoxModo->setEnabled(cBoxModo);
+
     ui->btnAbrirCarpeta->setEnabled(abrirCarpeta);
 }
 
@@ -276,8 +278,8 @@ void MainWindow::on_cBoxModo_currentIndexChanged(int index){
     if(index != 0){
         //si la seleccion esta en modo captura y la camara esta activa, habilita los botones para capturar las fotos
         if(index == 1){
-            //solamente se pueden capturar imagenes de una lesion cuya fecha sea la del dia actual
-            if(*fechaLesion == fecha){
+            //solamente se pueden capturar imagenes de una icon cuya fecha sea la del dia actual
+            if(*fechaIcon == fecha){
 
                 if(cam.isOpened()){
                     setBotones(true);
@@ -293,8 +295,11 @@ void MainWindow::on_cBoxModo_currentIndexChanged(int index){
         if(index == 2){
             if(tmrTimer->isActive())
                 tmrTimer->stop();
-            QPixmap pixDummy(0, 0);
-            ui->etqCamara->setPixmap(pixDummy);
+
+            ui->etqCamara->clear();
+            ui->etqCamara->setText(txtCamara);
+            ui->etqVistaprevia->clear();
+            ui->etqVistaprevia->setText(txtVistaPrev);
             //si la camara esta en modo de visualizacion
             QStringList colores;
 
@@ -309,9 +314,10 @@ void MainWindow::on_cBoxModo_currentIndexChanged(int index){
         if(tmrTimer->isActive())
             tmrTimer->stop();
         //borra la imagen que este en la vista previa y en la camara
-        QPixmap pixDummy(0, 0);
-        ui->etqCamara->setPixmap(pixDummy);
-        ui->etqVistaprevia->setPixmap(pixDummy);
+        ui->etqCamara->clear();
+        ui->etqCamara->setText(txtCamara);
+        ui->etqVistaprevia->clear();
+        ui->etqVistaprevia->setText(txtVistaPrev);
         //desabilitar todos los botones, excepto seleccionar
         setBotones(false);
     }
@@ -331,7 +337,7 @@ void MainWindow::setBotones(bool flag){
 
 void MainWindow::accionBotones(QString color){
 
-    QString nombreImagen(dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion + "/" + color + " - " + *fechaLesion + ".jpg");
+    QString nombreImagen(dirRaiz + "/" + *historia + "/" + *icon + "/" + *fechaIcon + "/" + color + " - " + *fechaIcon + ".jpg");
     QFileInfo archivo(nombreImagen);
     int w, h;
 
@@ -339,7 +345,7 @@ void MainWindow::accionBotones(QString color){
     if(ui->cBoxModo->currentIndex() == 1){
 
         QDir dir;
-        dir.mkpath(dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion);
+        dir.mkpath(dirRaiz + "/" + *historia + "/" + *icon + "/" + *fechaIcon);
         QImage imgCapturada(qimg.copy());
         QFileInfo archivo(nombreImagen);
 
@@ -367,7 +373,7 @@ void MainWindow::accionBotones(QString color){
 
     }else{
     //si la interfaz esta en modo de visualizacion de imagenes
-        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + *historia + "/" + *lesion, *fechaLesion);
+        dlgImagen *imagen = new dlgImagen(nombreImagen, color, dirRaiz + "/" + *historia + "/" + *icon, *fechaIcon);
         imagen->exec();
     }
 
@@ -379,8 +385,8 @@ void MainWindow::accionBotones(QString color){
         ui->etqVistaprevia->setPixmap((QPixmap::fromImage(imagen)).scaled(w, h, Qt::KeepAspectRatio));
     }else{
         //borra la imagen que este en la vista previa
-        QPixmap pixDummy(0, 0);
-        ui->etqVistaprevia->setPixmap(pixDummy);
+        ui->etqVistaprevia->clear();
+        ui->etqVistaprevia->setText(txtVistaPrev);
     }
     revision();
 }
@@ -390,12 +396,12 @@ void MainWindow::setColorDisponible(int colorIndex){
     QString nombreImagen, ruta;
     QFileInfo archivo;
 
-    ruta = dirRaiz + "/" + *historia + "/" + *lesion + "/" + *fechaLesion;
+    ruta = dirRaiz + "/" + *historia + "/" + *icon + "/" + *fechaIcon;
 
     switch (colorIndex) {
 
     case 0:
-        nombreImagen = (ruta + "/" + "Amarillo - " + *fechaLesion + ".jpg");
+        nombreImagen = (ruta + "/" + "Amarillo - " + *fechaIcon + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnAmarillo->setEnabled(true);
@@ -404,7 +410,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 1:
-        nombreImagen = (ruta + "/" + "Azul - " + *fechaLesion + ".jpg");
+        nombreImagen = (ruta + "/" + "Azul - " + *fechaIcon + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnAzul->setEnabled(true);
@@ -413,7 +419,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 2:
-        nombreImagen = (ruta + "/" + "Blanco - " + *fechaLesion + ".jpg");
+        nombreImagen = (ruta + "/" + "Blanco - " + *fechaIcon + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnBlanco->setEnabled(true);
@@ -422,7 +428,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 3:
-        nombreImagen = (ruta + "/" + "Cyan - " + *fechaLesion + ".jpg");
+        nombreImagen = (ruta + "/" + "Cyan - " + *fechaIcon + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnCyan->setEnabled(true);
@@ -431,7 +437,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 4:
-        nombreImagen = (ruta + "/" + "Magenta - " + *fechaLesion + ".jpg");
+        nombreImagen = (ruta + "/" + "Magenta - " + *fechaIcon + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnMagenta->setEnabled(true);
@@ -440,7 +446,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 5:
-        nombreImagen = (ruta + "/" + "Rojo - " + *fechaLesion + ".jpg");
+        nombreImagen = (ruta + "/" + "Rojo - " + *fechaIcon + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnRojo->setEnabled(true);
@@ -449,7 +455,7 @@ void MainWindow::setColorDisponible(int colorIndex){
         break;
 
     case 6:
-        nombreImagen = (ruta + "/" + "Verde - " + *fechaLesion + ".jpg");
+        nombreImagen = (ruta + "/" + "Verde - " + *fechaIcon + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             ui->btnVerde->setEnabled(true);
@@ -499,58 +505,107 @@ void MainWindow::on_btnBlanco_clicked(){
 
 void MainWindow::on_actionAbrir_historia_triggered(){
 
-    abrirHistoria abrir(historia, lesion, dirRaiz);
+    abrirHistoria abrir(historia, icon, dirRaiz);
     abrir.exec();
 
     revision();
     ui->cBoxModo->setCurrentIndex(0);
+
+    if(!historia->isEmpty()){
+        QDir aux;
+        aux.setPath(dirRaiz + "/" + *historia);
+        aux.setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
+        bool existenIcon;
+
+        if(aux.entryList().count() > 0)
+            existenIcon = true;
+        else
+            existenIcon = false;
+
+        if(cam.isOpened() || existenIcon){
+            regAbrirIcon regAbrir(cam.isOpened(), existenIcon);
+            regAbrir.exec();
+
+            if(regAbrir.selecciono()){
+                if(regAbrir.opcionNueva()){
+                    ui->actionRegistrar_Iconografia->trigger();
+                }else if(existenIcon){
+                    ui->actionAbrir_icon->trigger();
+                }
+            }
+        }
+    }
 }
 
-void MainWindow::on_actionAbrir_lesion_triggered(){
+void MainWindow::on_actionAbrir_icon_triggered(){
 
-    abrirLesion abrirL(lesion, dirRaiz + "/" + *historia, fechaLesion);
+    abrirIcon abrirL(icon, dirRaiz + "/" + *historia, fechaIcon);
     abrirL.exec();
 
     revision();
-    ui->cBoxModo->setCurrentIndex(0);
-}
 
-void MainWindow::on_actionEliminar_historia_triggered(){
+    if(!icon->isEmpty()){
 
-    eliminarHistoria elim(dirRaiz, historia, lesion);
-    elim.exec();
-
-    revision();
-    ui->cBoxModo->setCurrentIndex(0);
-}
-
-void MainWindow::on_actionEliminar_lesion_triggered(){
-
-    dlgConfirmar conf("Seguro que desea eliminar la lesion: " + *lesion + "?", "Eliminar lesion");
-    conf.exec();
-
-    if(conf.confirmacion()){
-
-        QDir dir;
-        dir.setPath(dirRaiz + "/" + *historia + "/" + *lesion);
-        dir.removeRecursively();
-        *lesion = "";
-        revision();
+        if(*fechaIcon == fecha && cam.isOpened())
+            ui->cBoxModo->setCurrentIndex(1);
+        else
+            ui->cBoxModo->setCurrentIndex(2);
+    }else
         ui->cBoxModo->setCurrentIndex(0);
-
-        dlgInfo info("La lesion se elimino correctamente.", "Lesion eliminada");
-        info.exec();
-    }
 }
 
 void MainWindow::on_btnAbrirCarpeta_clicked(){
 
     QString path = QDir::toNativeSeparators(dirRaiz);
-    QDesktopServices::openUrl(QUrl("file:///" + path + "/" + *historia + "/" + *lesion + "/" + *fechaLesion));
+    QDesktopServices::openUrl(QUrl("file:///" + path + "/" + *historia + "/" + *icon + "/" + *fechaIcon));
 }
 
 void MainWindow::on_actionVer_historia_triggered(){
 
     verHistoria ver(dirRaiz, *historia);
     ver.exec();
+}
+
+void MainWindow::on_actionActualizar_triggered(){
+
+    int i;
+
+    disconnect(signalMapper, SIGNAL(mapped(int)), this, SLOT(conectarCamaras(int)));
+
+    for(i = 0; i < numCams; i++){
+        signalMapper->removeMappings(accionesDinamicas.at(i));
+        disconnect(accionesDinamicas.at(i), SIGNAL(triggered()), signalMapper, SLOT(map()));
+        accionesDinamicas.removeAt(i);
+    }
+
+    indexCam = -1;//valor por defecto del indice de la camara
+    cv::VideoCapture camaras;
+    i = numCams = 0;
+    double w, h;
+    bool flag = true;
+    ui->menuCamaras->clear();
+
+    while(flag){
+        camaras.open(i);
+        if(camaras.isOpened()){
+            w = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
+            h = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
+            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara " + QString::number(i + 1) + " - " + QString::number(w) + "x" + QString::number(h)));
+            connect(accionesDinamicas.at(i), SIGNAL(triggered()), signalMapper, SLOT(map()));
+            signalMapper->setMapping(accionesDinamicas.at(i), i);
+            numCams+=1;
+            camaras.release();
+        }else
+            flag = false;
+        i++;
+    }
+    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(conectarCamaras(int)));
+
+    if(numCams > 0)
+        conectarCamaras(0);
+    else
+        ui->actionConectar_camara->setEnabled(false);
+
+    setBotones(false);
+    ui->cBoxModo->setCurrentIndex(0);
 }

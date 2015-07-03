@@ -25,7 +25,7 @@ public:
     ~dlgImagen();
 
 private slots:
-    void on_btnAceptar_clicked();
+    void on_btnListo_clicked();
 
 private:
     Ui::dlgImagen *ui;

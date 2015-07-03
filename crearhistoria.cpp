@@ -50,7 +50,7 @@ void crearHistoria::on_btnCrearHistoria_clicked(){
 
     if(!dir.exists()){
         *historia = ui->cBoxCI->currentText() + " - " +  ui->lineaCI->text();
-        //crea la estructura de carpetas para la nueva historia y la lesion
+        //crea la estructura de carpetas para la nueva historia y la icon
         dir.mkpath(dirRaiz + "/" + *historia);
 
         jHistoria.setFileName(dirRaiz + "/" + *historia + "/" + "historia.json");
@@ -78,11 +78,9 @@ void crearHistoria::on_btnCrearHistoria_clicked(){
         jDoc.setObject(jObj);
         jHistoria.write(jDoc.toJson());
         jHistoria.close();
-        dlgInfo info("La historia fue creada correctamente.", "Historia creada");
-        info.exec();
         close();
     }else{
-        dlgInfo info("La historia con la cedula: " + ui->cBoxCI->currentText() + " - " +  ui->lineaCI->text() + " ya existe, no se puede volver a crear.", "Error al crear historia");
+        dlgInfo info("La historia: " + ui->cBoxCI->currentText() + " - " +  ui->lineaCI->text() + " ya existe, no se puede volver a crear.", "Error al crear historia");
         ui->lineaCI->setText("");
         info.exec();
     }

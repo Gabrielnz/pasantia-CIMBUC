@@ -22,7 +22,7 @@ class abrirHistoria : public QDialog
     Q_OBJECT
 
 public:
-    explicit abrirHistoria(QString *historiaExt, QString *lesionExt, QString rutaExt, QWidget *parent = 0);
+    explicit abrirHistoria(QString *historiaExt, QString *iconExt, QString rutaExt, QWidget *parent = 0);
     ~abrirHistoria();
 
 private slots:
@@ -40,7 +40,7 @@ private slots:
 
 private:
     Ui::abrirHistoria *ui;
-    QString ruta, *historia, *lesion;
+    QString ruta, *historia, *icon;
     QDir dir;
     QStringListModel *modelo;
     QFile jHistoria;

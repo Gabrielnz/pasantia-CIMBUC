@@ -23,7 +23,7 @@ public:
     ~verHistoria();
 
 private slots:
-    void on_btnAceptar_clicked();
+    void on_btnListo_clicked();
 
 private:
     Ui::verHistoria *ui;

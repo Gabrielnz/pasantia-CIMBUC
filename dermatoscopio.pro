@@ -18,36 +18,36 @@ SOURCES += main.cpp\
     crearhistoria.cpp \
     dlgimagen.cpp \
     dlginfo.cpp \
-    crearlesion.cpp \
     abrirhistoria.cpp \
-    abrirlesion.cpp \
     dlgconfirmar.cpp \
-    eliminarhistoria.cpp \
-    verhistoria.cpp
+    verhistoria.cpp \
+    regabriricon.cpp \
+    abriricon.cpp \
+    regicon.cpp
 
 HEADERS  += mainwindow.h \
     acercade.h \
     crearhistoria.h \
     dlgimagen.h \
     dlginfo.h \
-    crearlesion.h \
     abrirhistoria.h \
-    abrirlesion.h \
     dlgconfirmar.h \
-    eliminarhistoria.h \
-    verhistoria.h
+    verhistoria.h \
+    regabriricon.h \
+    abriricon.h \
+    regicon.h
 
 FORMS    += mainwindow.ui \
     acercade.ui \
     crearhistoria.ui \
     dlgimagen.ui \
     dlginfo.ui \
-    crearlesion.ui \
     abrirhistoria.ui \
-    abrirlesion.ui \
     dlgconfirmar.ui \
-    eliminarhistoria.ui \
-    verhistoria.ui
+    verhistoria.ui \
+    regabriricon.ui \
+    abriricon.ui \
+    regicon.ui
 
 
 win32 {
@@ -70,5 +70,14 @@ win32 {
     #LIBS += C:\opencv\build\bin\libopencv_stitching300.dll
     #LIBS += C:\opencv\build\bin\libopencv_superres300.dll
     message("Usando la configuracion para Windows")
+}
+
+unix:!mac{
+    INCLUDEPATH += /usr/local/include
+    LIBS += `pkg-config opencv --libs`
+    LIBS += /usr/local/lib/libopencv_core.so
+    LIBS += /usr/local/lib/libopencv_imgproc.so
+    LIBS += /usr/local/lib/libopencv_video.so
+    message("Usando la configuracion para Linux")
 }
 
