@@ -36,8 +36,8 @@ MainWindow::~MainWindow(){ delete ui; }
 
 void MainWindow::procesarCuadroActualizarGUI(){
     cv::Mat mAux;
-    cam.read(mat);
-    cam.read(mAux);
+    cam >> (mat);
+    cam >> (mAux);
     //se prepara la imagen para convertirla de BGR A RGB para que Qt pueda manejarla
     cv::cvtColor(mat, mat, CV_BGR2RGB);
     //ocurre la conversion de cv mat a qimage. Investigar sobre cual QImage::Format_ es mas apropiado
@@ -285,7 +285,7 @@ void MainWindow::on_cBoxModo_currentIndexChanged(int index){
                     setBotones(true);
 
                     if(!tmrTimer->isActive())
-                        tmrTimer->start(100);
+                        tmrTimer->start(20);
                 }else
                     setBotones(false);
             }else

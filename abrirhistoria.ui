@@ -59,6 +59,12 @@
                <height>27</height>
               </size>
              </property>
+             <property name="maximumSize">
+              <size>
+               <width>51</width>
+               <height>27</height>
+              </size>
+             </property>
              <item>
               <property name="text">
                <string>  -</string>
@@ -79,6 +85,12 @@
            <item>
             <widget class="QLineEdit" name="lineaBuscar">
              <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>27</height>
+              </size>
+             </property>
+             <property name="maximumSize">
               <size>
                <width>120</width>
                <height>27</height>
