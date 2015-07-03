@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>301</width>
-    <height>155</height>
+    <width>310</width>
+    <height>142</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>10</height>
+         <height>13</height>
         </size>
        </property>
       </spacer>
@@ -94,8 +94,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>15</width>
-           <height>17</height>
+           <width>13</width>
+           <height>33</height>
           </size>
          </property>
         </spacer>
@@ -104,7 +104,13 @@
         <widget class="QPushButton" name="btnReg">
          <property name="minimumSize">
           <size>
-           <width>120</width>
+           <width>135</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>135</width>
            <height>30</height>
           </size>
          </property>
@@ -117,7 +123,13 @@
         <widget class="QPushButton" name="btnAbrir">
          <property name="minimumSize">
           <size>
-           <width>120</width>
+           <width>135</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>135</width>
            <height>30</height>
           </size>
          </property>
@@ -133,8 +145,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>16</width>
-           <height>17</height>
+           <width>13</width>
+           <height>33</height>
           </size>
          </property>
         </spacer>
@@ -152,7 +164,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>10</height>
+         <height>13</height>
         </size>
        </property>
       </spacer>

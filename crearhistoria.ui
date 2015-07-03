@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>240</width>
-    <height>314</height>
+    <width>343</width>
+    <height>342</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>17</width>
-         <height>10</height>
+         <height>13</height>
         </size>
        </property>
       </spacer>
@@ -43,6 +43,12 @@
        </item>
        <item>
         <widget class="QComboBox" name="cBoxCI">
+         <property name="minimumSize">
+          <size>
+           <width>51</width>
+           <height>27</height>
+          </size>
+         </property>
          <item>
           <property name="text">
            <string>V</string>
@@ -57,6 +63,12 @@
        </item>
        <item>
         <widget class="QLineEdit" name="lineaCI">
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>27</height>
+          </size>
+         </property>
          <property name="maxLength">
           <number>9</number>
          </property>
@@ -84,30 +96,40 @@
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
-       <item>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
         <widget class="QLabel" name="etqNombre">
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nombre:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QLineEdit" name="lineaNombre"/>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="lineaNombre">
+         <property name="minimumSize">
+          <size>
+           <width>210</width>
+           <height>27</height>
+          </size>
+         </property>
+        </widget>
        </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
+       <item row="1" column="0">
         <widget class="QLabel" name="etqApellido">
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Apellido:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QLineEdit" name="lineaApellido"/>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lineaApellido">
+         <property name="minimumSize">
+          <size>
+           <width>210</width>
+           <height>27</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -182,7 +204,7 @@
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QLabel" name="etqFechaNac">
          <property name="text">
@@ -192,6 +214,15 @@
        </item>
        <item>
         <widget class="QDateEdit" name="editFechaNac">
+         <property name="minimumSize">
+          <size>
+           <width>101</width>
+           <height>27</height>
+          </size>
+         </property>
+         <property name="displayFormat">
+          <string>dd/MM/yyyy</string>
+         </property>
          <property name="calendarPopup">
           <bool>true</bool>
          </property>
@@ -237,8 +268,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>13</width>
+           <height>27</height>
           </size>
          </property>
         </spacer>
@@ -247,7 +278,7 @@
         <widget class="QPushButton" name="btnCrearHistoria">
          <property name="minimumSize">
           <size>
-           <width>100</width>
+           <width>120</width>
            <height>30</height>
           </size>
          </property>
@@ -260,7 +291,7 @@
         <widget class="QPushButton" name="btnCancelar">
          <property name="minimumSize">
           <size>
-           <width>100</width>
+           <width>90</width>
            <height>30</height>
           </size>
          </property>
@@ -276,8 +307,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>13</width>
+           <height>27</height>
           </size>
          </property>
         </spacer>
@@ -295,7 +326,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>17</width>
-         <height>10</height>
+         <height>13</height>
         </size>
        </property>
       </spacer>

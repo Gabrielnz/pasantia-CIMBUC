@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>341</width>
+    <width>312</width>
     <height>172</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>17</width>
-         <height>10</height>
+         <height>13</height>
         </size>
        </property>
       </spacer>
@@ -94,7 +94,13 @@
         <widget class="QPushButton" name="btnReg">
          <property name="minimumSize">
           <size>
-           <width>120</width>
+           <width>135</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>135</width>
            <height>30</height>
           </size>
          </property>
@@ -107,7 +113,13 @@
         <widget class="QPushButton" name="btnCancelar">
          <property name="minimumSize">
           <size>
-           <width>120</width>
+           <width>90</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>90</width>
            <height>30</height>
           </size>
          </property>
@@ -142,7 +154,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>17</width>
-         <height>10</height>
+         <height>13</height>
         </size>
        </property>
       </spacer>

@@ -72,10 +72,11 @@ win32 {
     message("Usando la configuracion para Windows")
 }
 
-unix:!mac{
+unix:!mac {
     INCLUDEPATH += /usr/local/include
     LIBS += `pkg-config opencv --libs`
     LIBS += /usr/local/lib/libopencv_core.so
+    LIBS += /usr/local/lib/libopencv_highgui.so
     LIBS += /usr/local/lib/libopencv_imgproc.so
     LIBS += /usr/local/lib/libopencv_video.so
     message("Usando la configuracion para Linux")

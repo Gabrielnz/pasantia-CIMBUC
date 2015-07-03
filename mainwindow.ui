@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>932</width>
-    <height>571</height>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -267,7 +267,7 @@
             <property name="sizeHint" stdset="0">
              <size>
               <width>297</width>
-              <height>15</height>
+              <height>13</height>
              </size>
             </property>
            </spacer>
@@ -330,19 +330,19 @@
                <widget class="QComboBox" name="cBoxModo">
                 <property name="minimumSize">
                  <size>
-                  <width>85</width>
+                  <width>100</width>
                   <height>30</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>85</width>
+                  <width>100</width>
                   <height>30</height>
                  </size>
                 </property>
                 <item>
                  <property name="text">
-                  <string>         - - -</string>
+                  <string>        - - - - -</string>
                  </property>
                 </item>
                 <item>
@@ -364,8 +364,8 @@
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>20</width>
-                  <height>15</height>
+                  <width>82</width>
+                  <height>13</height>
                  </size>
                 </property>
                </spacer>
@@ -606,8 +606,8 @@
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>20</width>
-                  <height>15</height>
+                  <width>82</width>
+                  <height>13</height>
                  </size>
                 </property>
                </spacer>
@@ -651,13 +651,13 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>85</width>
+                <width>100</width>
                 <height>30</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>85</width>
+                <width>100</width>
                 <height>30</height>
                </size>
               </property>
@@ -696,7 +696,7 @@
         <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
-          <height>10</height>
+          <height>13</height>
          </size>
         </property>
        </spacer>
@@ -711,7 +711,7 @@
      <x>0</x>
      <y>0</y>
      <width>932</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">

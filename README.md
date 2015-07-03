@@ -6,12 +6,16 @@ Dermasoft es una aplicacion que actua como una interfaz para el dermatoscopio mu
 
 Dermasoft requiere de la instalacion de las siguientes dependencias:
 
+En general
+
 + [openCV 3.0](http://opencv.org/) - Libreria open-source de computo visual.
+
+Para Linux
+ las librerias v4l2ucp, v4l-utils y libv4l-dev
 
 ## Usuario final
 
-### Pasos para instalar la aplicacion
-
+### Pasos para instalar la aplicacion en Windows
 1. Descargar este archivo [opencv 3.0 pre-compilado](https://mega.nz/#!XpMw1ZSS!PZA33YhmlT4_KhacCrwTeU1TE4rQYb379Tk1haiOCP8), extraer en C:\ y agregar el siguiente valor a la variable del sistema Path:
 c:\opencv\build\bin como se muestra en la siguiente imagen [agregar valor a variable de entorno Path](https://mega.nz/#!q9VFWASZ!LVVSHsgSJ79tHPGYQennFeAHJk3N0qAV9w0b2hCxl4k)
 
