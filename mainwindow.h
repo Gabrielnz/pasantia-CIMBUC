@@ -32,7 +32,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    void revision();
+    void revisionBtns();
     void habilitarColores(bool flag);
     void disponibilidadColores();
     ~MainWindow();
@@ -51,7 +51,7 @@ private slots:
     void on_btnAbrirCarpeta_clicked();
     void on_actionVer_historia_triggered();
     void on_actionActualizar_triggered();
-    void conectarCamaras(int num);
+    void conectar(int num);
     void on_cBoxModo_activated(int index);
     void accionColores(QString color);
 
@@ -59,7 +59,7 @@ private:
     Ui::MainWindow *ui;
     cv::VideoCapture cam;
     cv::Mat mat;
-    QImage qimg;
+    QImage img;
     QTimer *tmrTimer;
     QString dirRaiz, *historia, *icon, fecha, *fechaIcon;
     int indexCam, numCams;

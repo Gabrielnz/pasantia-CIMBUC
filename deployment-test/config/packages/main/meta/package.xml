@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+  <DisplayName>Paquete principal</DisplayName>
+  <Description>...</Description>
+  <Version>0.1.0</Version>
+  <ReleaseDate>2015-06-27</ReleaseDate>
+  <Name>Dermasoft</Name>
+  <Licenses>
+  <License name="GPL" file="license.txt" />
+  </Licenses>
+  <ForcedInstallation>true</ForcedInstallation>
+  <Script>installshortcut.qs</Script>
+</Package>

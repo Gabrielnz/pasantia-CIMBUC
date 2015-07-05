@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+  <Name>Dermasoft</Name>
+  <Version>0.1.0</Version>
+  <Title>Software para el manejo del dermatoscopio multiespectral.</Title>
+  <Publisher>Gabriel Nunez</Publisher>
+  <StartMenuDir>Dermasoft</StartMenuDir>
+  <TargetDir>@rootDir@dermasoft</TargetDir>
+  <UninstallerName>Desinstalar</UninstallerName>
+</Installer>
