@@ -32,63 +32,28 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    void setDirRaiz(QString raiz);
-    void setHistoria(QString historia);
-    QString getDirRaiz();
-    QString getHistoria();
     void revision();
+    void habilitarColores(bool flag);
+    void disponibilidadColores();
     ~MainWindow();
 
 private slots:
     void procesarCuadroActualizarGUI();/*Procedimiento donde la magia sucede :b*/
-
     void on_actionAcerca_de_triggered();
-
     void on_actionSalir_triggered();
-
     void on_actionDesconectar_camara_triggered();
-
     void on_actionCrear_historia_triggered();
-
     void on_actionCerrar_historia_triggered();
-
-    void on_cBoxModo_currentIndexChanged(int index);
-
-    void setBotones(bool flag);
-
-    void accionBotones(QString color);
-
-    void setColorDisponible(int colorIndex);
-
-    void on_btnRojo_clicked();
-
-    void on_btnVerde_clicked();
-
-    void on_btnAzul_clicked();
-
-    void on_btnCyan_clicked();
-
-    void on_btnMagenta_clicked();
-
-    void on_btnAmarillo_clicked();
-
-    void on_btnBlanco_clicked();
-
     void on_actionCerrar_icon_triggered();
-
     void on_actionRegistrar_Iconografia_triggered();
-
     void on_actionAbrir_historia_triggered();
-
     void on_actionAbrir_icon_triggered();
-
     void on_btnAbrirCarpeta_clicked();
-
-    void conectarCamaras(int num);
-
     void on_actionVer_historia_triggered();
-
     void on_actionActualizar_triggered();
+    void conectarCamaras(int num);
+    void on_cBoxModo_activated(int index);
+    void accionColores(QString color);
 
 private:
     Ui::MainWindow *ui;
@@ -99,8 +64,10 @@ private:
     QString dirRaiz, *historia, *icon, fecha, *fechaIcon;
     int indexCam, numCams;
     QList<QAction*> accionesDinamicas;
-    QSignalMapper *signalMapper;
+    QSignalMapper *signalMapper, *coloresMapper;
     QString txtCamara, txtVistaPrev;
+    QStringList colores;
+    QList<QPushButton*> btnsColores;
 };
 
 #endif // MAINWINDOW_H
