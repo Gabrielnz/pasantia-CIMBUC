@@ -60,11 +60,11 @@ private:
     cv::VideoCapture cam;
     cv::Mat mat;
     QImage img;
-    QTimer *tmrTimer;
+    QTimer timer;
     QString dirRaiz, *historia, *icon, fecha, *fechaIcon;
     int indexCam, numCams;
     QList<QAction*> accionesDinamicas;
-    QSignalMapper *signalMapper, *coloresMapper;
+    QSignalMapper camsMapper, coloresMapper;
     QString txtCamara, txtVistaPrev;
     QStringList colores;
     QList<QPushButton*> btnsColores;

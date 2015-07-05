@@ -9,11 +9,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     dirRaiz = QDir::homePath() + "/" + "Dermasoft - Historias";
     fecha = QDate::currentDate().toString("dd.MM.yyyy");
     fechaIcon = new QString(fecha);
-    tmrTimer = new QTimer;
     historia = new QString;
     icon = new QString;
     //conecta el timer con la actualizacion del cuadro de la GUI
-    connect(tmrTimer, SIGNAL(timeout()), this, SLOT(procesarCuadroActualizarGUI()));
+    connect(&timer, &QTimer::timeout, this, &MainWindow::procesarCuadroActualizarGUI);
     QDir dir;
     dir.setPath(dirRaiz);
 
@@ -21,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         dir.mkdir(dirRaiz);
 
     //Mapea los SIGNAL clicked() de todos los botones de colores al mismo SLOT accionColores(QString)
-    coloresMapper = new QSignalMapper;
 
     colores << "Amarillo" << "Azul" << "Blanco" << "Cyan" << "Magenta" << "Rojo" << "Verde";
     int nColores = colores.size();
@@ -34,17 +32,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     btnsColores.push_back(ui->btnVerde);
 
     for(int i = 0; i < nColores; ++i){
-        connect(btnsColores.at(i), SIGNAL(clicked()), coloresMapper, SLOT(map()));
-        coloresMapper->setMapping(btnsColores.at(i), colores.at(i));
+        //connect(btnsColores.at(i), &QPushButton::clicked, &coloresMapper, &QSignalMapper::map);
+        connect(btnsColores.at(i), SIGNAL(clicked()), &coloresMapper, SLOT(map()));
+        coloresMapper.setMapping(btnsColores.at(i), colores.at(i));
     }
-
-    connect(coloresMapper, SIGNAL(mapped(QString)), this, SLOT(accionColores(QString)));
+    //connect(&coloresMapper, &QSignalMapper::mapped, QString, this, &MainWindow::accionColores, QString);
+    connect(&coloresMapper, SIGNAL(mapped(QString)), this, SLOT(accionColores(QString)));
 
     dlgInfo info("Verifique que el dispositivo este conectado antes de empezar.", "Atencion", "Listo");
     info.exec();
 
     numCams = 0;
-    signalMapper = new QSignalMapper;
     //actualiza la lista de dispositivos la primera vez, y en caso de que haya al menos 1 disponible, lo conecta
     ui->actionActualizar->trigger();
     if(numCams > 0)
@@ -55,9 +53,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 MainWindow::~MainWindow(){
-
-    if(cam.isOpened())
-        cam.release();
 
     delete ui;
 }
@@ -487,11 +482,11 @@ void MainWindow::on_actionActualizar_triggered(){
 
     int i;
 
-    disconnect(signalMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
+    disconnect(&camsMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
 
     for(i = 0; i < numCams; ++i){
-        signalMapper->removeMappings(accionesDinamicas.at(i));
-        disconnect(accionesDinamicas.at(i), SIGNAL(triggered()), signalMapper, SLOT(map()));
+        camsMapper.removeMappings(accionesDinamicas.at(i));
+        disconnect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
         accionesDinamicas.removeAt(i);
     }
 
@@ -508,15 +503,15 @@ void MainWindow::on_actionActualizar_triggered(){
             w = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
             h = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
             accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara " + QString::number(i + 1) + " - " + QString::number(w) + "x" + QString::number(h)));
-            connect(accionesDinamicas.at(i), SIGNAL(triggered()), signalMapper, SLOT(map()));
-            signalMapper->setMapping(accionesDinamicas.at(i), i);
+            connect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
+            camsMapper.setMapping(accionesDinamicas.at(i), i);
             numCams+=1;
             camaras.release();
         }else
             flag = false;
         ++i;
     }
-    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
+    connect(&camsMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
 
     ui->cBoxModo->activated(0);
 }
@@ -525,13 +520,13 @@ void MainWindow::on_cBoxModo_activated(int index){
 
     if(index == 1){
 
-        if(cam.isOpened() && !historia->isEmpty() && !icon->isEmpty() && *fechaIcon == fecha && !tmrTimer->isActive()){
-            tmrTimer->start(20);
+        if(cam.isOpened() && !historia->isEmpty() && !icon->isEmpty() && *fechaIcon == fecha && !timer.isActive()){
+            timer.start(20);
         }
     }else{
 
-        if(tmrTimer->isActive())
-            tmrTimer->stop();
+        if(timer.isActive())
+            timer.stop();
         //borra la imagen que este en la vista previa y en la camara
         ui->etqCamara->clear();
         ui->etqCamara->setText(txtCamara);
