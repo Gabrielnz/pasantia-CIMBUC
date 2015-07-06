@@ -154,20 +154,27 @@ void MainWindow::on_actionAbrir_historia_triggered(){
                 ui->actionRegistrar_Iconografia->trigger();
             }else{
 
-                regAbrirIcon regAbrir(conectado, existenIcon);
-                regAbrir.exec();
-
-                if(regAbrir.selecciono()){
-                    if(regAbrir.opcionNueva()){
-                        ui->actionRegistrar_Iconografia->trigger();
-                    }else if(existenIcon){
-                        ui->actionAbrir_icon->trigger();
-                    }
+                if(!conectado){
+                    ui->actionAbrir_icon->trigger();
                 }else{
-                    ui->cBoxModo->activated(0);
+
+                    regAbrirIcon regAbrir(conectado, existenIcon);
+                    regAbrir.exec();
+
+                    if(regAbrir.selecciono()){
+                        if(regAbrir.opcionNueva()){
+                            ui->actionRegistrar_Iconografia->trigger();
+                        }else if(existenIcon){
+                            ui->actionAbrir_icon->trigger();
+                        }
+                    }else{
+                        ui->cBoxModo->activated(0);
+                    }
                 }
             }
         }else{
+            dlgInfo info("Esta histora no contiene iconografias para abrir.", "Historia vacia", "Entendido");
+            info.exec();
             ui->cBoxModo->activated(0);
         }
     }else{
