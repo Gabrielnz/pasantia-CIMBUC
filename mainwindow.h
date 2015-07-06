@@ -75,6 +75,7 @@ private:
     QStringList colores;
     QList<QPushButton*> btnsColores;
     objCaptura captura;
+    QFuture<void> hiloCaptura;
     bool conectado;
     int w, h;
 };

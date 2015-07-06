@@ -4,6 +4,12 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
 
     ui->setupUi(this);
+    //conectando los signals y slots del hilo de captura de imagenes
+    connect(&captura, &objCaptura::nueva_imagen, this, &MainWindow::procesar_imagen);
+    connect(&captura, &objCaptura::interrumpirConexion, this, &MainWindow::conexionInterrumpida);
+    connect(this, &MainWindow::on_stop, &captura, &objCaptura::stop);
+    connect(&captura, &objCaptura::limpiarVista, this, &MainWindow::limpiarVista);
+
     txtCamara = ui->etqCamara->text();
     txtVistaPrev = ui->etqVistaprevia->text();
     dirRaiz = QDir::homePath() + "/" + "Dermasoft - Historias";
@@ -500,13 +506,9 @@ void MainWindow::on_actionActualizar_triggered(){
 void MainWindow::on_cBoxModo_activated(int index){
 
     if(index == 1){
-
-        if(conectado && !historia->isEmpty() && !icon->isEmpty() && *fechaIcon == fecha){
-            connect(&captura, &objCaptura::nueva_imagen, this, &MainWindow::procesar_imagen);
-            connect(&captura, &objCaptura::interrumpirConexion, this, &MainWindow::conexionInterrumpida);
-            connect(this, &MainWindow::on_stop, &captura, &objCaptura::stop);
-            connect(&captura, &objCaptura::limpiarVista, this, &MainWindow::limpiarVista);
-            QFuture<void> hiloCaptura = QtConcurrent::run(&this->captura, &objCaptura::start, int(indexCam));
+        //si le hilo no esta corriendo ya, y hay una historia/iconografia/fecha valida cargada, arranca el hilo
+        if(conectado && !historia->isEmpty() && !icon->isEmpty() && *fechaIcon == fecha && !hiloCaptura.isRunning()){
+            hiloCaptura = QtConcurrent::run(&this->captura, &objCaptura::start, int(indexCam));
         }
     }else{
         emit on_stop();
