@@ -9,7 +9,12 @@ void objCaptura::start(int id){
 
     detenerse = false;
     cam.open(id);
-    cv::Point p1(200, 50);
+    int w, h;
+    w = cam.get(CV_CAP_PROP_FRAME_WIDTH);
+    h = cam.get(CV_CAP_PROP_FRAME_HEIGHT);
+    cv::Point p1(w/1.3, h/1.05);
+    cv::Point p2(w/1.1, h/1.05);
+    cv::Scalar color(0, 104, 255);
     cv::HersheyFonts fuente(cv::FONT_HERSHEY_PLAIN);
 
     for(;;){
@@ -29,14 +34,14 @@ void objCaptura::start(int id){
 
 /////////////////////////////////////
         //matMicroM.release();
-        //matMicroM = mat;
+        mat.copyTo(matMicroM);
         //se prepara la imagen para convertirla de BGR A RGB para que Qt pueda manejarla
-        //ocurre la conversion de cv mat a qimage. Investigar sobre cual QImage::Format_ es mas apropiado
-        //cv::putText(matMicroM, "micromarca", p1, fuente, 1, (204, 102, 51), 1.5, cv::LINE_AA );
-        //imgMicroM = QImage((uchar*)matMicroM.data, matMicroM.cols, matMicroM.rows, matMicroM.step, QImage::Format_RGB888);
+        //cv::putText(matMicroM, "micromarca", p1, fuente, 1, color, 1, cv::LINE_AA );
+        cv::line(matMicroM, p1, p2, color, 1, cv::LINE_8);
+        imgMicroM = QImage((uchar*)matMicroM.data, matMicroM.cols, matMicroM.rows, matMicroM.step, QImage::Format_RGB888);
 /////////////////////////////////////
         if(!img.allGray()){
-            emit nueva_imagen(QPixmap::fromImage(img), QPixmap::fromImage(img));
+            emit nueva_imagen(QPixmap::fromImage(img), QPixmap::fromImage(imgMicroM));
         }else{
             //captura unas cuantas imagenes mas, para asegurarse de que que la camara si esta desconectada
             for(int i = 0; i < 3; ++i){
