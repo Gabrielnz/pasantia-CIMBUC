@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     verhistoria.cpp \
     regabriricon.cpp \
     abriricon.cpp \
-    regicon.cpp
+    regicon.cpp \
+    objcaptura.cpp
 
 HEADERS  += mainwindow.h \
     acercade.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     verhistoria.h \
     regabriricon.h \
     abriricon.h \
-    regicon.h
+    regicon.h \
+    objcaptura.h
 
 FORMS    += mainwindow.ui \
     acercade.ui \

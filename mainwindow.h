@@ -21,6 +21,8 @@
 #include "abriricon.h"
 #include "verhistoria.h"
 #include "regabriricon.h"
+#include "objcaptura.h"
+#include <QtConcurrent>
 
 namespace Ui {
 class MainWindow;
@@ -37,8 +39,10 @@ public:
     void disponibilidadColores();
     ~MainWindow();
 
+signals:
+    void on_stop();
+
 private slots:
-    void procesarCuadroActualizarGUI();/*Procedimiento donde la magia sucede :b*/
     void on_actionAcerca_de_triggered();
     void on_actionSalir_triggered();
     void on_actionDesconectar_camara_triggered();
@@ -54,13 +58,15 @@ private slots:
     void conectar(int num);
     void on_cBoxModo_activated(int index);
     void accionColores(QString color);
+    void conexionInterrumpida();
+    void limpiarVista();
+
+public slots:
+    void procesar_imagen(QPixmap pixmap);
 
 private:
     Ui::MainWindow *ui;
-    cv::VideoCapture cam;
-    cv::Mat mat;
     QImage img;
-    QTimer timer;
     QString dirRaiz, *historia, *icon, fecha, *fechaIcon;
     int indexCam, numCams;
     QList<QAction*> accionesDinamicas;
@@ -68,6 +74,9 @@ private:
     QString txtCamara, txtVistaPrev;
     QStringList colores;
     QList<QPushButton*> btnsColores;
+    objCaptura captura;
+    bool conectado;
+    int w, h;
 };
 
 #endif // MAINWINDOW_H
