@@ -60,8 +60,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 MainWindow::~MainWindow(){
-    if(hiloCaptura.isRunning())
+    if(hiloCaptura.isRunning()){
         emit on_stop();
+        hiloCaptura.waitForFinished();
+    }
 
     delete ui;
 }
@@ -91,8 +93,10 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
 
     if(conectado){
         conectado = false;
-        if(hiloCaptura.isRunning())
+        if(hiloCaptura.isRunning()){
             emit on_stop();
+            hiloCaptura.waitForFinished();
+        }
 
         ui->etqInfoEstado->setText("<html><head/><body><p><span style= 'font-weight:600; color:#c81d1d;'>Desconectada</span></p></body></html>");
 
@@ -173,7 +177,7 @@ void MainWindow::on_actionAbrir_historia_triggered(){
                 }
             }
         }else{
-            dlgInfo info("Esta histora no contiene iconografias para abrir.", "Historia vacia", "Entendido");
+            dlgInfo info("Conecte una camara y actualice para continuar.", "Historia vacia", "Entendido");
             info.exec();
             ui->cBoxModo->activated(0);
         }
@@ -439,10 +443,10 @@ void MainWindow::limpiarVista(){
     ui->etqVistaprevia->setText(txtVistaPrev);
 }
 
-void MainWindow::procesar_imagen(QPixmap pixmap){
+void MainWindow::procesar_imagen(QPixmap pixOriginal, QPixmap pixMicroM){
 
-    img = pixmap.toImage();
-    ui->etqCamara->setPixmap(pixmap.scaled(w, h, Qt::KeepAspectRatio));
+    img = pixOriginal.toImage();
+    ui->etqCamara->setPixmap(pixMicroM.scaled(w, h, Qt::KeepAspectRatio));
 }
 
 void MainWindow::disponibilidadColores(){
@@ -521,8 +525,10 @@ void MainWindow::on_cBoxModo_activated(int index){
             hiloCaptura = QtConcurrent::run(&this->captura, &objCaptura::start, int(indexCam));
         }
     }else{
-        if(hiloCaptura.isRunning())
+        if(hiloCaptura.isRunning()){
             emit on_stop();
+            hiloCaptura.waitForFinished();
+        }
     }
     ui->cBoxModo->setCurrentIndex(index);
     revisionBtns();

@@ -19,7 +19,7 @@ public:
     ~objCaptura();
 
 signals:
-    void nueva_imagen(QPixmap pixmap);
+    void nueva_imagen(QPixmap pixOriginal, QPixmap pixMicroM);
     void interrumpirConexion();
     void limpiarVista();
 
@@ -29,8 +29,8 @@ public slots:
 private:
     bool detenerse;
     cv::VideoCapture cam;
-    cv::Mat mat;
-    QImage img;
+    cv::Mat mat, matMicroM;
+    QImage img, imgMicroM;
 };
 
 #endif // OBJCAPTURA_H

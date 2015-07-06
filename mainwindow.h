@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QtConcurrent>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -22,7 +23,6 @@
 #include "verhistoria.h"
 #include "regabriricon.h"
 #include "objcaptura.h"
-#include <QtConcurrent>
 
 namespace Ui {
 class MainWindow;
@@ -62,7 +62,7 @@ private slots:
     void limpiarVista();
 
 public slots:
-    void procesar_imagen(QPixmap pixmap);
+    void procesar_imagen(QPixmap pixOriginal, QPixmap pixMicroM);
 
 private:
     Ui::MainWindow *ui;
