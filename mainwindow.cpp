@@ -60,7 +60,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 MainWindow::~MainWindow(){
-    emit on_stop();
+    if(hiloCaptura.isRunning())
+        emit on_stop();
+
     delete ui;
 }
 
@@ -89,7 +91,9 @@ void MainWindow::on_actionDesconectar_camara_triggered(){
 
     if(conectado){
         conectado = false;
-        emit on_stop();
+        if(hiloCaptura.isRunning())
+            emit on_stop();
+
         ui->etqInfoEstado->setText("<html><head/><body><p><span style= 'font-weight:600; color:#c81d1d;'>Desconectada</span></p></body></html>");
 
         if(!historia->isEmpty() && !icon->isEmpty()){
@@ -186,7 +190,7 @@ void MainWindow::on_actionCerrar_historia_triggered(){
     *historia = "";
     *icon = "";
     *fechaIcon = fecha;
-
+    limpiarVista();
     ui->cBoxModo->activated(0);
 }
 
@@ -235,6 +239,7 @@ void MainWindow::on_actionCerrar_icon_triggered(){
     ui->etqInfoFecha->setText("- - -");
     *icon = "";
     *fechaIcon = fecha;
+    limpiarVista();
     ui->cBoxModo->activated(0);
 }
 
@@ -262,12 +267,12 @@ void MainWindow::revisionBtns(){
     //revisa la historia, la iconografia y la fecha
     if(!historia->isEmpty()){
         crearHistoria = false;
-        abrirHistoria = true;
+        abrirHistoria = false;
         verHistoria = true;
         cerrarHistoria = true;
         if(!icon->isEmpty()){
             regIcon = false;
-            abrirIcon = true;
+            abrirIcon = false;
             cerrarIcon = true;
             cBoxModo = true;
 
@@ -361,9 +366,9 @@ void MainWindow::habilitarColores(bool flag){
 
 void MainWindow::accionColores(QString color){
 
-    QString nombreImagen(dirRaiz + "/" + *historia + "/" + *icon + "/" + *fechaIcon + "/" + color + " - " + *fechaIcon + ".jpg");
+    QString nombreImagen(dirRaiz + "/" + *historia + "/" + *icon + "/" + *fechaIcon + "/" + *historia + " - " + *icon + " - " + *fechaIcon + " - " + color + ".jpg");
     QFileInfo archivo(nombreImagen);
-    int w, h;
+    int wPrev, hPrev;
 
     //si la interfaz esta en modo de captura de imagenes
     if(ui->cBoxModo->currentIndex() == 1){
@@ -375,10 +380,10 @@ void MainWindow::accionColores(QString color){
 
         if(!archivo.exists()){
             imgCapturada.save(nombreImagen);
-            w = ui->etqVistaprevia->width();
-            h = ui->etqVistaprevia->height();
+            wPrev = ui->etqVistaprevia->width();
+            hPrev = ui->etqVistaprevia->height();
             //se le asigna la imagen a la etiqueta de la camara
-            ui->etqVistaprevia->setPixmap((QPixmap::fromImage(img)).scaled(w, h, Qt::KeepAspectRatio));
+            ui->etqVistaprevia->setPixmap((QPixmap::fromImage(img)).scaled(wPrev, hPrev, Qt::KeepAspectRatio));
         }else{
 
             dlgConfirmar conf("La imagen de color: " + color + " ya existe, desea reemplazarla?", "Reemplazar imagen");
@@ -388,10 +393,10 @@ void MainWindow::accionColores(QString color){
 
             if(reemplazar){
                 imgCapturada.save(nombreImagen);
-                w = ui->etqVistaprevia->width();
-                h = ui->etqVistaprevia->height();
+                wPrev = ui->etqVistaprevia->width();
+                hPrev = ui->etqVistaprevia->height();
                 //se le asigna la imagen a la etiqueta de la camara
-                ui->etqVistaprevia->setPixmap((QPixmap::fromImage(img)).scaled(w, h, Qt::KeepAspectRatio));
+                ui->etqVistaprevia->setPixmap((QPixmap::fromImage(img)).scaled(wPrev, hPrev, Qt::KeepAspectRatio));
             }
         }
 
@@ -404,9 +409,9 @@ void MainWindow::accionColores(QString color){
     if(archivo.exists()){
 
         QImage imagen(nombreImagen);
-        w = ui->etqVistaprevia->width();
-        h = ui->etqVistaprevia->height();
-        ui->etqVistaprevia->setPixmap((QPixmap::fromImage(imagen)).scaled(w, h, Qt::KeepAspectRatio));
+        wPrev = ui->etqVistaprevia->width();
+        hPrev = ui->etqVistaprevia->height();
+        ui->etqVistaprevia->setPixmap((QPixmap::fromImage(imagen)).scaled(wPrev, hPrev, Qt::KeepAspectRatio));
     }else{
         //borra la imagen que este en la vista previa
         ui->etqVistaprevia->clear();
@@ -444,7 +449,7 @@ void MainWindow::disponibilidadColores(){
     for(int i = 0; i < colores.size(); ++i){
 
         color = colores.at(i);
-        nombreImagen = (ruta + "/" + color + " - " + *fechaIcon + ".jpg");
+        nombreImagen = (ruta + "/" + *historia + " - " + *icon + " - " + *fechaIcon + " - " + color + ".jpg");
         archivo.setFile(nombreImagen);
         if(archivo.exists())
             btnsColores.at(i)->setEnabled(true);
@@ -480,16 +485,16 @@ void MainWindow::on_actionActualizar_triggered(){
     indexCam = -1;//valor por defecto del indice de la camara
     cv::VideoCapture camaras;
     i = numCams = 0;
-    double w, h;
+    double wRes, hRes;
     bool flag = true;
     ui->menuCamaras->clear();
 
     while(flag){
         camaras.open(i);
         if(camaras.isOpened()){
-            w = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
-            h = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
-            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara " + QString::number(i + 1) + " - " + QString::number(w) + "x" + QString::number(h)));
+            wRes = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
+            hRes = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
+            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara " + QString::number(i + 1) + " - " + QString::number(wRes) + "x" + QString::number(hRes)));
             connect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
             camsMapper.setMapping(accionesDinamicas.at(i), i);
             numCams+=1;
@@ -511,7 +516,8 @@ void MainWindow::on_cBoxModo_activated(int index){
             hiloCaptura = QtConcurrent::run(&this->captura, &objCaptura::start, int(indexCam));
         }
     }else{
-        emit on_stop();
+        if(hiloCaptura.isRunning())
+            emit on_stop();
     }
     ui->cBoxModo->setCurrentIndex(index);
     revisionBtns();
