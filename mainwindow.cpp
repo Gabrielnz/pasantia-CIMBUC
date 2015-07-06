@@ -119,15 +119,7 @@ void MainWindow::on_actionCrear_historia_triggered(){
     if(!historia->isEmpty()){
 
         ui->etqInfoHistoria->setText(*historia);
-
-        regAbrirIcon reg(true, false);
-        reg.exec();
-
-        if(reg.selecciono()){
-            ui->actionRegistrar_Iconografia->trigger();
-        }else{
-            ui->cBoxModo->activated(0);
-        }
+        ui->actionRegistrar_Iconografia->trigger();
     }else{
         ui->etqInfoHistoria->setText("- - -");
         ui->etqInfoIcon->setText("- - -");
@@ -157,17 +149,23 @@ void MainWindow::on_actionAbrir_historia_triggered(){
             existenIcon = false;
 
         if(conectado || existenIcon){
-            regAbrirIcon regAbrir(conectado, existenIcon);
-            regAbrir.exec();
 
-            if(regAbrir.selecciono()){
-                if(regAbrir.opcionNueva()){
-                    ui->actionRegistrar_Iconografia->trigger();
-                }else if(existenIcon){
-                    ui->actionAbrir_icon->trigger();
-                }
+            if(!existenIcon){
+                ui->actionRegistrar_Iconografia->trigger();
             }else{
-                ui->cBoxModo->activated(0);
+
+                regAbrirIcon regAbrir(conectado, existenIcon);
+                regAbrir.exec();
+
+                if(regAbrir.selecciono()){
+                    if(regAbrir.opcionNueva()){
+                        ui->actionRegistrar_Iconografia->trigger();
+                    }else if(existenIcon){
+                        ui->actionAbrir_icon->trigger();
+                    }
+                }else{
+                    ui->cBoxModo->activated(0);
+                }
             }
         }else{
             ui->cBoxModo->activated(0);
@@ -421,8 +419,8 @@ void MainWindow::accionColores(QString color){
 
 void MainWindow::conexionInterrumpida(){
 
-    conectado = false;
-    emit on_stop();
+    ui->actionDesconectar_camara->trigger();
+    limpiarVista();
     ui->actionActualizar->trigger();
 }
 
