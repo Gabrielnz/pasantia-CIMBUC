@@ -742,12 +742,7 @@
      </layout>
     </item>
    </layout>
-   <zorder>horizontalSpacer_17</zorder>
-   <zorder>verticalSpacer_6</zorder>
    <zorder>checkMicroM</zorder>
-   <zorder>verticalSpacer_7</zorder>
-   <zorder>horizontalSpacer_4</zorder>
-   <zorder>verticalSpacer_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

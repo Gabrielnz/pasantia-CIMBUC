@@ -24,6 +24,7 @@ void objCaptura::start(int id){
 
         mat.release();
         cam >> mat;
+
         //se prepara la imagen para convertirla de BGR A RGB para que Qt pueda manejarla
         cv::cvtColor(mat, mat, CV_BGR2RGB);
         //ocurre la conversion de cv mat a qimage. Investigar sobre cual QImage::Format_ es mas apropiado
