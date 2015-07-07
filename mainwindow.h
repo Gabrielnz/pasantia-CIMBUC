@@ -9,7 +9,8 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QtConcurrent>
-#include <QCamera>
+#include <QCameraInfo>
+#include <QPainter>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -62,8 +63,10 @@ private slots:
     void conexionInterrumpida();
     void limpiarVista();
 
+    void on_checkMicroM_toggled(bool checked);
+
 public slots:
-    void procesar_imagen(QPixmap pixOriginal, QPixmap pixMicroM);
+    void procesar_imagen(QPixmap pixOriginal);
 
 private:
     Ui::MainWindow *ui;
@@ -77,7 +80,7 @@ private:
     QList<QPushButton*> btnsColores;
     objCaptura captura;
     QFuture<void> hiloCaptura;
-    bool conectado;
+    bool conectado, microMarca;
     int w, h;
 };
 

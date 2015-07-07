@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QDebug>
 #include <QThread>
-#include <QCamera>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -20,7 +19,7 @@ public:
     ~objCaptura();
 
 signals:
-    void nueva_imagen(QPixmap pixOriginal, QPixmap pixMicroM);
+    void nueva_imagen(QPixmap pixOriginal);
     void interrumpirConexion();
     void limpiarVista();
 
@@ -30,8 +29,8 @@ public slots:
 private:
     bool detenerse;
     cv::VideoCapture cam;
-    cv::Mat mat, matMicroM;
-    QImage img, imgMicroM;
+    cv::Mat mat;
+    QImage img;
 };
 
 #endif // OBJCAPTURA_H

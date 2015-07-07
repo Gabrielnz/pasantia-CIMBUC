@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(&captura, &objCaptura::interrumpirConexion, this, &MainWindow::conexionInterrumpida);
     connect(this, &MainWindow::on_stop, &captura, &objCaptura::stop);
     connect(&captura, &objCaptura::limpiarVista, this, &MainWindow::limpiarVista);
-
+    microMarca = false;
     txtCamara = ui->etqCamara->text();
     txtVistaPrev = ui->etqVistaprevia->text();
     dirRaiz = QDir::homePath() + "/" + "Dermasoft - Historias";
@@ -87,6 +87,42 @@ void MainWindow::conectar(int num){
             ui->cBoxModo->activated(0);
         }
     }
+}
+
+void MainWindow::on_actionActualizar_triggered(){
+
+    QList<QCameraInfo> listaCamaras = QCameraInfo::availableCameras();
+
+    int i;
+
+    disconnect(&camsMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
+
+    for(i = 0; i < numCams; ++i){
+        camsMapper.removeMappings(accionesDinamicas.at(i));
+        disconnect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
+        accionesDinamicas.removeAt(i);
+    }
+
+    indexCam = -1;//valor por defecto del indice de la camara
+    cv::VideoCapture camaras;
+    double wRes, hRes;
+    ui->menuCamaras->clear();
+
+    numCams = listaCamaras.size();
+
+    for(i = 0; i < numCams; ++i){
+        camaras.open(i);
+        wRes = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
+        hRes = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
+        accionesDinamicas.insert(i, ui->menuCamaras->addAction(QString::number(i + 1) + " - " + listaCamaras.at(i).description() + " " + QString::number(wRes) + "x" + QString::number(hRes)));
+        connect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
+        camsMapper.setMapping(accionesDinamicas.at(i), i);
+        camaras.release();
+    }
+
+    connect(&camsMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
+
+    ui->cBoxModo->activated(0);
 }
 
 void MainWindow::on_actionDesconectar_camara_triggered(){
@@ -255,7 +291,7 @@ void MainWindow::on_actionCerrar_icon_triggered(){
 //Realiza una revision de todos los botones, habilitando/deshabilitando segun el caso
 void MainWindow::revisionBtns(){
 
-    bool actualizar, conectar, desconectar, crearHistoria, abrirHistoria, verHistoria, cerrarHistoria, regIcon, abrirIcon, cerrarIcon, cBoxModo, habColores, abrirCarpeta;
+    bool actualizar, conectar, desconectar, crearHistoria, abrirHistoria, verHistoria, cerrarHistoria, regIcon, abrirIcon, cerrarIcon, cBoxModo, microM, habColores, abrirCarpeta;
     QDir dirHist, dirIcon, dirFecha;
     QFileInfoList lista;
     //revisa los botones para conectar, actualizar y desconectar la camara
@@ -333,22 +369,26 @@ void MainWindow::revisionBtns(){
     switch (ui->cBoxModo->currentIndex()){
 
     case 1:
-        if(conectado && !historia->isEmpty() && !icon->isEmpty() && *fechaIcon == fecha)
+        if(hiloCaptura.isRunning() && !historia->isEmpty() && !icon->isEmpty() && *fechaIcon == fecha){
+            microM = true;
             habColores = true;
-        else
+        }else{
+            microM = false;
             habColores = false;
+        }
 
         abrirCarpeta = false;
         habilitarColores(habColores);
         break;
 
     case 2:
+        microM = false;
         disponibilidadColores();
         break;
 
     default:
-        habColores = abrirCarpeta = false;
-        habilitarColores(false);
+        microM = habColores = abrirCarpeta = false;
+        habilitarColores(habColores);
         break;
     }
     ui->actionActualizar->setEnabled(actualizar);
@@ -363,6 +403,7 @@ void MainWindow::revisionBtns(){
     ui->actionAbrir_icon->setEnabled(abrirIcon);
     ui->actionCerrar_icon->setEnabled(cerrarIcon);
     ui->cBoxModo->setEnabled(cBoxModo);
+    ui->checkMicroM->setEnabled(microM);
     ui->btnAbrirCarpeta->setEnabled(abrirCarpeta);
 }
 
@@ -443,10 +484,21 @@ void MainWindow::limpiarVista(){
     ui->etqVistaprevia->setText(txtVistaPrev);
 }
 
-void MainWindow::procesar_imagen(QPixmap pixOriginal, QPixmap pixMicroM){
+void MainWindow::procesar_imagen(QPixmap pixOriginal){
 
     img = pixOriginal.toImage();
-    ui->etqCamara->setPixmap(pixMicroM.scaled(w, h, Qt::KeepAspectRatio));
+    QPixmap pixResult = pixOriginal;
+
+    if(microMarca){
+        QPainter pixPaint(&pixResult);
+        QBrush brush(Qt::green);
+        QPen pen;
+        pen.setBrush(brush);
+        pen.setWidth(3);
+        pixPaint.setPen(pen);
+        pixPaint.drawLine(w/1.3, h/1.05, w/1.1, h/1.05);
+    }
+    ui->etqCamara->setPixmap(pixResult.scaled(w, h, Qt::KeepAspectRatio));
 }
 
 void MainWindow::disponibilidadColores(){
@@ -479,44 +531,6 @@ void MainWindow::on_actionVer_historia_triggered(){
     ver.exec();
 }
 
-void MainWindow::on_actionActualizar_triggered(){
-
-    int i;
-
-    disconnect(&camsMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
-
-    for(i = 0; i < numCams; ++i){
-        camsMapper.removeMappings(accionesDinamicas.at(i));
-        disconnect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
-        accionesDinamicas.removeAt(i);
-    }
-
-    indexCam = -1;//valor por defecto del indice de la camara
-    cv::VideoCapture camaras;
-    i = numCams = 0;
-    double wRes, hRes;
-    bool flag = true;
-    ui->menuCamaras->clear();
-
-    while(flag){
-        camaras.open(i);
-        if(camaras.isOpened()){
-            wRes = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
-            hRes = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
-            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara " + QString::number(i + 1) + " - " + QString::number(wRes) + "x" + QString::number(hRes)));
-            connect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
-            camsMapper.setMapping(accionesDinamicas.at(i), i);
-            numCams+=1;
-            camaras.release();
-        }else
-            flag = false;
-        ++i;
-    }
-    connect(&camsMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
-
-    ui->cBoxModo->activated(0);
-}
-
 void MainWindow::on_cBoxModo_activated(int index){
 
     if(index == 1){
@@ -532,4 +546,8 @@ void MainWindow::on_cBoxModo_activated(int index){
     }
     ui->cBoxModo->setCurrentIndex(index);
     revisionBtns();
+}
+
+void MainWindow::on_checkMicroM_toggled(bool checked){
+    microMarca = checked;
 }
