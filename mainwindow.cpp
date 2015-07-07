@@ -91,8 +91,6 @@ void MainWindow::conectar(int num){
 
 void MainWindow::on_actionActualizar_triggered(){
 
-    QList<QCameraInfo> listaCamaras = QCameraInfo::availableCameras();
-
     int i;
 
     disconnect(&camsMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));
@@ -107,17 +105,23 @@ void MainWindow::on_actionActualizar_triggered(){
     cv::VideoCapture camaras;
     double wRes, hRes;
     ui->menuCamaras->clear();
+    bool flag = true;
+    numCams = i = 0;
 
-    numCams = listaCamaras.size();
-
-    for(i = 0; i < numCams; ++i){
+    while(flag){
         camaras.open(i);
-        wRes = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
-        hRes = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
-        accionesDinamicas.insert(i, ui->menuCamaras->addAction(QString::number(i + 1) + " - " + listaCamaras.at(i).description() + " " + QString::number(wRes) + "x" + QString::number(hRes)));
-        connect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
-        camsMapper.setMapping(accionesDinamicas.at(i), i);
-        camaras.release();
+        if(camaras.isOpened()){
+            wRes = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
+            hRes = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
+            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara " + QString::number(i + 1) + " - " + QString::number(wRes) + "x" + QString::number(hRes)));
+            connect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
+            camsMapper.setMapping(accionesDinamicas.at(i), i);
+            camaras.release();
+            numCams+=1;
+        }else{
+            flag = false;
+        }
+        ++i;
     }
 
     connect(&camsMapper, SIGNAL(mapped(int)), this, SLOT(conectar(int)));

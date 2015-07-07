@@ -9,7 +9,6 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QtConcurrent>
-#include <QCameraInfo>
 #include <QPainter>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
