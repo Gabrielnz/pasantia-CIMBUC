@@ -22,6 +22,8 @@ regIcon::~regIcon(){ delete ui; }
 
 void regIcon::on_lineaIcon_textChanged(const QString &regIcon){
 
+    ui->lineaIcon->setText(regIcon.toUpper());
+
     if(!regIcon.isEmpty()){
         iconLista = true;
         ui->btnReg->setEnabled(true);

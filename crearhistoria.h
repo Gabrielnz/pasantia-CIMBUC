@@ -22,6 +22,8 @@ class crearHistoria : public QDialog
 
 public:
     explicit crearHistoria(QString dirRaizExt, QString *historiaExt, QWidget *parent = 0);
+    QString getNombre();
+    QString getApellido();
     ~crearHistoria();
 
 private slots:
@@ -41,7 +43,7 @@ private slots:
 
 private:
     Ui::crearHistoria *ui;
-    QString dirRaiz, *historia;
+    QString dirRaiz, *historia, nombre, apellido;
     QFile jHistoria;
 };
 

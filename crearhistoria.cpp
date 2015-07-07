@@ -19,9 +19,21 @@ crearHistoria::crearHistoria(QString dirRaizExt, QString *historiaExt, QWidget *
     QValidator *soloPalabras = new QRegExpValidator(rx, this);
     ui->lineaNombre->setValidator(soloPalabras);
     ui->lineaApellido->setValidator(soloPalabras);
+    nombre = "";
+    apellido = "";
     this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());
+}
+
+QString crearHistoria::getNombre(){
+
+    return nombre;
+}
+
+QString crearHistoria::getApellido(){
+
+    return apellido;
 }
 
 crearHistoria::~crearHistoria(){
@@ -68,16 +80,18 @@ void crearHistoria::on_btnCrearHistoria_clicked(){
             jSexo = ui->radioFemenino->text();
 
         QJsonValue jFechaNac(ui->editFechaNac->date().toString("dd/MM/yyyy"));
-
         jObj.insert("CI", jCI);
         jObj.insert("Nombre", jNombre);
         jObj.insert("Apellido", jApellido);
         jObj.insert("Sexo", jSexo);
         jObj.insert("Fecha de nacimiento", jFechaNac);
-
         jDoc.setObject(jObj);
         jHistoria.write(jDoc.toJson());
         jHistoria.close();
+
+        nombre = ui->lineaNombre->text();
+        apellido = ui->lineaApellido->text();
+
         close();
     }else{
         dlgInfo info("La historia: " + ui->cBoxCI->currentText() + " - " +  ui->lineaCI->text() + " ya existe, no se puede volver a crear.", "Error al crear historia");
@@ -88,6 +102,8 @@ void crearHistoria::on_btnCrearHistoria_clicked(){
 
 void crearHistoria::on_lineaNombre_textChanged(const QString &nombre){
     //se asegura de que todos los campos esten llenos
+    ui->lineaNombre->setText(nombre.toUpper());
+
     if(!ui->lineaCI->text().isEmpty() && !nombre.isEmpty() && !ui->lineaApellido->text().isEmpty() && (ui->radioMasculino->isChecked() || ui->radioFemenino->isChecked())){
         ui->btnCrearHistoria->setEnabled(true);
     }else{
@@ -97,6 +113,8 @@ void crearHistoria::on_lineaNombre_textChanged(const QString &nombre){
 
 void crearHistoria::on_lineaApellido_textChanged(const QString &apellido){
     //se asegura de que todos los campos esten llenos
+    ui->lineaApellido->setText(apellido.toUpper());
+
     if(!ui->lineaCI->text().isEmpty() && !ui->lineaNombre->text().isEmpty() && !apellido.isEmpty() && (ui->radioMasculino->isChecked() || ui->radioFemenino->isChecked())){
         ui->btnCrearHistoria->setEnabled(true);
     }else{

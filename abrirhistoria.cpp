@@ -8,6 +8,8 @@ abrirHistoria::abrirHistoria(QString *historiaExt, QString *iconExt, QString rut
     historia = historiaExt;
     icon = iconExt;
     ruta = rutaExt;
+    nombre = "";
+    apellido = "";
     QValidator *soloNumeros = new QIntValidator(1, 999999999, this);
     ui->lineaBuscar->setValidator(soloNumeros);
     modelo = new QStringListModel();
@@ -22,6 +24,16 @@ abrirHistoria::abrirHistoria(QString *historiaExt, QString *iconExt, QString rut
     this->setFixedSize(this->size());
 }
 
+QString abrirHistoria::getNombre()
+{
+    return nombre;
+}
+
+QString abrirHistoria::getApellido()
+{
+    return apellido;
+}
+
 abrirHistoria::~abrirHistoria(){ delete ui; }
 
 void abrirHistoria::on_btnCancelar_clicked(){ close(); }
@@ -31,7 +43,8 @@ void abrirHistoria::on_btnAbrir_clicked(){
     QString histSeleccionada = (modelo->data(ui->listView->currentIndex(), Qt::DisplayRole)).toString();
     *historia = histSeleccionada;
     *icon = "";
-
+    nombre = ui->etqInfoNombre->text();
+    apellido = ui->etqInfoApellido->text();
     close();
 }
 

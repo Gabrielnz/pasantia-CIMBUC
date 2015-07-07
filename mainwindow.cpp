@@ -161,13 +161,16 @@ void MainWindow::on_actionCrear_historia_triggered(){
     crear.exec();
 
     if(!historia->isEmpty()){
-
         ui->etqInfoHistoria->setText(*historia);
+        ui->etqInfoNombre->setText(crear.getNombre());
+        ui->etqInfoApellido->setText(crear.getApellido());
         ui->actionRegistrar_Iconografia->trigger();
     }else{
         ui->etqInfoHistoria->setText("- - -");
         ui->etqInfoIcon->setText("- - -");
         ui->etqInfoFecha->setText("- - -");
+        ui->etqInfoNombre->setText("- - -");
+        ui->etqInfoApellido->setText("- - -");
         *fechaIcon = fecha;
         ui->cBoxModo->activated(0);
     }
@@ -181,6 +184,8 @@ void MainWindow::on_actionAbrir_historia_triggered(){
     if(!historia->isEmpty()){
 
         ui->etqInfoHistoria->setText(*historia);
+        ui->etqInfoNombre->setText(abrir.getNombre());
+        ui->etqInfoApellido->setText(abrir.getApellido());
 
         QDir aux;
         aux.setPath(dirRaiz + "/" + *historia);
@@ -225,6 +230,8 @@ void MainWindow::on_actionAbrir_historia_triggered(){
         ui->etqInfoHistoria->setText("- - -");
         ui->etqInfoIcon->setText("- - -");
         ui->etqInfoFecha->setText("- - -");
+        ui->etqInfoNombre->setText("- - -");
+        ui->etqInfoApellido->setText("- - -");
         *fechaIcon = fecha;
         ui->cBoxModo->activated(0);
     }
@@ -235,6 +242,8 @@ void MainWindow::on_actionCerrar_historia_triggered(){
     ui->etqInfoHistoria->setText("- - -");
     ui->etqInfoIcon->setText("- - -");
     ui->etqInfoFecha->setText("- - -");
+    ui->etqInfoNombre->setText("- - -");
+    ui->etqInfoApellido->setText("- - -");
     //cuando se cierra una historia, se debe cerrar la icon de dicha historia tambien
     *historia = "";
     *icon = "";

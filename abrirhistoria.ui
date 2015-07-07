@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>526</width>
+    <width>511</width>
     <height>435</height>
    </rect>
   </property>
@@ -86,13 +86,13 @@
             <widget class="QLineEdit" name="lineaBuscar">
              <property name="minimumSize">
               <size>
-               <width>120</width>
+               <width>144</width>
                <height>27</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>120</width>
+               <width>144</width>
                <height>27</height>
               </size>
              </property>
@@ -108,7 +108,7 @@
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>40</width>
+               <width>17</width>
                <height>20</height>
               </size>
              </property>
