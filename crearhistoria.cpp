@@ -94,7 +94,7 @@ void crearHistoria::on_btnCrearHistoria_clicked(){
 
         close();
     }else{
-        dlgInfo info("La historia: " + ui->cBoxCI->currentText() + " - " +  ui->lineaCI->text() + " ya existe, no se puede volver a crear.", "Error al crear historia");
+        dlgInfo info("La cédula " + ui->cBoxCI->currentText() + " - " +  ui->lineaCI->text() + " ya existe, porfavor introduzca una nueva.", "Error al crear historia");
         ui->lineaCI->setText("");
         info.exec();
     }

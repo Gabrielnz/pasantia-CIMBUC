@@ -20,7 +20,6 @@ verHistoria::verHistoria(QString ruta, QString historia, QWidget *parent) : QDia
     dir.setPath(ruta + "/" + historia);
     dir.setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
     ui->etqInfoIcones->setText(QString::number(dir.entryList().count()));
-    this->setWindowTitle("Historia");
     this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());

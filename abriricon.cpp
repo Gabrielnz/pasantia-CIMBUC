@@ -21,7 +21,6 @@ abrirIcon::abrirIcon(QString *iconExt, QString rutaExt, QString *fechaIconExt, Q
     ui->iconList->scrollTo(index);
     ui->iconList->activated(index);
     ui->iconList->setRootIndex(index);
-    this->setWindowTitle("Abrir iconografia");
     this->adjustSize();
     this->setModal(true);
 }

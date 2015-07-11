@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Dermasoft</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/img/Eye_ico.ico</normaloff>:/img/Eye_ico.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_5">
     <item row="0" column="0">
@@ -43,7 +47,7 @@
            <enum>QFrame::Sunken</enum>
           </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; color:#4b4b4b;&quot;&gt;Imagen de la camara&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; color:#4b4b4b;&quot;&gt;Imagen de la cámara&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -58,7 +62,7 @@
                 <item>
                  <widget class="QLabel" name="etqEstado">
                   <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Camara: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Cámara: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                  </widget>
                 </item>
@@ -239,7 +243,7 @@
             <item>
              <widget class="QLabel" name="etqIcon">
               <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Iconografia:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Iconografía:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
             </item>
@@ -851,9 +855,9 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuArchivo">
+   <widget class="QMenu" name="menuCamara">
     <property name="title">
-     <string>Camara</string>
+     <string>Cámara</string>
     </property>
     <widget class="QMenu" name="menuCamaras">
      <property name="title">
@@ -885,14 +889,14 @@
    </widget>
    <widget class="QMenu" name="menuIconografia">
     <property name="title">
-     <string>Iconografias</string>
+     <string>Iconografías</string>
     </property>
     <addaction name="actionRegistrar_Iconografia"/>
     <addaction name="actionAbrir_icon"/>
     <addaction name="separator"/>
     <addaction name="actionCerrar_icon"/>
    </widget>
-   <addaction name="menuArchivo"/>
+   <addaction name="menuCamara"/>
    <addaction name="menuHistoria"/>
    <addaction name="menuIconografia"/>
    <addaction name="menuAyuda"/>
@@ -935,12 +939,12 @@
   </action>
   <action name="actionRegistrar_Iconografia">
    <property name="text">
-    <string>Registrar iconografia</string>
+    <string>Registrar iconografía</string>
    </property>
   </action>
   <action name="actionCerrar_icon">
    <property name="text">
-    <string>Cerrar iconografia</string>
+    <string>Cerrar iconografía</string>
    </property>
   </action>
   <action name="actionAbrir_historia">
@@ -950,7 +954,7 @@
   </action>
   <action name="actionAbrir_icon">
    <property name="text">
-    <string>Abrir iconografia</string>
+    <string>Abrir iconografía</string>
    </property>
   </action>
   <action name="actionP">
@@ -981,6 +985,8 @@
   <tabstop>btnRojo</tabstop>
   <tabstop>btnAbrirCarpeta</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

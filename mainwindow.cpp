@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
     connect(&coloresMapper, SIGNAL(mapped(QString)), this, SLOT(accionColores(QString)));
 
-    dlgInfo info("Verifique que el dispositivo este conectado antes de empezar.", "Atencion", "Listo");
+    dlgInfo info("Verifique que la cámara este conectada antes de empezar.", "Atención", "Listo");
     info.exec();
 
     conectado = false;
@@ -113,7 +113,7 @@ void MainWindow::on_actionActualizar_triggered(){
         if(camaras.isOpened()){
             wRes = camaras.get(CV_CAP_PROP_FRAME_WIDTH);
             hRes = camaras.get(CV_CAP_PROP_FRAME_HEIGHT);
-            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Camara " + QString::number(i + 1) + " - " + QString::number(wRes) + "x" + QString::number(hRes)));
+            accionesDinamicas.insert(i, ui->menuCamaras->addAction("Cámara " + QString::number(i + 1) + " - " + QString::number(wRes) + "x" + QString::number(hRes)));
             connect(accionesDinamicas.at(i), SIGNAL(triggered()), &camsMapper, SLOT(map()));
             camsMapper.setMapping(accionesDinamicas.at(i), i);
             camaras.release();
@@ -449,7 +449,7 @@ void MainWindow::accionColores(QString color){
             ui->etqVistaprevia->setPixmap((QPixmap::fromImage(img)).scaled(wPrev, hPrev, Qt::KeepAspectRatio));
         }else{
 
-            dlgConfirmar conf("La imagen de color: " + color + " ya existe, desea reemplazarla?", "Reemplazar imagen");
+            dlgConfirmar conf("La imagen de color " + color + " ya existe, ¿desea reemplazarla?", "Reemplazar imagen");
             conf.exec();
 
             bool reemplazar = conf.confirmacion();

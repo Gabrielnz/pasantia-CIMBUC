@@ -4,7 +4,6 @@
 regAbrirIcon::regAbrirIcon(bool nueva, bool abrir, QWidget *parent) : QDialog(parent), ui(new Ui::regAbrirIcon){
 
     ui->setupUi(this);
-    this->setWindowTitle("Iconografia");
     ui->btnReg->setEnabled(nueva);
     ui->btnAbrir->setEnabled(abrir);
 

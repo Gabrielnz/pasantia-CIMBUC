@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/cimbuc.jpg</file>
+        <file>img/Eye_64.png</file>
+        <file>img/Eye_ico.ico</file>
+    </qresource>
+</RCC>

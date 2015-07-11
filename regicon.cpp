@@ -12,7 +12,6 @@ regIcon::regIcon(QString dirRaizExt, QString historiaExt, QString *iconExt, QWid
     ui->lineaIcon->setValidator(val);
     ui->btnReg->setEnabled(false);
     iconLista = false;
-    this->setWindowTitle("Registrar iconografia");
     this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());
@@ -45,7 +44,7 @@ void regIcon::on_btnReg_clicked(){
         dir.mkpath(dirRaiz + "/" + historia + "/" + *icon);
         close();
     }else{
-        dlgInfo info("La iconografia: " + ui->lineaIcon->text() + " ya existe, no se puede volver a registrar.", "Error al registrar la iconografia");
+        dlgInfo info("La iconografía " + ui->lineaIcon->text() + " ya existe, introduzca una nueva.", "Error al registrar iconografía");
         ui->lineaIcon->setText("");
         info.exec();
     }

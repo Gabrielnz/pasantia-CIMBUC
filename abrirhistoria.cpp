@@ -18,7 +18,6 @@ abrirHistoria::abrirHistoria(QString *historiaExt, QString *iconExt, QString rut
     modelo->setStringList(dir.entryList());
     ui->listView->setModel(modelo);
     ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    this->setWindowTitle("Abrir historia");
     this->setModal(true);
     this->adjustSize();
     this->setFixedSize(this->size());

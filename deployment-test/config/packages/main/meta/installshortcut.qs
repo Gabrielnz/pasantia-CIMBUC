@@ -7,7 +7,7 @@
  if ( installer.value("os") === "win" ) {
   component.addOperation(
   "CreateShortcut",
-  "@TargetDir@/dermatoscopio.exe",
+  "@TargetDir@/Dermasoft.exe",
   "@StartMenuDir@/Dermasoft.lnk"
   );
   

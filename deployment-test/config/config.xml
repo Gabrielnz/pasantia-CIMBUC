@@ -5,6 +5,6 @@
   <Title>Software para el manejo del dermatoscopio multiespectral.</Title>
   <Publisher>Gabriel Nunez</Publisher>
   <StartMenuDir>Dermasoft</StartMenuDir>
-  <TargetDir>@rootDir@dermasoft</TargetDir>
+  <TargetDir>@rootDir@Dermasoft</TargetDir>
   <UninstallerName>Desinstalar</UninstallerName>
 </Installer>

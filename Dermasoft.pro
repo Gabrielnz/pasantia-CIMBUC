@@ -8,7 +8,7 @@ QT       += core gui concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = dermatoscopio
+TARGET = Dermasoft
 TEMPLATE = app
 
 
@@ -53,8 +53,8 @@ FORMS    += mainwindow.ui \
 
 
 win32 {
+    RC_ICONS += img/Eye_ico.ico
     INCLUDEPATH += C:\opencv\build\install\include
-
     LIBS += C:\opencv\build\bin\libopencv_core300.dll
     LIBS += C:\opencv\build\bin\libopencv_imgproc300.dll
     LIBS += C:\opencv\build\bin\libopencv_video300.dll
@@ -83,4 +83,10 @@ unix:!mac {
     LIBS += /usr/local/lib/libopencv_video.so
     message("Usando la configuracion para Linux")
 }
+
+DISTFILES += \
+    cimbuc.jpg
+
+RESOURCES += \
+    resources.qrc
 
