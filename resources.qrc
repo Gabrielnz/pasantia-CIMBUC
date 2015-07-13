@@ -3,5 +3,8 @@
         <file>img/cimbuc.jpg</file>
         <file>img/Eye_64.png</file>
         <file>img/Eye_ico.ico</file>
+        <file>img/Eye_128.png</file>
+        <file>img/Eye_256.png</file>
+        <file>img/Eye_512.png</file>
     </qresource>
 </RCC>
