@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     microMarca = false;
     txtCamara = ui->etqCamara->text();
     txtVistaPrev = ui->etqVistaprevia->text();
-    dirRaiz = QDir::homePath() + "/" + "Dermasoft - Historias";
+    dirRaiz = QDir::homePath() + "/" + QStandardPaths::displayName( QStandardPaths::DesktopLocation ) + "/" + "Dermasoft - Historias";
     fecha = QDate::currentDate().toString("dd.MM.yyyy");
     fechaIcon = new QString(fecha);
     historia = new QString;
