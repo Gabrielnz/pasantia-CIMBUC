@@ -44,8 +44,7 @@ void regIcon::on_btnReg_clicked(){
         dir.mkpath(dirRaiz + "/" + historia + "/" + *icon);
         close();
     }else{
-        dlgInfo info("La iconografía " + ui->lineaIcon->text() + " ya existe, introduzca una nueva.", "Error al registrar iconografía");
+        QMessageBox::warning(this, "Error al registrar iconografía", "La iconografía " + ui->lineaIcon->text() + " ya existe, introduzca una nueva.");
         ui->lineaIcon->setText("");
-        info.exec();
     }
 }

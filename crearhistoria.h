@@ -10,7 +10,7 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QByteArray>
-#include "dlginfo.h"
+#include <QMessageBox>
 
 namespace Ui {
 class crearHistoria;

@@ -94,9 +94,8 @@ void crearHistoria::on_btnCrearHistoria_clicked(){
 
         close();
     }else{
-        dlgInfo info("La cédula " + ui->cBoxCI->currentText() + " - " +  ui->lineaCI->text() + " ya existe, porfavor introduzca una nueva.", "Error al crear historia");
+        QMessageBox::warning(this, "Error al crear historia", "La cédula " + ui->cBoxCI->currentText() + " - " +  ui->lineaCI->text() + " ya existe, porfavor introduzca una nueva.");
         ui->lineaCI->setText("");
-        info.exec();
     }
 }
 

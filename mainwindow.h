@@ -10,19 +10,16 @@
 #include <QDesktopServices>
 #include <QtConcurrent>
 #include <QPainter>
+#include <QMessageBox>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include "acercade.h"
 #include "crearhistoria.h"
 #include "dlgimagen.h"
-#include "dlgconfirmar.h"
-#include "dlginfo.h"
 #include "regicon.h"
 #include "abrirhistoria.h"
 #include "abriricon.h"
 #include "verhistoria.h"
-#include "regabriricon.h"
 #include "objcaptura.h"
 
 namespace Ui {
@@ -63,6 +60,8 @@ private slots:
     void limpiarVista();
 
     void on_checkMicroM_toggled(bool checked);
+
+    void on_actionAcerca_del_CIMBUC_triggered();
 
 public slots:
     void procesar_imagen(QPixmap pixOriginal);

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QDir>
-#include "dlginfo.h"
+#include <QMessageBox>
 
 namespace Ui {
 class regIcon;

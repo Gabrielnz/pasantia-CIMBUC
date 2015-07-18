@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(&captura, &objCaptura::interrumpirConexion, this, &MainWindow::conexionInterrumpida);
     connect(this, &MainWindow::on_stop, &captura, &objCaptura::stop);
     connect(&captura, &objCaptura::limpiarVista, this, &MainWindow::limpiarVista);
+
     microMarca = false;
     txtCamara = ui->etqCamara->text();
     txtVistaPrev = ui->etqVistaprevia->text();
@@ -43,8 +44,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
     connect(&coloresMapper, SIGNAL(mapped(QString)), this, SLOT(accionColores(QString)));
 
-    dlgInfo info("Verifique que la cámara este conectada antes de empezar.", "Atención", "Listo");
-    info.exec();
+    QMessageBox::information(this, "Atención", "Verifique que la cámara este conectada antes de empezar.");
 
     conectado = false;
     numCams = 0;
@@ -64,7 +64,6 @@ MainWindow::~MainWindow(){
         emit on_stop();
         hiloCaptura.waitForFinished();
     }
-
     delete ui;
 }
 
@@ -151,8 +150,25 @@ void MainWindow::on_actionSalir_triggered(){ close();}
 
 void MainWindow::on_actionAcerca_de_triggered(){
 
-    AcercaDe mensaje;
-    mensaje.exec();
+    QImage logo(":/img/Eye_128.png");
+    QMessageBox msgBox;
+
+    msgBox.setIconPixmap(QPixmap::fromImage(logo));
+    QString titulo("<html><head/><body><p><span style=' font-size:14pt; font-weight:600; color:#4b4b4b;'>Dermasoft</span></p>");
+    QString resumen("<p>Aplicación para la adquisición de imágenes para microscopios de epiluminiscencia.</p>");
+    QString desarrollador("<p>Diseñado, desarrollado e implementado por Gabriel Núñez.\nContacto: gabriel.nzn@gmail.com</p></body></html>");
+    msgBox.setText(titulo + resumen + desarrollador);
+    msgBox.exec();
+}
+
+void MainWindow::on_actionAcerca_del_CIMBUC_triggered(){
+
+    QImage logo(":/img/cimbuc.jpg");
+    QMessageBox msgBox;
+
+    msgBox.setWindowTitle("CIMBUC");
+    msgBox.setIconPixmap(QPixmap::fromImage(logo).scaledToWidth(700));
+    msgBox.exec();
 }
 
 void MainWindow::on_actionCrear_historia_triggered(){
@@ -207,23 +223,37 @@ void MainWindow::on_actionAbrir_historia_triggered(){
                     ui->actionAbrir_icon->trigger();
                 }else{
 
-                    regAbrirIcon regAbrir(conectado, existenIcon);
-                    regAbrir.exec();
+                    QMessageBox msgBox;
 
-                    if(regAbrir.selecciono()){
-                        if(regAbrir.opcionNueva()){
-                            ui->actionRegistrar_Iconografia->trigger();
-                        }else if(existenIcon){
-                            ui->actionAbrir_icon->trigger();
-                        }
+                    msgBox.setIcon(QMessageBox::Information);
+                    msgBox.setWindowTitle("Iconografía");
+                    msgBox.setText("Elija una de las siguientes opciones");
+
+                    QPushButton *btnRegistrar = msgBox.addButton("Registrar iconografía", QMessageBox::AcceptRole);
+                    QPushButton *btnAbrir = msgBox.addButton("Abrir iconografía", QMessageBox::AcceptRole);
+                    QPushButton *btnCancelar = msgBox.addButton("Cancelar", QMessageBox::RejectRole);
+
+                    btnRegistrar->setFixedWidth(130);
+                    btnRegistrar->setFixedHeight(30);
+                    btnAbrir->setFixedWidth(130);
+                    btnAbrir->setFixedHeight(30);
+                    btnCancelar->setFixedWidth(90);
+                    btnCancelar->setFixedHeight(30);
+
+                    msgBox.exec();
+
+                    if (msgBox.clickedButton() == btnRegistrar) {
+
+                        ui->actionRegistrar_Iconografia->trigger();
+                    }else if(msgBox.clickedButton() == btnAbrir){
+                        ui->actionAbrir_icon->trigger();
                     }else{
                         ui->cBoxModo->activated(0);
                     }
                 }
             }
         }else{
-            dlgInfo info("Conecte una camara y actualice para continuar.", "Historia vacia", "Entendido");
-            info.exec();
+            QMessageBox::information(this, "Historia vacía", "Conecte una cámara y actualice para continuar.");
             ui->cBoxModo->activated(0);
         }
     }else{
@@ -448,13 +478,18 @@ void MainWindow::accionColores(QString color){
             //se le asigna la imagen a la etiqueta de la camara
             ui->etqVistaprevia->setPixmap((QPixmap::fromImage(img)).scaled(wPrev, hPrev, Qt::KeepAspectRatio));
         }else{
+            QMessageBox msgBox;
 
-            dlgConfirmar conf("La imagen de color " + color + " ya existe, ¿desea reemplazarla?", "Reemplazar imagen");
-            conf.exec();
+            msgBox.setIcon(QMessageBox::Question);
+            msgBox.setWindowTitle("Reemplazar imagen");
+            msgBox.setText("La imagen de color " + color + " ya existe, ¿desea reemplazarla?");
 
-            bool reemplazar = conf.confirmacion();
+            QPushButton *btnSi = msgBox.addButton("Sí", QMessageBox::YesRole);
+            QPushButton *btnNo = msgBox.addButton("No", QMessageBox::NoRole);
 
-            if(reemplazar){
+            msgBox.exec();
+
+            if (msgBox.clickedButton() == btnSi) {
                 imgCapturada.save(nombreImagen);
                 wPrev = ui->etqVistaprevia->width();
                 hPrev = ui->etqVistaprevia->height();
@@ -504,7 +539,7 @@ void MainWindow::procesar_imagen(QPixmap pixOriginal){
 
     if(microMarca){
         QPainter pixPaint(&pixResult);
-        QBrush brush(Qt::green);
+        QBrush brush(Qt::blue);
         QPen pen;
         pen.setBrush(brush);
         pen.setWidth(3);
