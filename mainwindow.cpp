@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this, &MainWindow::on_stop, &captura, &objCaptura::stop);
     connect(&captura, &objCaptura::limpiarVista, this, &MainWindow::limpiarVista);
 
+    version = "07222015-2014";
     microMarca = false;
     txtCamara = ui->etqCamara->text();
     txtVistaPrev = ui->etqVistaprevia->text();
@@ -152,10 +153,9 @@ void MainWindow::on_actionAcerca_de_triggered(){
 
     QImage logo(":/img/Eye_128.png");
     QMessageBox msgBox;
-
     msgBox.setIconPixmap(QPixmap::fromImage(logo));
-    QString titulo("<html><head/><body><p><span style=' font-size:14pt; font-weight:600; color:#4b4b4b;'>Dermasoft</span></p>");
-    QString resumen("<p>Aplicación para la adquisición de imágenes para microscopios de epiluminiscencia.</p>");
+    QString titulo("<html><head/><body><p><span style=' font-size:14pt; font-weight:600; color:#4b4b4b;'>Dermasoft</span>&nbsp; &nbsp;<span style=' font-size:8pt; font-weight:450; color:#4b4b4b;'>versión " + version + "</span></p>");
+    QString resumen("<p>Aplicación para la adquisición de imágenes para microscopios de epiluminiscencia multiespectral.</p>");
     QString desarrollador("<p>Diseñado, desarrollado e implementado por Gabriel Núñez.\nContacto: gabriel.nzn@gmail.com</p></body></html>");
     msgBox.setText(titulo + resumen + desarrollador);
     msgBox.exec();

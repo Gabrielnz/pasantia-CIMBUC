@@ -80,6 +80,7 @@ private:
     QFuture<void> hiloCaptura;
     bool conectado, microMarca;
     int w, h;
+    QString version;
 };
 
 #endif // MAINWINDOW_H
